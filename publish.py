@@ -6,10 +6,28 @@ import datetime
 import sys
 
 CONFLUENCE_BASE_URL = "https://eng-stla.atlassian.net/wiki"
-USERNAME = "ritika.palchaudhuri@stellantis.com"
-API_TOKEN = "ATATT3xFfGF0l3WsLauZ3IUi0ZngpkPh2-ES2Ti9BKg2GeX_4LC0lBvtPUQ4PR95LrxZDsjqlikz2DesIGYzJ_mVbIHpcylUOfhQMarL9QRJGnVlqtYfXby08jJylWWuTM0byBdw1XHX03X08Ikb-PcuhJh0bQJsTMElC6rHV0Q8oMGsF5yBWCo=FA51292A"
-SPACE_KEY = "~7120205aff550fb14a4887972f52ed690ad96b"
-PARENT_PAGE_ID = "2314764925"
+
+USERNAME = os.getenv("CONFLUENCE_USERNAME")
+API_TOKEN = os.getenv("CONFLUENCE_API_TOKEN")
+
+SPACE_KEY = os.getenv("CONFLUENCE_SPACE_KEY")
+PARENT_PAGE_ID = os.getenv("CONFLUENCE_PARENT_PAGE_ID")
+
+# Hard fail if anything is missing (REQUIRED on Render)
+missing = [
+    name for name, value in {
+        "CONFLUENCE_USERNAME": USERNAME,
+        "CONFLUENCE_API_TOKEN": API_TOKEN,
+        "CONFLUENCE_SPACE_KEY": SPACE_KEY,
+        "CONFLUENCE_PARENT_PAGE_ID": PARENT_PAGE_ID,
+    }.items()
+    if not value
+]
+
+if missing:
+    raise RuntimeError(
+        f"Missing Confluence environment variables: {', '.join(missing)}"
+    )
 
 SUMMARY_HTML = "summary_output.html"
 WEEK_FILE = "week_number.txt"
