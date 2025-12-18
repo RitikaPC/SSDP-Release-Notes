@@ -1,0 +1,66 @@
+{
+  "51": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": null,
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": "RCZ 4.0.19"
+  },
+  "43": {
+    "APIM": "10.0.0",
+    "EAH": "2.30.0",
+    "DOCG": null,
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null
+  },
+  "45": {
+    "APIM": null,
+    "EAH": "2.32.1",
+    "DOCG": "25.3.4.7.1",
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null
+  },
+  "46": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": "25.3.4.7.2  - (1.5.4)",
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null
+  },
+  "47": {
+    "APIM": "10.5.0",
+    "EAH": "2.34.0",
+    "DOCG": "25.3.4.7.4",
+    "VDR": "1.4.2",
+    "PATRIC-SSDP": null,
+    "RCZ": null
+  },
+  "48": {
+    "APIM": "10.7.0",
+    "EAH": "2.36.0",
+    "DOCG": "DOCG-25.3.4.12",
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null
+  },
+  "49": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": "DOCG-25.3.4.7.7",
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null
+  },
+  "50": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": "25.3.4.7.9",
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null
+  }
+}

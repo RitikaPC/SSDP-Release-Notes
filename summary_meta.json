@@ -1,0 +1,19 @@
+{
+  "week": 51,
+  "prev_versions": {
+    "APIM": "10.7.0",
+    "EAH": "2.36.0",
+    "DOCG": "25.3.4.7.9",
+    "VDR": "1.4.2",
+    "PATRIC-SSDP": "None",
+    "RCZ": "None"
+  },
+  "curr_versions": {
+    "APIM": "None",
+    "EAH": "None",
+    "DOCG": "None",
+    "VDR": "None",
+    "PATRIC-SSDP": "None",
+    "RCZ": "RCZ 4.0.19"
+  }
+}
