@@ -31,10 +31,19 @@ from typing import List, Dict
 # Config
 # -----------------------
 JIRA_BASE = "https://stla-iotpf-jira.atlassian.net"
-USERNAME = os.getenv("JIRA_USERNAME", "ritika.palchaudhuri@stellantis.com")
-API_TOKEN = os.getenv("JIRA_API_TOKEN","ATATT3xFfGF0z6Kb5b3R1AtLeoYn0HfkWXGWukp5KffjHY7iJ0zjPCqXsGkk_Nwn6OVZsmiT1gQi1gDuyWaDSkVMUY-6n2YNlO3hR3gFh30enNipD3VOiy11d1J6J8QGwHOKfqIm4B-CRUKYZfLnLjm8zY9EjUvqxIjDKtNe4mOvIFGQ32iPzuo=8C3C0C90")
+
+USERNAME = os.getenv("JIRA_USERNAME")
+API_TOKEN = os.getenv("JIRA_API_TOKEN")
+
 BOARD_ID = 35
 QUICKFILTER_ID = 169
+
+# Hard fail if env vars are missing (VERY IMPORTANT for Render)
+if not USERNAME or not API_TOKEN:
+    raise RuntimeError(
+        "Missing JIRA credentials. "
+        "Ensure JIRA_USERNAME and JIRA_API_TOKEN are set in Render Environment Variables."
+    )
 
 LINKED_FILE = "Linked_Issues_Report.txt"
 WEEKLY_STOPPER = "weekly_stopper.json"
