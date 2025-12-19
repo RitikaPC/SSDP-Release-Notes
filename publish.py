@@ -139,7 +139,7 @@ def main():
         url = confluence_create_page(title, html)
 
     if url:
-        print("Page published:", url)
+        print(f"CONFLUENCE_PAGE_URL={url}")
     else:
         print("Failed to publish page.")
         sys.exit(1)
