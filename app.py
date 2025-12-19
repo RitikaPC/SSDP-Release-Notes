@@ -8,75 +8,197 @@ import json
 app = Flask(__name__)
 
 INDEX_HTML = """
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Release Workflow</title>
-  <style>
-    body { font-family: Arial, sans-serif; background:#f4f5f7; display:flex; justify-content:center; align-items:center; min-height:100vh; }
-    .container { background:white; padding:24px; border-radius:8px; width:900px; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
-    input[type=number] { padding:8px; width:120px; margin-right:8px; }
-    button { background:#0747A6; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; }
-    #status { margin-top:12px; font-weight:600; }
-    pre { background:#f7f7f7; padding:8px; border-radius:6px; overflow:auto; }
-    table { border-collapse:collapse; width:100%; margin-top:12px; }
-    th, td { border:1px solid #ddd; padding:8px; text-align:left; }
-    th { background:#0747A6; color:white; }
-    a { color:#0747A6; text-decoration:none; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Generate Release Notes</h2>
-    <div>
-      <label>Week (optional): </label>
-      <input id="weekInput" type="number" min="1" max="53" placeholder="e.g. 45" />
-      <button id="runBtn" onclick="runWorkflow()">Start</button>
-    </div>
-    <div id="status"></div>
-    <div id="link"></div>
-    <h3>Preview</h3>
-    <div id="preview" style="border:1px solid #eee; padding:12px; border-radius:6px; max-height:500px; overflow:auto;"></div>
-    <h3>Meta</h3>
-    <div id="meta"></div>
-  </div>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SSDP Release Notes</title>
 
-  <script>
-    async function runWorkflow(){
-      const btn = document.getElementById('runBtn');
-      const status = document.getElementById('status');
-      const link = document.getElementById('link');
-      const preview = document.getElementById('preview');
-      const meta = document.getElementById('meta');
-      const week = document.getElementById('weekInput').value;
-
-      btn.disabled = true;
-      status.innerText = "Running extract → summarize → publish...";
-      link.innerHTML = "";
-      preview.innerHTML = "";
-      meta.innerHTML = "";
-
-      let url = '/run';
-      if (week) url += '?week=' + encodeURIComponent(week);
-
-      try {
-        const resp = await fetch(url);
-        const data = await resp.json();
-        if (data.success) {
-          status.innerText = "Workflow Completed Successfully";
-          if (data.page_url) link.innerHTML = '<p>Page: <a href="'+data.page_url+'" target="_blank">'+data.page_url+'</a></p>';
-          else link.innerHTML = "<p>No page published (check logs)</p>";
-          if (data.summary_html) preview.innerHTML = data.summary_html;
-          if (data.meta) meta.innerHTML = '<pre>' + JSON.stringify(data.meta, null, 2) + '</pre>';
-        } else {
-          status.innerText = "Error: " + (data.error || "unknown");
-        }
-      } catch (err) {
-        status.innerText = "Error: " + err;
-      } finally {
-        btn.disabled = false;
-      }
+<style>
+    :root {
+        --bg: #f3f4f6;
+        --panel: #ffffff;
+        --primary: #2f5bea;
+        --text: #111827;
+        --muted: #6b7280;
+        --border: #e5e7eb;
     }
-  </script>
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Segoe UI", Inter, system-ui, sans-serif;
+        background: linear-gradient(180deg, #f6f7f9, #eef0f3);
+        color: var(--text);
+    }
+
+    .panel {
+        width: 440px;
+        background: var(--panel);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.08);
+        padding: 28px 32px 36px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 21px;
+        font-weight: 600;
+        margin: 0 0 6px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 24px;
+    }
+
+    label {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 6px;
+        color: var(--muted);
+        text-align: left;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 14px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        outline: none;
+        margin-bottom: 18px;
+    }
+
+    input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(47,91,234,0.12);
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        background: var(--primary);
+        color: #fff;
+        cursor: pointer;
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+
+    .spinner {
+        width: 26px;
+        height: 26px;
+        margin: 26px auto 10px;
+        border: 3px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        display: none;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .status {
+        font-size: 13px;
+        color: var(--muted);
+        display: none;
+        margin-top: 6px;
+    }
+
+    .footer {
+        margin-top: 28px;
+        font-size: 11px;
+        color: var(--muted);
+    }
+
+    .link {
+        margin-top: 14px;
+        font-size: 13px;
+    }
+
+    .link a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+</style>
+</head>
+
+<body>
+<div class="panel">
+
+    <h1>SSDP Release Notes</h1>
+    <div class="subtitle">
+        Generate weekly release documentation
+    </div>
+
+    <label for="week">Release Week (optional)</label>
+    <input id="week" placeholder="e.g. 45" />
+
+    <button id="start">Generate</button>
+
+    <div class="spinner" id="spinner"></div>
+    <div class="status" id="status">Running extract → summarize → publish…</div>
+    <div class="link" id="link"></div>
+
+    <div class="footer">
+        Internal Use Only · Stellantis SSDP
+    </div>
+</div>
+
+<script>
+    const start = document.getElementById("start");
+    const spinner = document.getElementById("spinner");
+    const status = document.getElementById("status");
+    const week = document.getElementById("week");
+    const link = document.getElementById("link");
+
+    start.onclick = async () => {
+        start.disabled = true;
+        spinner.style.display = "block";
+        status.style.display = "block";
+        link.innerHTML = "";
+
+        let url = "/run";
+        if (week.value.trim()) {
+            url += "?week=" + encodeURIComponent(week.value.trim());
+        }
+
+        try {
+            const resp = await fetch(url);
+            const data = await resp.json();
+
+            if (data.success && data.page_url) {
+                status.innerText = "Release notes generated";
+                link.innerHTML = '<a href="' + data.page_url + '" target="_blank">Open Release Notes</a>';
+            } else {
+                status.innerText = "Generation completed with no page published";
+            }
+        } catch (e) {
+            status.innerText = "Error while running workflow";
+        } finally {
+            spinner.style.display = "none";
+            start.disabled = false;
+        }
+    };
+</script>
 </body>
 </html>
 """
@@ -86,71 +208,48 @@ def index():
     return render_template_string(INDEX_HTML)
 
 def run_cmd(cmd):
-    """Run a command and return (returncode, stdout, stderr)."""
     proc = subprocess.run(cmd, capture_output=True, text=True)
     return proc.returncode, proc.stdout, proc.stderr
 
 @app.route('/run')
 def run_workflow():
     week = request.args.get('week')
-
-    # Normalize week: treat empty string, whitespace, or None as "no week provided"
     if week is None or str(week).strip() == "":
         week = None
 
     try:
-        # 1) extract
         extract_cmd = ["python3", "extract.py"]
-        if week is not None:
+        if week:
             extract_cmd += ["--week", week]
 
         code, out, err = run_cmd(extract_cmd)
         if code != 0:
-            return jsonify({"success": False, "error": f"extract.py failed: {err or out}"}), 200
+            return jsonify({"success": False, "error": err or out})
 
-        # 2) summarize
         summarize_cmd = ["python3", "summarize.py"]
-        if week is not None:
+        if week:
             summarize_cmd += ["--week", week]
 
         code, out, err = run_cmd(summarize_cmd)
         if code != 0:
-            return jsonify({"success": False, "error": f"summarize.py failed: {err or out}"}), 200
+            return jsonify({"success": False, "error": err or out})
 
-        # 3) publish
         code, out, err = run_cmd(["python3", "publish.py"])
         if code != 0:
-            return jsonify({"success": False, "error": f"publish.py failed: {err or out}"}), 200
+            return jsonify({"success": False, "error": err or out})
 
-        # parse out page url from publish output
         page_url = None
-        m = re.search(r"https?://[^\s'\"<>]+", out or "")
+        m = re.search(r"https?://[^\\s'\"<>]+", out or "")
         if m:
             page_url = m.group(0)
 
-        # load summary & meta for preview
-        summary_html = ""
-        meta = {}
-        if os.path.exists("summary_output.html"):
-            with open("summary_output.html", "r", encoding="utf-8") as f:
-                summary_html = f.read()
-        if os.path.exists("summary_meta.json"):
-            with open("summary_meta.json", "r", encoding="utf-8") as f:
-                try:
-                    meta = json.load(f)
-                except:
-                    meta = {"error": "invalid JSON in summary_meta.json"}
-
         return jsonify({
             "success": True,
-            "page_url": page_url,
-            "summary_html": summary_html,
-            "meta": meta
-        }), 200
+            "page_url": page_url
+        })
 
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 200
-
+        return jsonify({"success": False, "error": str(e)})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
