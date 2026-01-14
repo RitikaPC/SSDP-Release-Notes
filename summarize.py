@@ -430,8 +430,9 @@ def generate_component_toc():
     # Check each component for releases and add to TOC if it has releases
     for component in ["APIM", "EAH", "DOCG", "VDR", "PATRIC-SSDP", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING"]:
         if component in pv and pv[component]:
-            # No links - Confluence will auto-generate anchors for headings, but we can't predict the exact format
-            component_links.append(f'<li style="color:#333;">{component}</li>')
+            # Use component name as anchor - Confluence will auto-generate for native headings
+            anchor_id = component_anchors[component]
+            component_links.append(f'<li><a href="#{anchor_id}" style="color:#0066CC;text-decoration:none;">{component}</a></li>')
     
     return '\n'.join(component_links)
 
@@ -530,7 +531,7 @@ for ver in sorted(pv["APIM"].keys(), key=vtuple):
         extra="<a href='https://pages.github.psa-cloud.com/mph00/cloud-api-capabilities/#/changelog' target='_blank'>Swagger Changelog</a>"
     )
 if apim_html.strip():
-    section_html += "<h3>APIM</h3>\n" + apim_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>APIM</strong></p></ac:rich-text-body></ac:structured-macro>\n" + apim_html
 
 # EAH
 eah_html = ""
@@ -545,7 +546,7 @@ for ver in sorted(pv["EAH"].keys(), key=vtuple):
         extra="<a href='https://pages.github.psa-cloud.com/mph00/cloud-api-capabilities/#/changelog' target='_blank'>Swagger Changelog</a>"
     )
 if eah_html.strip():
-    section_html += "<h3>EAH</h3>\n" + eah_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>EAH</strong></p></ac:rich-text-body></ac:structured-macro>\n" + eah_html
 
 # DOCG
 docg_html = ""
@@ -561,7 +562,7 @@ for ver in sorted(pv["DOCG"].keys(), key=vtuple):
         extra=extra
     )
 if docg_html.strip():
-    section_html += "<h3>DOCG</h3>\n" + docg_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>DOCG</strong></p></ac:rich-text-body></ac:structured-macro>\n" + docg_html
 
 # VDR
 vdr_html = ""
@@ -577,7 +578,7 @@ for ver in sorted(pv.get("VDR", {}).keys(), key=vtuple):
         extra=extra
     )
 if vdr_html.strip():
-    section_html += "<h3>VDR</h3>\n" + vdr_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>VDR</strong></p></ac:rich-text-body></ac:structured-macro>\n" + vdr_html
 
 # PATRIC-SSDP
 patric_html = ""
@@ -593,7 +594,7 @@ for ver in sorted(pv.get("PATRIC-SSDP", {}).keys(), key=vtuple):
         extra=extra
     )
 if patric_html.strip():
-    section_html += "<h3>PATRIC-SSDP</h3>\n" + patric_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>PATRIC-SSDP</strong></p></ac:rich-text-body></ac:structured-macro>\n" + patric_html
 
 # RCZ
 rcz_html = ""
@@ -610,7 +611,7 @@ for ver in sorted(pv.get("RCZ", {}).keys(), key=vtuple):
     )
 
 if rcz_html.strip():
-    section_html += "<h3>RCZ</h3>\n" + rcz_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>RCZ</strong></p></ac:rich-text-body></ac:structured-macro>\n" + rcz_html
 
 # SYNAPSE
 synapse_html = ""
@@ -627,7 +628,7 @@ for ver in sorted(pv.get("SYNAPSE", {}).keys(), key=vtuple):
     )
 
 if synapse_html.strip():
-    section_html += "<h3>SYNAPSE</h3>\n" + synapse_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>SYNAPSE</strong></p></ac:rich-text-body></ac:structured-macro>\n" + synapse_html
 
 # REFTEL
 reftel_html = ""
@@ -644,7 +645,7 @@ for ver in sorted(pv.get("REFTEL", {}).keys(), key=vtuple):
     )
 
 if reftel_html.strip():
-    section_html += "<h3>REFTEL</h3>\n" + reftel_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>REFTEL</strong></p></ac:rich-text-body></ac:structured-macro>\n" + reftel_html
 
 # CALVA
 calva_html = ""
@@ -661,7 +662,7 @@ for ver in sorted(pv.get("CALVA", {}).keys(), key=vtuple):
     )
 
 if calva_html.strip():
-    section_html += "<h3>CALVA</h3>\n" + calva_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>CALVA</strong></p></ac:rich-text-body></ac:structured-macro>\n" + calva_html
 
 # REFSER2
 refser2_html = ""
@@ -678,7 +679,7 @@ for ver in sorted(pv.get("REFSER2", {}).keys(), key=vtuple):
     )
 
 if refser2_html.strip():
-    section_html += "<h3>REFSER2</h3>\n" + refser2_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>REFSER2</strong></p></ac:rich-text-body></ac:structured-macro>\n" + refser2_html
 
 # SERING
 sering_html = ""
@@ -695,7 +696,7 @@ for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple):
     )
 
 if sering_html.strip():
-    section_html += "<h3>SERING</h3>\n" + sering_html
+    section_html += "<ac:structured-macro ac:name=\"heading\" ac:schema-version=\"1\"><ac:parameter ac:name=\"level\">3</ac:parameter><ac:rich-text-body><p><strong>SERING</strong></p></ac:rich-text-body></ac:structured-macro>\n" + sering_html
 
 
 linked_html = build_linked_table(blocks)
