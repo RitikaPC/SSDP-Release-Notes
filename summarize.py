@@ -406,87 +406,6 @@ release_summary_html = f"""
 """
 
 # -------------------------------------------------------
-# DECISION VOTE TABLE
-# -------------------------------------------------------
-decision_vote_html = """
-<h2>Decision Vote</h2>
-<table style="width:100%;border-collapse:collapse;border:1px solid #ccc;">
-<tr>
-    <td style="background:#F4F5F7;padding:8px;width:200px;border:1px solid #ccc;"><strong>Change Management</strong></td>
-    <td style="padding:8px;border:1px solid #ccc;">
-        <strong>Change duration</strong> : 1h<br>
-        <strong>Traffic Interruption: NO</strong>
-    </td>
-</tr>
-<tr>
-    <td style="background:#F4F5F7;padding:8px;border:1px solid #ccc;"><strong>Risk Identified</strong></td>
-    <td style="padding:8px;border:1px solid #ccc;">.......</td>
-</tr>
-<tr>
-    <td style="background:#F4F5F7;padding:8px;border:1px solid #ccc;vertical-align:top;"><strong>Approval Status</strong></td>
-    <td style="padding:8px;border:1px solid #ccc;">
-        <table style="width:100%;border-collapse:collapse;">
-        <tr style="background:#E3F2FD;">
-            <th style="padding:4px;text-align:left;border:1px solid #ccc;width:40%;">Reviewers</th>
-            <th style="padding:4px;text-align:left;border:1px solid #ccc;width:40%;">Key Information / notes</th>
-            <th style="padding:4px;text-align:center;border:1px solid #ccc;width:20%;">Status</th>
-        </tr>
-        <tr>
-            <td style="padding:4px;border:1px solid #ccc;">ICON team</td>
-            <td style="padding:4px;border:1px solid #ccc;"></td>
-            <td style="padding:4px;border:1px solid #ccc;text-align:center;"><span style="background:#4CAF50;color:white;padding:2px 6px;border-radius:3px;">GO</span></td>
-        </tr>
-        <tr>
-            <td style="padding:4px;border:1px solid #ccc;">INDUS Team</td>
-            <td style="padding:4px;border:1px solid #ccc;"></td>
-            <td style="padding:4px;border:1px solid #ccc;text-align:center;"><span style="background:#4CAF50;color:white;padding:2px 6px;border-radius:3px;">GO</span></td>
-        </tr>
-        <tr>
-            <td style="padding:4px;border:1px solid #ccc;">AEAM DEV Team</td>
-            <td style="padding:4px;border:1px solid #ccc;"></td>
-            <td style="padding:4px;border:1px solid #ccc;text-align:center;"><span style="background:#4CAF50;color:white;padding:2px 6px;border-radius:3px;">GO</span></td>
-        </tr>
-        <tr>
-            <td style="padding:4px;border:1px solid #ccc;">OP4C Team</td>
-            <td style="padding:4px;border:1px solid #ccc;"></td>
-            <td style="padding:4px;border:1px solid #ccc;text-align:center;"></td>
-        </tr>
-        <tr>
-            <td style="padding:4px;border:1px solid #ccc;">RCZ Dev Team</td>
-            <td style="padding:4px;border:1px solid #ccc;"></td>
-            <td style="padding:4px;border:1px solid #ccc;text-align:center;"></td>
-        </tr>
-        <tr>
-            <td style="padding:4px;border:1px solid #ccc;">VDP/Patric Dev Team</td>
-            <td style="padding:4px;border:1px solid #ccc;"></td>
-            <td style="padding:4px;border:1px solid #ccc;text-align:center;"></td>
-        </tr>
-        <tr>
-            <td style="padding:4px;border:1px solid #ccc;">...</td>
-            <td style="padding:4px;border:1px solid #ccc;"></td>
-            <td style="padding:4px;border:1px solid #ccc;text-align:center;"></td>
-        </tr>
-        </table>
-    </td>
-</tr>
-<tr>
-    <td style="background:#F4F5F7;padding:8px;border:1px solid #ccc;vertical-align:top;"><strong>Final Decision plus comments</strong></td>
-    <td style="padding:8px;border:1px solid #ccc;">
-        <div style="margin-bottom:10px;">
-            <label><input type="checkbox" style="margin-right:5px;"> GO</label><br>
-            <label><input type="checkbox" style="margin-right:5px;"> NO-GO</label><br>
-            <label><input type="checkbox" style="margin-right:5px;"> Conditional GO</label>
-        </div>
-        <div style="background:#E8F5E8;padding:8px;border-left:4px solid #4CAF50;">
-            <strong>📝 Notes:</strong> APIM and EAH not yet in use by real customer
-        </div>
-    </td>
-</tr>
-</table>
-<br><br>
-"""
-
-# -------------------------------------------------------
 # SECTIONS: unchanged from your script
 # -------------------------------------------------------
 section_html = ""
@@ -678,8 +597,6 @@ html = f"""
 <h1 style="color:#0747A6;">SSDP Release Notes Week {week_display}</h1>
 
 {release_summary_html}
-
-{decision_vote_html}
 
 {section_html}
 
