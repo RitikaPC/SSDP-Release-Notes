@@ -437,18 +437,18 @@ def generate_component_toc():
     return '\n'.join(component_links)
 
 release_note_summary_html = f"""
-<div style="display:flex;gap:30px;margin-bottom:30px;">
-    <div style="flex:2;">
-        <h2>Release Note Summary</h2>
-        <p style="color:#666;margin-bottom:20px;">High-level description of the primary changes from a business perspective, updated by the Product Team.</p>
+<div style="display:flex;gap:30px;margin-bottom:30px;align-items:flex-start;flex-wrap:nowrap;width:100%;">
+    <div style="flex:2;min-width:400px;max-width:65%;">
+        <h2 style="margin-top:0;">Release Note Summary</h2>
+        <p style="color:#666;margin-bottom:20px;"><em>High-level description of the primary changes from a business perspective, updated by the Product Team.</em></p>
         
         <div style="background:#E8F5E8;border:1px solid #4CAF50;border-radius:4px;padding:15px;margin-bottom:15px;">
             <div style="display:flex;align-items:center;margin-bottom:10px;">
                 <span style="background:#4CAF50;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:12px;">✓</span>
                 <strong>What we added:</strong>
             </div>
-            <div style="margin-left:30px;">
-                <!-- Content to be filled manually -->
+            <div style="margin-left:30px;min-height:40px;padding:10px;background:#f9f9f9;border-radius:3px;border:1px dashed #ccc;">
+                <em style="color:#999;">Content to be filled manually by Product Team</em>
             </div>
         </div>
         
@@ -457,8 +457,8 @@ release_note_summary_html = f"""
                 <span style="background:#4CAF50;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:12px;">✓</span>
                 <strong>What we changed:</strong>
             </div>
-            <div style="margin-left:30px;">
-                <!-- Content to be filled manually -->
+            <div style="margin-left:30px;min-height:40px;padding:10px;background:#f9f9f9;border-radius:3px;border:1px dashed #ccc;">
+                <em style="color:#999;">Content to be filled manually by Product Team</em>
             </div>
         </div>
         
@@ -477,15 +477,15 @@ release_note_summary_html = f"""
                 <span style="background:#4CAF50;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:12px;">✓</span>
                 <strong>What we fixed:</strong>
             </div>
-            <div style="margin-left:30px;">
-                <!-- Content to be filled manually -->
+            <div style="margin-left:30px;min-height:40px;padding:10px;background:#f9f9f9;border-radius:3px;border:1px dashed #ccc;">
+                <em style="color:#999;">Content to be filled manually by Product Team</em>
             </div>
         </div>
     </div>
     
-    <div style="flex:1;background:#F8F9FA;padding:20px;border-radius:4px;height:fit-content;">
-        <h3 style="margin-top:0;">TABLE of Contents</h3>
-        <ol style="line-height:1.8;">
+    <div style="flex:1;min-width:300px;max-width:35%;background:#F8F9FA;padding:20px;border-radius:4px;height:fit-content;border:1px solid #e0e0e0;">
+        <h3 style="margin-top:0;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:5px;">TABLE of Contents</h3>
+        <ol style="line-height:1.8;margin-left:0;padding-left:20px;">
             <li><a href="#release-summary" style="color:#0066CC;text-decoration:none;">Release Summary</a></li>
             <li><a href="#release-note-summary" style="color:#0066CC;text-decoration:none;">Release Note Summary</a></li>
             <li><a href="#release-notes" style="color:#0066CC;text-decoration:none;">RELEASE NOTES</a>
