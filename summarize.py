@@ -406,6 +406,95 @@ release_summary_html = f"""
 """
 
 # -------------------------------------------------------
+# RELEASE NOTE SUMMARY SECTION
+# -------------------------------------------------------
+release_note_summary_html = """
+<div style="display:flex;gap:30px;margin-bottom:30px;">
+    <div style="flex:2;">
+        <h2>Release Note Summary</h2>
+        <p style="color:#666;margin-bottom:20px;">High-level description of the primary changes from a business perspective, updated by the Product Team.</p>
+        
+        <div style="background:#E8F5E8;border:1px solid #4CAF50;border-radius:4px;padding:15px;margin-bottom:15px;">
+            <div style="display:flex;align-items:center;margin-bottom:10px;">
+                <span style="background:#4CAF50;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:12px;">✓</span>
+                <strong>What we added:</strong>
+            </div>
+            <div style="margin-left:30px;">
+                <!-- Content to be filled manually -->
+            </div>
+        </div>
+        
+        <div style="background:#E8F5E8;border:1px solid #4CAF50;border-radius:4px;padding:15px;margin-bottom:15px;">
+            <div style="display:flex;align-items:center;margin-bottom:10px;">
+                <span style="background:#4CAF50;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:12px;">✓</span>
+                <strong>What we changed:</strong>
+            </div>
+            <div style="margin-left:30px;">
+                <!-- Content to be filled manually -->
+            </div>
+        </div>
+        
+        <div style="background:#F3E5F5;border:1px solid #9C27B0;border-radius:4px;padding:15px;margin-bottom:15px;">
+            <div style="display:flex;align-items:center;margin-bottom:10px;">
+                <span style="background:#9C27B0;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:12px;">🗑</span>
+                <strong>What we Deprecated/ Removed:</strong>
+            </div>
+            <div style="margin-left:30px;">
+                <p style="margin:0;color:#666;">No explicit deprecations or removals were executed in this release.</p>
+            </div>
+        </div>
+        
+        <div style="background:#E8F5E8;border:1px solid #4CAF50;border-radius:4px;padding:15px;margin-bottom:15px;">
+            <div style="display:flex;align-items:center;margin-bottom:10px;">
+                <span style="background:#4CAF50;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:12px;">✓</span>
+                <strong>What we fixed:</strong>
+            </div>
+            <div style="margin-left:30px;">
+                <!-- Content to be filled manually -->
+            </div>
+        </div>
+    </div>
+    
+    <div style="flex:1;background:#F8F9FA;padding:20px;border-radius:4px;height:fit-content;">
+        <h3 style="margin-top:0;">TABLE of Contents</h3>
+        <ol style="line-height:1.8;">
+            <li><a href="#release-summary" style="color:#0066CC;text-decoration:none;">Release Summary</a></li>
+            <li><a href="#release-note-summary" style="color:#0066CC;text-decoration:none;">Release Note Summary</a></li>
+            <li><a href="#decision-vote" style="color:#0066CC;text-decoration:none;">Decision Vote</a>
+                <ol style="margin-left:10px;">
+                    <li><a href="#actor-involved" style="color:#0066CC;text-decoration:none;">Actor involved</a></li>
+                </ol>
+            </li>
+            <li><a href="#release-notes" style="color:#0066CC;text-decoration:none;">RELEASE NOTES</a>
+                <ol style="margin-left:10px;">
+                    <li><a href="#high-level-summary" style="color:#0066CC;text-decoration:none;">High level summary by application</a>
+                        <ol style="margin-left:10px;">
+                            <li><a href="#apim" style="color:#0066CC;text-decoration:none;">APIM</a></li>
+                            <li><a href="#eah" style="color:#0066CC;text-decoration:none;">EAH</a></li>
+                            <li><a href="#vdr" style="color:#0066CC;text-decoration:none;">VDR</a></li>
+                            <li><a href="#vdp-proc" style="color:#0066CC;text-decoration:none;">VDP_PROC</a></li>
+                            <li><a href="#vdp-store" style="color:#0066CC;text-decoration:none;">VDP_STORE</a></li>
+                            <li><a href="#vdp-ds-ssdp" style="color:#0066CC;text-decoration:none;">VDP_DS_SSDP</a></li>
+                            <li><a href="#patric-ssdp" style="color:#0066CC;text-decoration:none;">PATRIC_SSDP</a></li>
+                            <li><a href="#rcz" style="color:#0066CC;text-decoration:none;">RCZ</a></li>
+                        </ol>
+                    </li>
+                    <li><a href="#detailed-list" style="color:#0066CC;text-decoration:none;">Detailed List</a></li>
+                </ol>
+            </li>
+            <li><a href="#validation-results" style="color:#0066CC;text-decoration:none;">VALIDATION RESULTS</a>
+                <ol style="margin-left:10px;">
+                    <li><a href="#executed-tests" style="color:#0066CC;text-decoration:none;">Executed Tests</a></li>
+                    <li><a href="#regressions" style="color:#0066CC;text-decoration:none;">Regressions</a></li>
+                    <li><a href="#known-issues" style="color:#0066CC;text-decoration:none;">Known Issues</a></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+</div>
+"""
+
+# -------------------------------------------------------
 # SECTIONS: unchanged from your script
 # -------------------------------------------------------
 section_html = ""
@@ -595,6 +684,8 @@ linked_html = build_linked_table(blocks)
 
 html = f"""
 <h1 style="color:#0747A6;">SSDP Release Notes Week {week_display}</h1>
+
+{release_note_summary_html}
 
 {release_summary_html}
 
