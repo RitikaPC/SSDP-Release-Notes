@@ -408,7 +408,20 @@ release_summary_html = f"""
 # -------------------------------------------------------
 # RELEASE NOTE SUMMARY SECTION
 # -------------------------------------------------------
-release_note_summary_html = """
+def generate_component_toc():
+    """Generate table of contents for components that have releases"""
+    component_links = []
+    component_counter = 1
+    
+    # Check each component for releases and add to TOC if it has releases
+    for component in ["APIM", "EAH", "DOCG", "VDR", "PATRIC-SSDP", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING"]:
+        if component in pv and pv[component]:
+            component_links.append(f'<li><a href="#{component.lower()}" style="color:#0066CC;text-decoration:none;">{component}</a></li>')
+            component_counter += 1
+    
+    return '\n'.join(component_links)
+
+release_note_summary_html = f"""
 <div style="display:flex;gap:30px;margin-bottom:30px;">
     <div style="flex:2;">
         <h2>Release Note Summary</h2>
@@ -460,33 +473,14 @@ release_note_summary_html = """
         <ol style="line-height:1.8;">
             <li><a href="#release-summary" style="color:#0066CC;text-decoration:none;">Release Summary</a></li>
             <li><a href="#release-note-summary" style="color:#0066CC;text-decoration:none;">Release Note Summary</a></li>
-            <li><a href="#decision-vote" style="color:#0066CC;text-decoration:none;">Decision Vote</a>
-                <ol style="margin-left:10px;">
-                    <li><a href="#actor-involved" style="color:#0066CC;text-decoration:none;">Actor involved</a></li>
-                </ol>
-            </li>
             <li><a href="#release-notes" style="color:#0066CC;text-decoration:none;">RELEASE NOTES</a>
                 <ol style="margin-left:10px;">
                     <li><a href="#high-level-summary" style="color:#0066CC;text-decoration:none;">High level summary by application</a>
                         <ol style="margin-left:10px;">
-                            <li><a href="#apim" style="color:#0066CC;text-decoration:none;">APIM</a></li>
-                            <li><a href="#eah" style="color:#0066CC;text-decoration:none;">EAH</a></li>
-                            <li><a href="#vdr" style="color:#0066CC;text-decoration:none;">VDR</a></li>
-                            <li><a href="#vdp-proc" style="color:#0066CC;text-decoration:none;">VDP_PROC</a></li>
-                            <li><a href="#vdp-store" style="color:#0066CC;text-decoration:none;">VDP_STORE</a></li>
-                            <li><a href="#vdp-ds-ssdp" style="color:#0066CC;text-decoration:none;">VDP_DS_SSDP</a></li>
-                            <li><a href="#patric-ssdp" style="color:#0066CC;text-decoration:none;">PATRIC_SSDP</a></li>
-                            <li><a href="#rcz" style="color:#0066CC;text-decoration:none;">RCZ</a></li>
+                            {generate_component_toc()}
                         </ol>
                     </li>
                     <li><a href="#detailed-list" style="color:#0066CC;text-decoration:none;">Detailed List</a></li>
-                </ol>
-            </li>
-            <li><a href="#validation-results" style="color:#0066CC;text-decoration:none;">VALIDATION RESULTS</a>
-                <ol style="margin-left:10px;">
-                    <li><a href="#executed-tests" style="color:#0066CC;text-decoration:none;">Executed Tests</a></li>
-                    <li><a href="#regressions" style="color:#0066CC;text-decoration:none;">Regressions</a></li>
-                    <li><a href="#known-issues" style="color:#0066CC;text-decoration:none;">Known Issues</a></li>
                 </ol>
             </li>
         </ol>
@@ -512,7 +506,7 @@ for ver in sorted(pv["APIM"].keys(), key=vtuple):
         extra="<a href='https://pages.github.psa-cloud.com/mph00/cloud-api-capabilities/#/changelog' target='_blank'>Swagger Changelog</a>"
     )
 if apim_html.strip():
-    section_html += "<h2>APIM</h2>\n" + apim_html
+    section_html += "<h2 id='apim'>APIM</h2>\n" + apim_html
 
 # EAH
 eah_html = ""
@@ -527,7 +521,7 @@ for ver in sorted(pv["EAH"].keys(), key=vtuple):
         extra="<a href='https://pages.github.psa-cloud.com/mph00/cloud-api-capabilities/#/changelog' target='_blank'>Swagger Changelog</a>"
     )
 if eah_html.strip():
-    section_html += "<h2>EAH</h2>\n" + eah_html
+    section_html += "<h2 id='eah'>EAH</h2>\n" + eah_html
 
 # DOCG
 docg_html = ""
@@ -543,7 +537,7 @@ for ver in sorted(pv["DOCG"].keys(), key=vtuple):
         extra=extra
     )
 if docg_html.strip():
-    section_html += "<h2>DOCG</h2>\n" + docg_html
+    section_html += "<h2 id='docg'>DOCG</h2>\n" + docg_html
 
 # VDR
 vdr_html = ""
@@ -559,7 +553,7 @@ for ver in sorted(pv.get("VDR", {}).keys(), key=vtuple):
         extra=extra
     )
 if vdr_html.strip():
-    section_html += "<h2>VDR</h2>\n" + vdr_html
+    section_html += "<h2 id='vdr'>VDR</h2>\n" + vdr_html
 
 # PATRIC-SSDP
 patric_html = ""
@@ -575,7 +569,7 @@ for ver in sorted(pv.get("PATRIC-SSDP", {}).keys(), key=vtuple):
         extra=extra
     )
 if patric_html.strip():
-    section_html += "<h2>PATRIC-SSDP</h2>\n" + patric_html
+    section_html += "<h2 id='patric-ssdp'>PATRIC-SSDP</h2>\n" + patric_html
 
 # RCZ
 rcz_html = ""
@@ -592,7 +586,7 @@ for ver in sorted(pv.get("RCZ", {}).keys(), key=vtuple):
     )
 
 if rcz_html.strip():
-    section_html += "<h2>RCZ</h2>\n" + rcz_html
+    section_html += "<h2 id='rcz'>RCZ</h2>\n" + rcz_html
 
 # SYNAPSE
 synapse_html = ""
@@ -609,7 +603,7 @@ for ver in sorted(pv.get("SYNAPSE", {}).keys(), key=vtuple):
     )
 
 if synapse_html.strip():
-    section_html += "<h2>SYNAPSE</h2>\n" + synapse_html
+    section_html += "<h2 id='synapse'>SYNAPSE</h2>\n" + synapse_html
 
 # REFTEL
 reftel_html = ""
@@ -626,7 +620,7 @@ for ver in sorted(pv.get("REFTEL", {}).keys(), key=vtuple):
     )
 
 if reftel_html.strip():
-    section_html += "<h2>REFTEL</h2>\n" + reftel_html
+    section_html += "<h2 id='reftel'>REFTEL</h2>\n" + reftel_html
 
 # CALVA
 calva_html = ""
@@ -643,7 +637,7 @@ for ver in sorted(pv.get("CALVA", {}).keys(), key=vtuple):
     )
 
 if calva_html.strip():
-    section_html += "<h2>CALVA</h2>\n" + calva_html
+    section_html += "<h2 id='calva'>CALVA</h2>\n" + calva_html
 
 # REFSER2
 refser2_html = ""
@@ -660,7 +654,7 @@ for ver in sorted(pv.get("REFSER2", {}).keys(), key=vtuple):
     )
 
 if refser2_html.strip():
-    section_html += "<h2>REFSER2</h2>\n" + refser2_html
+    section_html += "<h2 id='refser2'>REFSER2</h2>\n" + refser2_html
 
 # SERING
 sering_html = ""
@@ -677,7 +671,7 @@ for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple):
     )
 
 if sering_html.strip():
-    section_html += "<h2>SERING</h2>\n" + sering_html
+    section_html += "<h2 id='sering'>SERING</h2>\n" + sering_html
 
 
 linked_html = build_linked_table(blocks)
@@ -685,9 +679,9 @@ linked_html = build_linked_table(blocks)
 html = f"""
 <h1 style="color:#0747A6;">SSDP Release Notes Week {week_display}</h1>
 
-{release_note_summary_html}
-
 {release_summary_html}
+
+{release_note_summary_html}
 
 {section_html}
 
