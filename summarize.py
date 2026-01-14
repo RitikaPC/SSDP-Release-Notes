@@ -504,6 +504,16 @@ release_note_summary_html = f"""
 """
 
 # -------------------------------------------------------
+# RELEASE NOTES INTRODUCTION SECTION
+# -------------------------------------------------------
+release_notes_intro_html = """
+<h2>RELEASE NOTES</h2>
+<p>To clarify the releases across the various enablers and components, we have divided the release notes into a high-level summary and a detailed list of user stories extracted from Jira.</p>
+
+<h3>High level summary by application</h3>
+"""
+
+# -------------------------------------------------------
 # SECTIONS: unchanged from your script
 # -------------------------------------------------------
 section_html = ""
@@ -708,6 +718,8 @@ function scrollToComponent(componentId) {{
 {release_summary_html}
 
 {release_note_summary_html}
+
+{release_notes_intro_html}
 
 {section_html}
 
