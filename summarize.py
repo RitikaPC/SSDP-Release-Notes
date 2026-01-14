@@ -370,6 +370,17 @@ curr_patric = safe(stopper_data.get(week_str, {}).get("PATRIC-SSDP"))
 # -------------------------------------------------------
 # EXPANDED RELEASE SUMMARY FOR ALL COMPONENTS
 # -------------------------------------------------------
+
+# Determine which components have releases this week
+def get_highlight_style(component):
+    """Returns highlight style if component has releases, otherwise normal style"""
+    if component in pv and pv[component]:
+        # Component has releases - highlight with green background
+        return 'style="background-color:#E3FCEF;font-weight:bold;"'
+    else:
+        # No releases - normal style
+        return ''
+
 release_summary_html = f"""
 <h2>Release Summary</h2>
 <table style="width:100%;border-collapse:collapse;">
@@ -379,17 +390,17 @@ release_summary_html = f"""
     <th>New Version</th>
 </tr>
 
-<tr><td>APIM</td><td>{prev_apim}</td><td>{curr_apim}</td></tr>
-<tr><td>EAH</td><td>{prev_eah}</td><td>{curr_eah}</td></tr>
-<tr><td>DOCG</td><td>{prev_docg}</td><td>{curr_docg}</td></tr>
-<tr><td>VDR</td><td>{prev_vdr}</td><td>{curr_vdr}</td></tr>
-<tr><td>PATRIC-SSDP</td><td>{prev_patric}</td><td>{curr_patric}</td></tr>
-<tr><td>RCZ</td><td>{prev_rcz}</td><td>{curr_rcz}</td></tr>
-<tr><td>SYNAPSE</td><td>{prev_synapse}</td><td>{curr_synapse}</td></tr>
-<tr><td>REFTEL</td><td>{prev_reftel}</td><td>{curr_reftel}</td></tr>
-<tr><td>CALVA</td><td>{prev_calva}</td><td>{curr_calva}</td></tr>
-<tr><td>REFSER2</td><td>{prev_refser2}</td><td>{curr_refser2}</td></tr>
-<tr><td>SERING</td><td>{prev_sering}</td><td>{curr_sering}</td></tr>
+<tr {get_highlight_style("APIM")}><td>APIM</td><td>{prev_apim}</td><td>{curr_apim}</td></tr>
+<tr {get_highlight_style("EAH")}><td>EAH</td><td>{prev_eah}</td><td>{curr_eah}</td></tr>
+<tr {get_highlight_style("DOCG")}><td>DOCG</td><td>{prev_docg}</td><td>{curr_docg}</td></tr>
+<tr {get_highlight_style("VDR")}><td>VDR</td><td>{prev_vdr}</td><td>{curr_vdr}</td></tr>
+<tr {get_highlight_style("PATRIC-SSDP")}><td>PATRIC-SSDP</td><td>{prev_patric}</td><td>{curr_patric}</td></tr>
+<tr {get_highlight_style("RCZ")}><td>RCZ</td><td>{prev_rcz}</td><td>{curr_rcz}</td></tr>
+<tr {get_highlight_style("SYNAPSE")}><td>SYNAPSE</td><td>{prev_synapse}</td><td>{curr_synapse}</td></tr>
+<tr {get_highlight_style("REFTEL")}><td>REFTEL</td><td>{prev_reftel}</td><td>{curr_reftel}</td></tr>
+<tr {get_highlight_style("CALVA")}><td>CALVA</td><td>{prev_calva}</td><td>{curr_calva}</td></tr>
+<tr {get_highlight_style("REFSER2")}><td>REFSER2</td><td>{prev_refser2}</td><td>{curr_refser2}</td></tr>
+<tr {get_highlight_style("SERING")}><td>SERING</td><td>{prev_sering}</td><td>{curr_sering}</td></tr>
 
 </table>
 """
