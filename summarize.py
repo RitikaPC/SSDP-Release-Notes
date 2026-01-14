@@ -430,9 +430,8 @@ def generate_component_toc():
     # Check each component for releases and add to TOC if it has releases
     for component in ["APIM", "EAH", "DOCG", "VDR", "PATRIC-SSDP", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING"]:
         if component in pv and pv[component]:
-            # Use dedicated section anchors for reliable navigation
-            anchor_id = component_anchors[component] + "-section"
-            component_links.append(f'<li><a href="#{anchor_id}" style="color:#0066CC;text-decoration:none;">{component}</a></li>')
+            # No links - Confluence will auto-generate anchors for headings, but we can't predict the exact format
+            component_links.append(f'<li style="color:#333;">{component}</li>')
     
     return '\n'.join(component_links)
 
@@ -531,7 +530,7 @@ for ver in sorted(pv["APIM"].keys(), key=vtuple):
         extra="<a href='https://pages.github.psa-cloud.com/mph00/cloud-api-capabilities/#/changelog' target='_blank'>Swagger Changelog</a>"
     )
 if apim_html.strip():
-    section_html += '<div><a id="apim-section" name="apim-section"></a></div><h3>APIM</h3>\n' + apim_html
+    section_html += "<h3>APIM</h3>\n" + apim_html
 
 # EAH
 eah_html = ""
@@ -546,7 +545,7 @@ for ver in sorted(pv["EAH"].keys(), key=vtuple):
         extra="<a href='https://pages.github.psa-cloud.com/mph00/cloud-api-capabilities/#/changelog' target='_blank'>Swagger Changelog</a>"
     )
 if eah_html.strip():
-    section_html += '<div><a id="eah-section" name="eah-section"></a></div><h3>EAH</h3>\n' + eah_html
+    section_html += "<h3>EAH</h3>\n" + eah_html
 
 # DOCG
 docg_html = ""
@@ -562,7 +561,7 @@ for ver in sorted(pv["DOCG"].keys(), key=vtuple):
         extra=extra
     )
 if docg_html.strip():
-    section_html += '<div><a id="docg-section" name="docg-section"></a></div><h3>DOCG</h3>\n' + docg_html
+    section_html += "<h3>DOCG</h3>\n" + docg_html
 
 # VDR
 vdr_html = ""
@@ -578,7 +577,7 @@ for ver in sorted(pv.get("VDR", {}).keys(), key=vtuple):
         extra=extra
     )
 if vdr_html.strip():
-    section_html += '<div><a id="vdr-section" name="vdr-section"></a></div><h3>VDR</h3>\n' + vdr_html
+    section_html += "<h3>VDR</h3>\n" + vdr_html
 
 # PATRIC-SSDP
 patric_html = ""
@@ -594,7 +593,7 @@ for ver in sorted(pv.get("PATRIC-SSDP", {}).keys(), key=vtuple):
         extra=extra
     )
 if patric_html.strip():
-    section_html += '<div><a id="patric-ssdp-section" name="patric-ssdp-section"></a></div><h3>PATRIC-SSDP</h3>\n' + patric_html
+    section_html += "<h3>PATRIC-SSDP</h3>\n" + patric_html
 
 # RCZ
 rcz_html = ""
@@ -611,7 +610,7 @@ for ver in sorted(pv.get("RCZ", {}).keys(), key=vtuple):
     )
 
 if rcz_html.strip():
-    section_html += '<div><a id="rcz-section" name="rcz-section"></a></div><h3>RCZ</h3>\n' + rcz_html
+    section_html += "<h3>RCZ</h3>\n" + rcz_html
 
 # SYNAPSE
 synapse_html = ""
@@ -628,7 +627,7 @@ for ver in sorted(pv.get("SYNAPSE", {}).keys(), key=vtuple):
     )
 
 if synapse_html.strip():
-    section_html += '<div><a id="synapse-section" name="synapse-section"></a></div><h3>SYNAPSE</h3>\n' + synapse_html
+    section_html += "<h3>SYNAPSE</h3>\n" + synapse_html
 
 # REFTEL
 reftel_html = ""
@@ -645,7 +644,7 @@ for ver in sorted(pv.get("REFTEL", {}).keys(), key=vtuple):
     )
 
 if reftel_html.strip():
-    section_html += '<div><a id="reftel-section" name="reftel-section"></a></div><h3>REFTEL</h3>\n' + reftel_html
+    section_html += "<h3>REFTEL</h3>\n" + reftel_html
 
 # CALVA
 calva_html = ""
@@ -662,7 +661,7 @@ for ver in sorted(pv.get("CALVA", {}).keys(), key=vtuple):
     )
 
 if calva_html.strip():
-    section_html += '<div><a id="calva-section" name="calva-section"></a></div><h3>CALVA</h3>\n' + calva_html
+    section_html += "<h3>CALVA</h3>\n" + calva_html
 
 # REFSER2
 refser2_html = ""
@@ -679,7 +678,7 @@ for ver in sorted(pv.get("REFSER2", {}).keys(), key=vtuple):
     )
 
 if refser2_html.strip():
-    section_html += '<div><a id="refser2-section" name="refser2-section"></a></div><h3>REFSER2</h3>\n' + refser2_html
+    section_html += "<h3>REFSER2</h3>\n" + refser2_html
 
 # SERING
 sering_html = ""
@@ -696,7 +695,7 @@ for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple):
     )
 
 if sering_html.strip():
-    section_html += '<div><a id="sering-section" name="sering-section"></a></div><h3>SERING</h3>\n' + sering_html
+    section_html += "<h3>SERING</h3>\n" + sering_html
 
 
 linked_html = build_linked_table(blocks)
