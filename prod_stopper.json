@@ -1,0 +1,31 @@
+{
+  "APIM": {
+    "last_in_production": "10.1.0"
+  },
+  "EAH": {
+    "last_in_production": "2.32.1"
+  }
+  ,"AM": { "last_in_production": null }
+  ,"CALVA": { "last_in_production": null }
+  ,"CMMSSDP": { "last_in_production": null }
+  ,"CVS": { "last_in_production": null }
+  ,"MAJESTIC": { "last_in_production": null }
+  ,"MUSE": { "last_in_production": null }
+  ,"PATRIC-SSDP": { "last_in_production": null }
+  ,"REDBEND-OTA": { "last_in_production": null }
+  ,"REDBEND-LWM2M": { "last_in_production": null }
+  ,"REFADS": { "last_in_production": null }
+  ,"REFPOL": { "last_in_production": null }
+  ,"REFSER": { "last_in_production": null }
+  ,"REFTEL": { "last_in_production": null }
+  ,"RUBY": { "last_in_production": null }
+  ,"SERING": { "last_in_production": null }
+  ,"SUPREM": { "last_in_production": null }
+  ,"SYNAPSE": { "last_in_production": null }
+  ,"SYNAPSOFT": { "last_in_production": null }
+  ,"V2CGW": { "last_in_production": null }
+  ,"VDP-DS-SSDP": { "last_in_production": null }
+  ,"VDP-PROC": { "last_in_production": null }
+  ,"VMN": { "last_in_production": null }
+  ,"VTM": { "last_in_production": null }
+}
