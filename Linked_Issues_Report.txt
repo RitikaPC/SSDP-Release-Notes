@@ -1,0 +1,47 @@
+======= RCZ-RCZ 4.0.19 (IOTPF-13182) =======
+
+Issue: IOTPF-13182
+Summary: SSDP RCZ 4.0.19
+Status: In production
+Owner: ANASS
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-12-16
+
+Linked issues:
+
+Issue: RCZ-1464
+Summary: [SSDP][RCZ] The charge program is not following the V2C specs.
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= RCZ-RCZ 4.0.21 (IOTPF-14417) =======
+
+Issue: IOTPF-14417
+Summary: SSDP RCZ 4.0.21
+Status: Awaiting Go / No go PROD
+Owner: ANASS
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-12-15
+
+Linked issues:
+
+Issue: RCZ-1605
+Summary: [SSDP][RCZ]  V3 : Mapping : Regression
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: RCZ-1612
+Summary: Implement publishing of config ID to Kafka upon successful deletion of drive alert config
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: RCZ-1667
+Summary: [SSDP][DriveAlerts]Change Partner and Customer Delete  apis to Post
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: RCZ-1552
+Summary: Remote operations - Engine start/stop
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
