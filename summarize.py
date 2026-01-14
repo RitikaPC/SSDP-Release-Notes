@@ -411,13 +411,27 @@ release_summary_html = f"""
 def generate_component_toc():
     """Generate table of contents for components that have releases"""
     component_links = []
-    component_counter = 1
+    
+    # Define component mapping for consistent anchor IDs
+    component_anchors = {
+        "APIM": "apim",
+        "EAH": "eah", 
+        "DOCG": "docg",
+        "VDR": "vdr",
+        "PATRIC-SSDP": "patric-ssdp",
+        "RCZ": "rcz",
+        "SYNAPSE": "synapse",
+        "REFTEL": "reftel",
+        "CALVA": "calva",
+        "REFSER2": "refser2",
+        "SERING": "sering"
+    }
     
     # Check each component for releases and add to TOC if it has releases
     for component in ["APIM", "EAH", "DOCG", "VDR", "PATRIC-SSDP", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING"]:
         if component in pv and pv[component]:
-            component_links.append(f'<li><a href="#{component.lower()}" style="color:#0066CC;text-decoration:none;">{component}</a></li>')
-            component_counter += 1
+            anchor_id = component_anchors[component]
+            component_links.append(f'<li><a href="#{anchor_id}" style="color:#0066CC;text-decoration:none;">{component}</a></li>')
     
     return '\n'.join(component_links)
 
