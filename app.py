@@ -196,17 +196,27 @@ INDEX_HTML = """
             const resp = await fetch(url);
             const data = await resp.json();
 
-            if (data.success && data.page_url) {
-                if (data.filled_gaps > 0) {
-                    gapInfo.innerText = `Published ${data.filled_gaps} missing week${data.filled_gaps > 1 ? 's' : ''} + target week`;
-                    gapInfo.style.display = "block";
-                    setTimeout(() => {
-                        window.location.replace(data.page_url);
-                    }, 2000);
-                } else {
-                    window.location.replace(data.page_url);
+            if (data.success) {
+                // Handle "No releases this week" case
+                if (!data.page_url && data.message) {
+                    status.innerText = data.message;
+                    status.style.color = "#f59e0b"; // Orange color for warning
+                    return;
                 }
-                return;
+                
+                if (data.page_url) {
+                    status.innerText = "Successfully published release notes";
+                    if (data.filled_gaps > 0) {
+                        gapInfo.innerText = `Published ${data.filled_gaps} missing week${data.filled_gaps > 1 ? 's' : ''} + target week`;
+                        gapInfo.style.display = "block";
+                        setTimeout(() => {
+                            window.location.replace(data.page_url);
+                        }, 2000);
+                    } else {
+                        window.location.replace(data.page_url);
+                    }
+                    return;
+                }
             }
 
             status.innerText = "Release generated but no page URL returned";
@@ -264,6 +274,32 @@ def run_workflow():
         if code != 0:
             return jsonify({"success": False, "error": f"Extract failed for week {process_week}: {err or out}"})
 
+        # Check if there are any releases found
+        extract_output = out or ""
+        total_releases = 0
+        try:
+            # Extract JSON from the output
+            json_start = extract_output.rfind('{\n  "week"')
+            if json_start != -1:
+                json_str = extract_output[json_start:]
+                extract_data = json.loads(json_str)
+                counts = extract_data.get("counts", {})
+                total_releases = sum(counts.values())
+        except (json.JSONDecodeError, ValueError, AttributeError):
+            # If we can't parse the JSON, assume there are releases to be safe
+            total_releases = 1
+
+        # If no releases found, write message and skip confluence page creation
+        if total_releases == 0:
+            week_display = process_week or "current week"
+            print(f"No releases found for {week_display}")
+            published_urls.append({
+                "week": process_week or "current", 
+                "url": None, 
+                "message": "No releases this week"
+            })
+            continue
+
         summarize_cmd = ["python3", "summarize.py"]
         if process_week:
             summarize_cmd += ["--week", process_week]
@@ -288,7 +324,28 @@ def run_workflow():
                 break
 
     # Return the last published URL (target week) as main URL
-    main_url = published_urls[-1]["url"] if published_urls else None
+    # If no releases were found, return appropriate message
+    if not published_urls:
+        return jsonify({
+            "success": True,
+            "page_url": None,
+            "message": "No releases this week",
+            "all_published": [],
+            "filled_gaps": 0
+        })
+    
+    # Check if the last entry has no URL (no releases case)
+    last_entry = published_urls[-1]
+    if last_entry.get("url") is None:
+        return jsonify({
+            "success": True,
+            "page_url": None,
+            "message": last_entry.get("message", "No releases this week"),
+            "all_published": published_urls,
+            "filled_gaps": len(unpublished_weeks)
+        })
+    
+    main_url = last_entry["url"]
     
     return jsonify({
         "success": True,
