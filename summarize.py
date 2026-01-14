@@ -520,7 +520,7 @@ for ver in sorted(pv["APIM"].keys(), key=vtuple):
         extra="<a href='https://pages.github.psa-cloud.com/mph00/cloud-api-capabilities/#/changelog' target='_blank'>Swagger Changelog</a>"
     )
 if apim_html.strip():
-    section_html += "<h2 id='apim'>APIM</h2>\n" + apim_html
+    section_html += "<h2 id=\"apim\">APIM</h2>\n" + apim_html
 
 # EAH
 eah_html = ""
@@ -535,7 +535,7 @@ for ver in sorted(pv["EAH"].keys(), key=vtuple):
         extra="<a href='https://pages.github.psa-cloud.com/mph00/cloud-api-capabilities/#/changelog' target='_blank'>Swagger Changelog</a>"
     )
 if eah_html.strip():
-    section_html += "<h2 id='eah'>EAH</h2>\n" + eah_html
+    section_html += "<h2 id=\"eah\">EAH</h2>\n" + eah_html
 
 # DOCG
 docg_html = ""
@@ -551,7 +551,7 @@ for ver in sorted(pv["DOCG"].keys(), key=vtuple):
         extra=extra
     )
 if docg_html.strip():
-    section_html += "<h2 id='docg'>DOCG</h2>\n" + docg_html
+    section_html += "<h2 id=\"docg\">DOCG</h2>\n" + docg_html
 
 # VDR
 vdr_html = ""
@@ -567,7 +567,7 @@ for ver in sorted(pv.get("VDR", {}).keys(), key=vtuple):
         extra=extra
     )
 if vdr_html.strip():
-    section_html += "<h2 id='vdr'>VDR</h2>\n" + vdr_html
+    section_html += "<h2 id=\"vdr\">VDR</h2>\n" + vdr_html
 
 # PATRIC-SSDP
 patric_html = ""
@@ -583,7 +583,7 @@ for ver in sorted(pv.get("PATRIC-SSDP", {}).keys(), key=vtuple):
         extra=extra
     )
 if patric_html.strip():
-    section_html += "<h2 id='patric-ssdp'>PATRIC-SSDP</h2>\n" + patric_html
+    section_html += "<h2 id=\"patric-ssdp\">PATRIC-SSDP</h2>\n" + patric_html
 
 # RCZ
 rcz_html = ""
@@ -600,7 +600,7 @@ for ver in sorted(pv.get("RCZ", {}).keys(), key=vtuple):
     )
 
 if rcz_html.strip():
-    section_html += "<h2 id='rcz'>RCZ</h2>\n" + rcz_html
+    section_html += "<h2 id=\"rcz\">RCZ</h2>\n" + rcz_html
 
 # SYNAPSE
 synapse_html = ""
@@ -617,7 +617,7 @@ for ver in sorted(pv.get("SYNAPSE", {}).keys(), key=vtuple):
     )
 
 if synapse_html.strip():
-    section_html += "<h2 id='synapse'>SYNAPSE</h2>\n" + synapse_html
+    section_html += "<h2 id=\"synapse\">SYNAPSE</h2>\n" + synapse_html
 
 # REFTEL
 reftel_html = ""
@@ -634,7 +634,7 @@ for ver in sorted(pv.get("REFTEL", {}).keys(), key=vtuple):
     )
 
 if reftel_html.strip():
-    section_html += "<h2 id='reftel'>REFTEL</h2>\n" + reftel_html
+    section_html += "<h2 id=\"reftel\">REFTEL</h2>\n" + reftel_html
 
 # CALVA
 calva_html = ""
@@ -651,7 +651,7 @@ for ver in sorted(pv.get("CALVA", {}).keys(), key=vtuple):
     )
 
 if calva_html.strip():
-    section_html += "<h2 id='calva'>CALVA</h2>\n" + calva_html
+    section_html += "<h2 id=\"calva\">CALVA</h2>\n" + calva_html
 
 # REFSER2
 refser2_html = ""
@@ -668,7 +668,7 @@ for ver in sorted(pv.get("REFSER2", {}).keys(), key=vtuple):
     )
 
 if refser2_html.strip():
-    section_html += "<h2 id='refser2'>REFSER2</h2>\n" + refser2_html
+    section_html += "<h2 id=\"refser2\">REFSER2</h2>\n" + refser2_html
 
 # SERING
 sering_html = ""
@@ -685,7 +685,7 @@ for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple):
     )
 
 if sering_html.strip():
-    section_html += "<h2 id='sering'>SERING</h2>\n" + sering_html
+    section_html += "<h2 id=\"sering\">SERING</h2>\n" + sering_html
 
 
 linked_html = build_linked_table(blocks)
