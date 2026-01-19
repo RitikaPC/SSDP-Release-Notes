@@ -57,6 +57,25 @@ def vtuple(v):
         return ()
 
 
+def extract_latest_version(version_string):
+    """Extract the latest version from a comma-separated version string"""
+    if not version_string or version_string == "None":
+        return "None"
+    
+    # Handle comma-separated versions
+    if "," in version_string:
+        versions = [v.strip() for v in version_string.split(",")]
+        # Sort by version tuple to get the latest
+        try:
+            latest = max(versions, key=vtuple)
+            return latest
+        except Exception:
+            # If version parsing fails, return the last one
+            return versions[-1]
+    
+    return version_string.strip()
+
+
 def load_text(path):
     return open(path, "r", encoding="utf-8").read() if os.path.exists(path) else ""
 
@@ -351,7 +370,10 @@ def last_non_null(stopper, target_year, target_week, key):
 
 
 def safe(v):
-    return v if v else "None"
+    """Return the latest version from a version string, or 'None' if empty"""
+    if not v:
+        return "None"
+    return extract_latest_version(v)
 
 
 # -------------------------------------------------------
@@ -388,7 +410,23 @@ curr_patric = safe(get_stopper_value("PATRIC-SSDP"))
 # Determine which components have releases this week
 def get_highlight_style(component):
     """Returns highlight style if component has releases, otherwise normal style"""
-    if component in pv and pv[component]:
+    # Check the current version for this component
+    current_versions = {
+        "APIM": curr_apim,
+        "EAH": curr_eah,
+        "DOCG": curr_docg,
+        "VDR": curr_vdr,
+        "PATRIC-SSDP": curr_patric,
+        "RCZ": curr_rcz,
+        "SYNAPSE": curr_synapse,
+        "REFTEL": curr_reftel,
+        "CALVA": curr_calva,
+        "REFSER2": curr_refser2,
+        "SERING": curr_sering
+    }
+    
+    current_version = current_versions.get(component, "None")
+    if current_version and current_version != "None" and current_version.strip():
         # Component has releases - highlight with green background
         return 'style="background-color:#E3FCEF;font-weight:bold;"'
     else:
@@ -440,7 +478,7 @@ def count_components_with_releases():
     }
     
     for component, version in all_current_versions.items():
-        if version != "None" and version is not None and version.strip():
+        if version and version != "None" and version.strip():
             components_with_releases += 1
     
     return components_with_releases
