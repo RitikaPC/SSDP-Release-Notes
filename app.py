@@ -154,7 +154,7 @@ INDEX_HTML = """
     <input id="week" placeholder="e.g. 45" />
 
     <label for="year">Year (optional)</label>
-    <input id="year" placeholder="e.g. 2025" />
+    <input id="year" placeholder="e.g. 2026" />
 
     <button id="start">Generate & Open</button>
 

@@ -60,7 +60,7 @@ ALLOWED_STATUSES = {
 }
 
 # -----------------------
-# CLI args / week logic (supports optional year: e.g. 2025-50 or 2025-W50)
+# CLI args / week logic (supports optional year: e.g. 2026-50 or 2026-W50)
 # -----------------------
 override_year = None
 override_week = None
@@ -71,13 +71,13 @@ def parse_week_arg(raw: str):
 
     Acceptable forms:
       - "50" -> (None, 50)
-      - "2025-50" or "2025-W50" -> (2025, 50)
+      - "2026-50" or "2026-W50" -> (2026, 50)
       - "W50" -> (None, 50)
     """
     if not raw:
         return None, None
     raw = raw.strip()
-    # year-week like 2025-W50 or 2025-50
+    # year-week like 2026-W50 or 2026-50
     m = re.match(r"^(?P<year>\d{4})[-_ ]*W?(?P<week>\d{1,2})$", raw)
     if m:
         return int(m.group("year")), int(m.group("week"))
@@ -110,8 +110,8 @@ if target_week < 1 or target_week > weeks_in_year(target_year):
     print(f"ERROR: week {target_week} is not valid for year {target_year}", file=sys.stderr)
     sys.exit(1)
 
-# canonical stopper key: include year only when explicitly provided
-week_str = f"{target_year}-W{target_week:02d}" if override_year else str(target_week)
+# canonical stopper key: always include year for consistency
+week_str = f"{target_year}-W{target_week:02d}"
 
 if not API_TOKEN:
     print("ERROR: Set env variable JIRA_API_TOKEN", file=sys.stderr)
@@ -149,7 +149,7 @@ def parse_iso_date(date_str: str):
     if not date_str:
         return None
     try:
-        # Jira changelog dates are like 2025-11-17T12:34:56.000+0000 or 2025-11-17T12:34:56.000Z
+        # Jira changelog dates are like 2026-11-17T12:34:56.000+0000 or 2026-11-17T12:34:56.000Z
         if "T" in date_str:
             return datetime.datetime.strptime(date_str.split("T")[0], "%Y-%m-%d").date()
         return datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -1557,13 +1557,22 @@ if sering_versions:
 # Persist stopper
 # -----------------------
 existing = stopper.get(week_str)
+legacy_week_str = str(target_week)  # Legacy format for backward compatibility
+existing_legacy = stopper.get(legacy_week_str)
+
 if existing is not None and not force_overwrite:
     print(f"Week {week_str} already exists in {WEEKLY_STOPPER}: {existing}")
     print("Use --force to overwrite.")
+elif existing_legacy is not None and not force_overwrite:
+    print(f"Week {legacy_week_str} already exists in {WEEKLY_STOPPER}: {existing_legacy}")
+    print("Use --force to overwrite.")
 else:
+    # Save in both new and legacy formats for backward compatibility
     stopper[week_str] = store_entry
+    stopper[legacy_week_str] = store_entry
     save_stopper(stopper)
     print(f"Week {week_str} snapshot written: {store_entry}")
+    print(f"Week {legacy_week_str} snapshot also saved for backward compatibility")
 
 # -----------------------
 # Summary output for CLI / debugging

@@ -64,37 +64,16 @@ def parse_stopper_key(k: str):
     return None, None, k
 
 def get_page_title_for_week(year, week, display_key):
-    """Generate Confluence page title with year prefix when needed.
+    """Generate Confluence page title with consistent year prefix format.
     
-    Use year prefix (YYYY-Www) when:
-    - Week is from a different calendar year than today
-    - Or when the display_key already has a year format
+    Always use YYYY-Www format for consistency.
     """
-    if '-' in display_key or 'W' in display_key:
-        # Already has year format
+    if '-' in display_key and 'W' in display_key:
+        # Already has proper year format
         return f"SSDP Release Notes Week {display_key}"
     
-    # Check if this week is from current calendar year
-    today = datetime.date.today()
-    current_calendar_year = today.year
-    
-    # For weeks near year boundary, determine calendar year
-    # Week 1 of ISO year can start in previous December
-    # Week 52/53 belong to their ISO year
-    if week >= 52:
-        # High weeks belong to their year
-        week_calendar_year = year
-    elif week == 1:
-        # Week 1 can span years - use ISO year
-        week_calendar_year = year
-    else:
-        week_calendar_year = year
-    
-    # Add year prefix if not current calendar year
-    if week_calendar_year != current_calendar_year:
-        return f"SSDP Release Notes Week {year}-W{week:02d}"
-    else:
-        return f"SSDP Release Notes Week {display_key}"
+    # Always use year-week format for consistency
+    return f"SSDP Release Notes Week {year}-W{week:02d}"
 
 def load_stopper():
     if not os.path.exists(WEEKLY_STOPPER):

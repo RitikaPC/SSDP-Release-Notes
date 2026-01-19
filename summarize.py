@@ -68,7 +68,7 @@ def write(path, txt):
 def read_week():
     """Return (year, week, display_str)
 
-    If a year was provided, display_str will be like '2025-W50'. If no year, display_str is '50'.
+    display_str will always be like '2026-W04' to maintain consistency.
     """
     today = datetime.date.today()
     current_year = today.isocalendar()[0]
@@ -84,7 +84,8 @@ def read_week():
         print(f"Invalid week {week} for year {year}")
         sys.exit(1)
 
-    display = f"{year}-W{week:02d}" if forced_year else str(week)
+    # Always use year-week format for consistency
+    display = f"{year}-W{week:02d}"
     return year, week, display
 
 
@@ -287,7 +288,20 @@ pv = build_changes(blocks)
 year, week, week_display = read_week()
 
 stopper_data = json.load(open(STOPPER_FILE)) if os.path.exists(STOPPER_FILE) else {}
+
+# Try both new format (2026-W04) and legacy format (4) for backward compatibility
 week_str = week_display
+legacy_week_str = str(week)
+
+def get_stopper_value(component):
+    """Get stopper value, trying both new and legacy week formats"""
+    # Try new format first (e.g., "2026-W04")
+    if week_str in stopper_data and stopper_data[week_str].get(component):
+        return stopper_data[week_str].get(component)
+    # Fall back to legacy format (e.g., "4")
+    if legacy_week_str in stopper_data and stopper_data[legacy_week_str].get(component):
+        return stopper_data[legacy_week_str].get(component)
+    return None
 
 
 # -------------------------------------------------------
@@ -349,22 +363,22 @@ prev_docg = safe(last_non_null(stopper_data, year, week, "DOCG"))
 prev_vdr = safe(last_non_null(stopper_data, year, week, "VDR"))
 prev_patric = safe(last_non_null(stopper_data, year, week, "PATRIC-SSDP"))
 prev_rcz = safe(last_non_null(stopper_data, year, week, "RCZ"))
-curr_rcz = safe(stopper_data.get(week_str, {}).get("RCZ"))
+curr_rcz = safe(get_stopper_value("RCZ"))
 prev_synapse = safe(last_non_null(stopper_data, year, week, "SYNAPSE"))
-curr_synapse = safe(stopper_data.get(week_str, {}).get("SYNAPSE"))
+curr_synapse = safe(get_stopper_value("SYNAPSE"))
 prev_reftel = safe(last_non_null(stopper_data, year, week, "REFTEL"))
-curr_reftel = safe(stopper_data.get(week_str, {}).get("REFTEL"))
+curr_reftel = safe(get_stopper_value("REFTEL"))
 prev_calva = safe(last_non_null(stopper_data, year, week, "CALVA"))
-curr_calva = safe(stopper_data.get(week_str, {}).get("CALVA"))
+curr_calva = safe(get_stopper_value("CALVA"))
 prev_refser2 = safe(last_non_null(stopper_data, year, week, "REFSER2"))
-curr_refser2 = safe(stopper_data.get(week_str, {}).get("REFSER2"))
+curr_refser2 = safe(get_stopper_value("REFSER2"))
 prev_sering = safe(last_non_null(stopper_data, year, week, "SERING"))
-curr_sering = safe(stopper_data.get(week_str, {}).get("SERING"))
-curr_apim = safe(stopper_data.get(week_str, {}).get("APIM"))
-curr_eah = safe(stopper_data.get(week_str, {}).get("EAH"))
-curr_docg = safe(stopper_data.get(week_str, {}).get("DOCG"))
-curr_vdr = safe(stopper_data.get(week_str, {}).get("VDR"))
-curr_patric = safe(stopper_data.get(week_str, {}).get("PATRIC-SSDP"))
+curr_sering = safe(get_stopper_value("SERING"))
+curr_apim = safe(get_stopper_value("APIM"))
+curr_eah = safe(get_stopper_value("EAH"))
+curr_docg = safe(get_stopper_value("DOCG"))
+curr_vdr = safe(get_stopper_value("VDR"))
+curr_patric = safe(get_stopper_value("PATRIC-SSDP"))
 
 
 # -------------------------------------------------------

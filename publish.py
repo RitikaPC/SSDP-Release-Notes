@@ -63,18 +63,29 @@ def read_week():
     if forced_week is not None:
         if forced_year:
             return f"{forced_year}-W{forced_week:02d}"
-        return str(forced_week)
+        # Even without forced_year, use current year for consistency
+        current_year = datetime.date.today().year
+        return f"{current_year}-W{forced_week:02d}"
 
     if os.path.exists(WEEK_FILE):
         try:
             content = open(WEEK_FILE, "r").read().strip()
+            # If content doesn't have year format, add current year
+            if not re.match(r"^\d{4}-W\d{1,2}$", content):
+                try:
+                    week_num = int(content)
+                    current_year = datetime.date.today().year
+                    content = f"{current_year}-W{week_num:02d}"
+                except ValueError:
+                    pass
             return content
         except Exception:
             pass
 
-    # fallback
-    wk = datetime.date.today().isocalendar()[1]
-    return str(wk)
+    # fallback - always use year format
+    today = datetime.date.today()
+    wk = today.isocalendar()[1]
+    return f"{today.year}-W{wk:02d}"
 
 
 def confluence_search_page(title):
@@ -153,25 +164,8 @@ def confluence_create_page(title, html):
 def main():
     week = read_week()
     
-    # Determine if we need year prefix in title
-    # Parse week to see if it has year
-    if re.match(r"^\d{4}-W?\d{1,2}$", week):
-        # Already has year format
-        title = f"SSDP Release Notes Week {week}"
-    else:
-        # Plain week number - check if it needs year prefix
-        try:
-            week_num = int(week)
-            today = datetime.date.today()
-            current_year = today.year
-            
-            # High week numbers in early year likely from previous year
-            if today.month <= 2 and week_num > 50:
-                title = f"SSDP Release Notes Week {current_year - 1}-W{week_num:02d}"
-            else:
-                title = f"SSDP Release Notes Week {week}"
-        except ValueError:
-            title = f"SSDP Release Notes Week {week}"
+    # Since we now always use year format, title generation is simpler
+    title = f"SSDP Release Notes Week {week}"
 
     if not os.path.exists(SUMMARY_HTML):
         print("summary_output.html missing")
