@@ -210,10 +210,10 @@ INDEX_HTML = """
                         gapInfo.innerText = `Published ${data.filled_gaps} missing week${data.filled_gaps > 1 ? 's' : ''} + target week`;
                         gapInfo.style.display = "block";
                         setTimeout(() => {
-                            window.location.replace(data.page_url);
+                            window.open(data.page_url, '_blank');
                         }, 2000);
                     } else {
-                        window.location.replace(data.page_url);
+                        window.open(data.page_url, '_blank');
                     }
                     return;
                 }
