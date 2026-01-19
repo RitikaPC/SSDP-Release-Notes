@@ -514,12 +514,12 @@ def generate_component_toc():
 # Check how many components have releases to determine layout
 num_releases = count_components_with_releases()
 
-if num_releases <= 2:
-    # Minimal releases - show condensed version
+if num_releases == 0:
+    # No releases - show condensed version
     release_note_summary_html = f"""
 <div style="background:#F8F9FA;border:1px solid #e0e0e0;border-radius:8px;padding:25px;margin-bottom:30px;">
     <h2 style="margin-top:0;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:10px;">Release Note Summary</h2>
-    <p style="color:#666;margin-bottom:20px;">This week includes <strong>{num_releases}</strong> component release{'s' if num_releases != 1 else ''}. See the Release Summary table above for details.</p>
+    <p style="color:#666;margin-bottom:20px;">No component releases this week.</p>
     
     <div style="background:#E3F2FD;border:1px solid #2196F3;border-radius:4px;padding:15px;">
         <div style="display:flex;align-items:center;margin-bottom:10px;">
@@ -533,7 +533,7 @@ if num_releases <= 2:
 </div>
 """
 else:
-    # Multiple releases - show full detailed version
+    # One or more releases - show full detailed version
     release_note_summary_html = f"""
 <div style="display:flex;gap:30px;margin-bottom:30px;align-items:flex-start;flex-wrap:nowrap;width:100%;">
     <div style="flex:2;min-width:400px;max-width:65%;">

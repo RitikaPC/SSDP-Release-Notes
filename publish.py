@@ -129,10 +129,12 @@ def confluence_update_page(page_id, title, html):
 
     if r.status_code in (200, 201):
         res = r.json()
+        print(f"Page updated successfully: {title}")
         return res["_links"]["base"] + res["_links"]["webui"]
-
-    print("Update failed:", r.text)
-    return None
+    else:
+        print(f"Update failed for {title}:", r.text)
+        print(f"Status code: {r.status_code}")
+        return None
 
 
 def confluence_create_page(title, html):
