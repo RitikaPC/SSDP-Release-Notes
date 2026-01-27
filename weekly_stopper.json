@@ -390,5 +390,70 @@
     "REFTEL": null,
     "CALVA": null,
     "REFSER2": null
+  },
+  "4": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": "DOCG-25.4.3.11 - 1.7.3,DOCG-25.4.3.12 - 1.7.3",
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null,
+    "SYNAPSE": null,
+    "REFTEL": null,
+    "CALVA": null,
+    "REFSER2": null,
+    "SERING": null
+  },
+  "2025-W02": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": null,
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null,
+    "SYNAPSE": null,
+    "REFTEL": null,
+    "CALVA": null,
+    "REFSER2": null,
+    "SERING": null
+  },
+  "2026-W05": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": null,
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null,
+    "SYNAPSE": null,
+    "REFTEL": null,
+    "CALVA": null,
+    "REFSER2": null,
+    "SERING": null
+  },
+  "5": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": null,
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null,
+    "SYNAPSE": null,
+    "REFTEL": null,
+    "CALVA": null,
+    "REFSER2": null,
+    "SERING": null
+  },
+  "2026-W04": {
+    "APIM": null,
+    "EAH": null,
+    "DOCG": "DOCG-25.4.3.11 - 1.7.3,DOCG-25.4.3.12 - 1.7.3",
+    "VDR": null,
+    "PATRIC-SSDP": null,
+    "RCZ": null,
+    "SYNAPSE": null,
+    "REFTEL": null,
+    "CALVA": null,
+    "REFSER2": null,
+    "SERING": null
   }
 }

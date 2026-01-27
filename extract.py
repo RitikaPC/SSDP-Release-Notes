@@ -1560,19 +1560,51 @@ existing = stopper.get(week_str)
 legacy_week_str = str(target_week)  # Legacy format for backward compatibility
 existing_legacy = stopper.get(legacy_week_str)
 
-if existing is not None and not force_overwrite:
-    print(f"Week {week_str} already exists in {WEEKLY_STOPPER}: {existing}")
-    print("Use --force to overwrite.")
-elif existing_legacy is not None and not force_overwrite:
-    print(f"Week {legacy_week_str} already exists in {WEEKLY_STOPPER}: {existing_legacy}")
-    print("Use --force to overwrite.")
-else:
+def data_has_changed(existing_data, new_data):
+    """Check if new data is different from existing data"""
+    if existing_data is None:
+        return True
+    
+    # Compare each component - if any component has new releases, update
+    for component, new_version in new_data.items():
+        existing_version = existing_data.get(component)
+        if new_version != existing_version:
+            # If new version is not None/empty and different, it's a change
+            if new_version and new_version != "None":
+                return True
+            # If existing had data and now it's None/empty, it's also a change
+            if existing_version and existing_version != "None" and not new_version:
+                return True
+    return False
+
+should_update = force_overwrite
+
+# Check if we should update based on data changes
+if not should_update:
+    if existing is not None:
+        should_update = data_has_changed(existing, store_entry)
+        if should_update:
+            print(f"Week {week_str} has new releases - updating existing entry")
+        else:
+            print(f"Week {week_str} already exists with same data: {existing}")
+    elif existing_legacy is not None:
+        should_update = data_has_changed(existing_legacy, store_entry)
+        if should_update:
+            print(f"Week {legacy_week_str} has new releases - updating existing entry")
+        else:
+            print(f"Week {legacy_week_str} already exists with same data: {existing_legacy}")
+    else:
+        should_update = True  # No existing data, so create new entry
+
+if should_update:
     # Save in both new and legacy formats for backward compatibility
     stopper[week_str] = store_entry
     stopper[legacy_week_str] = store_entry
     save_stopper(stopper)
     print(f"Week {week_str} snapshot written: {store_entry}")
     print(f"Week {legacy_week_str} snapshot also saved for backward compatibility")
+else:
+    print("Use --force to overwrite unchanged data.")
 
 # -----------------------
 # Summary output for CLI / debugging

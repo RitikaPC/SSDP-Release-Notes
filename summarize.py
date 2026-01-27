@@ -110,7 +110,8 @@ def read_week():
 
 def parse_blocks(raw):
     pattern = re.compile(
-        r"^=+\s*(APIM|EAH|DOCG|VDR|PATRIC-SSDP|SYNAPSE|REFTEL)\s*[- ]\s*([\d\.]+)\s*\((.*?)\)"
+        r"^=+\s*(APIM|EAH|VDR|PATRIC-SSDP|SYNAPSE|REFTEL)\s*[- ]\s*([\d\.]+)\s*\((.*?)\)"
+        r"|^=+\s*(DOCG)\s*-\s*DOCG-([^(]+)\s*\((.*?)\)"  # DOCG-DOCG-X.Y.Z - 1.7.3 (KEY)
         r"|^=+\s*(RCZ)\s*-\s*RCZ\s*([\d\.]+)\s*\((.*?)\)"
         r"|^=+\s*(CALVA|REFSER2|SERING)\s*-\s*([\d\.]+)\s*\((.*?)\)",
         re.MULTILINE
@@ -119,18 +120,22 @@ def parse_blocks(raw):
 
     blocks = []
     for i, m in enumerate(matches):
-        if m.group(1):  # normal systems
+        if m.group(1):  # normal systems (APIM, EAH, VDR, PATRIC-SSDP, SYNAPSE, REFTEL)
             system = m.group(1)
             version = m.group(2).rstrip(".")
             key = m.group(3)
-        elif m.group(4):  # RCZ-RCZ X.Y.Z format
-            system = "RCZ"
-            version = m.group(5).rstrip(".")
+        elif m.group(4):  # DOCG-DOCG-X.Y.Z format
+            system = "DOCG"
+            version = m.group(5).strip().rstrip(".")
             key = m.group(6)
-        else:  # CALVA-X.Y.Z format
-            system = "CALVA"
+        elif m.group(7):  # RCZ-RCZ X.Y.Z format
+            system = "RCZ"
             version = m.group(8).rstrip(".")
             key = m.group(9)
+        else:  # CALVA-X.Y.Z format
+            system = m.group(10)
+            version = m.group(11).rstrip(".")
+            key = m.group(12)
         start = m.end()
         end = matches[i + 1].start() if i + 1 < len(matches) else len(raw)
         body = raw[start:end].strip()

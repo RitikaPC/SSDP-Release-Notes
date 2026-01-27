@@ -141,14 +141,44 @@ def main():
     # Sort chronologically
     weeks_with_data.sort()
     
-    # Also check for recent weeks that might not be in stopper yet
-    # Check last 4 weeks before target
-    today = datetime.date.today()
-    check_weeks = []
-    for days_back in range(28, 0, -7):  # 4 weeks
-        check_date = today - datetime.timedelta(days=days_back)
-        iso_year, iso_week, _ = check_date.isocalendar()
-        check_weeks.append((iso_year, iso_week))
+    # Find the last published week first
+    last_published_year = None
+    last_published_week = None
+    
+    for year, week, display in reversed(weeks_with_data):  # Check from newest to oldest
+        title = get_page_title_for_week(year, week, display)
+        if confluence_page_exists(title):
+            last_published_year = year
+            last_published_week = week
+            print(f"Found last published week: {year}-W{week:02d}", file=sys.stderr)
+            break
+    
+    # If no published weeks found, fallback to checking recent weeks
+    if last_published_year is None or last_published_week is None:
+        print("No published weeks found, checking recent weeks", file=sys.stderr)
+        # Check last 4 weeks before target as fallback
+        today = datetime.date.today()
+        check_weeks = []
+        for days_back in range(28, 0, -7):  # 4 weeks
+            check_date = today - datetime.timedelta(days=days_back)
+            iso_year, iso_week, _ = check_date.isocalendar()
+            check_weeks.append((iso_year, iso_week))
+    else:
+        # Only check weeks between last published and target
+        check_weeks = []
+        current_year, current_week = last_published_year, last_published_week
+        
+        while (current_year, current_week) < (target_year, target_week):
+            # Move to next week
+            current_week += 1
+            if current_week > 52:  # Handle year boundary
+                max_weeks = datetime.date(current_year, 12, 31).isocalendar()[1]
+                if current_week > max_weeks:
+                    current_year += 1
+                    current_week = 1
+            
+            if (current_year, current_week) < (target_year, target_week):
+                check_weeks.append((current_year, current_week))
     
     # Add these to weeks_with_data if not already there
     for year, week in check_weeks:

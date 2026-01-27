@@ -274,32 +274,6 @@ def run_workflow():
         if code != 0:
             return jsonify({"success": False, "error": f"Extract failed for week {process_week}: {err or out}"})
 
-        # Check if there are any releases found
-        extract_output = out or ""
-        total_releases = 0
-        try:
-            # Extract JSON from the output
-            json_start = extract_output.rfind('{\n  "week"')
-            if json_start != -1:
-                json_str = extract_output[json_start:]
-                extract_data = json.loads(json_str)
-                counts = extract_data.get("counts", {})
-                total_releases = sum(counts.values())
-        except (json.JSONDecodeError, ValueError, AttributeError):
-            # If we can't parse the JSON, assume there are releases to be safe
-            total_releases = 1
-
-        # If no releases found, write message and skip confluence page creation
-        if total_releases == 0:
-            week_display = process_week or "current week"
-            print(f"No releases found for {week_display}")
-            published_urls.append({
-                "week": process_week or "current", 
-                "url": None, 
-                "message": "No releases this week"
-            })
-            continue
-
         summarize_cmd = ["python3", "summarize.py"]
         if process_week:
             summarize_cmd += ["--week", process_week]
@@ -307,6 +281,36 @@ def run_workflow():
         code, out, err = run_cmd(summarize_cmd)
         if code != 0:
             return jsonify({"success": False, "error": f"Summarize failed for week {process_week}: {err or out}"})
+
+        # Check if there are any NEW releases by checking if summary file was updated meaningfully
+        # Look for a summary JSON output or check the summary_meta.json file
+        has_new_releases = False
+        try:
+            # Check if summary_meta.json exists and has release info
+            if os.path.exists("summary_meta.json"):
+                with open("summary_meta.json", "r") as f:
+                    summary_meta = json.load(f)
+                    # Count components with actual new versions (not None)
+                    curr_versions = summary_meta.get("curr_versions", {})
+                    actual_releases = sum(1 for v in curr_versions.values() if v and v != "None" and v.strip())
+                    has_new_releases = actual_releases > 0
+            else:
+                # If no meta file, assume there are releases to be safe
+                has_new_releases = True
+        except Exception:
+            # If we can't parse, assume there are releases to be safe
+            has_new_releases = True
+
+        # If no new releases found, skip confluence page creation
+        if not has_new_releases:
+            week_display = process_week or "current week"
+            print(f"No new releases found for {week_display}")
+            published_urls.append({
+                "week": process_week or "current", 
+                "url": None, 
+                "message": "No releases this week"
+            })
+            continue
 
         publish_cmd = ["python3", "publish.py"]
         if process_week:
