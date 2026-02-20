@@ -290,10 +290,15 @@ def run_workflow():
             if os.path.exists("summary_meta.json"):
                 with open("summary_meta.json", "r") as f:
                     summary_meta = json.load(f)
-                    # Count components with actual new versions (not None)
-                    curr_versions = summary_meta.get("curr_versions", {})
-                    actual_releases = sum(1 for v in curr_versions.values() if v and v != "None" and v.strip())
-                    has_new_releases = actual_releases > 0
+                    
+                    # First check if there's a has_releases flag (new approach)
+                    if "has_releases" in summary_meta:
+                        has_new_releases = summary_meta.get("has_releases", False)
+                    else:
+                        # Fallback: Count components with actual new versions (not None)
+                        curr_versions = summary_meta.get("curr_versions", {})
+                        actual_releases = sum(1 for v in curr_versions.values() if v and v != "None" and v.strip())
+                        has_new_releases = actual_releases > 0
             else:
                 # If no meta file, assume there are releases to be safe
                 has_new_releases = True
@@ -301,17 +306,8 @@ def run_workflow():
             # If we can't parse, assume there are releases to be safe
             has_new_releases = True
 
-        # If no new releases found, skip confluence page creation
-        if not has_new_releases:
-            week_display = process_week or "current week"
-            print(f"No new releases found for {week_display}")
-            published_urls.append({
-                "week": process_week or "current", 
-                "url": None, 
-                "message": "No releases this week"
-            })
-            continue
-
+        # Always publish the page (even if no new summary releases, there may be linked issues)
+        # The Confluence page will be created/updated with any content (linked issues, etc.)
         publish_cmd = ["python3", "publish.py"]
         if process_week:
             publish_cmd += ["--week", process_week]

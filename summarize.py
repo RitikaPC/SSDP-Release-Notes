@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-summarize.py — version-accurate release summary with APIM, EAH, DOCG, VDR and PATRIC-SSDP
+summarize.py — version-accurate release summary with APIM, EAH, DOCG, VDR, PATRIC-SSDP, and VDP_PROC
 
 Enhancements:
 • Fully supports DOCG & VDR extracted via extract.py
 • Supports PATRIC-SSDP extracted via extract.py
-• Separate tables per version: APIM, EAH, DOCG, VDR, PATRIC-SSDP
+• Separate tables per version: APIM, EAH, DOCG, VDR, PATRIC-SSDP, VDP_PROC
 • Release Summary table now shows last NON-NULL version from historical stopper
 • Linked issues table includes all systems
 • Classification:
@@ -19,6 +19,10 @@ import sys
 import re
 import json
 import datetime
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 LINKED_FILE = os.getenv("LINKED_FILE", "Linked_Issues_Report.txt")
 SUMMARY_HTML = os.getenv("SUMMARY_HTML", "summary_output.html")
@@ -109,45 +113,80 @@ def read_week():
 
 
 def parse_blocks(raw):
-    pattern = re.compile(
-        r"^=+\s*(APIM|EAH|VDR|PATRIC-SSDP|SYNAPSE|REFTEL)\s*[- ]\s*([\d\.]+)\s*\((.*?)\)"
-        r"|^=+\s*(DOCG)\s*-\s*DOCG-([^(]+)\s*\((.*?)\)"  # DOCG-DOCG-X.Y.Z - 1.7.3 (KEY)
-        r"|^=+\s*(RCZ)\s*-\s*RCZ\s*([\d\.]+)\s*\((.*?)\)"
-        r"|^=+\s*(CALVA|REFSER2|SERING)\s*-\s*([\d\.]+)\s*\((.*?)\)",
-        re.MULTILINE
-    )
-    matches = list(pattern.finditer(raw))
+    header_re = re.compile(r"^=+\s*(.*?)\s*\(([^)]+)\)\s*=+\s*$", re.MULTILINE)
+    matches = list(header_re.finditer(raw))
+
+    known_systems = [
+        "PATRIC-SSDP",
+        "VDP_DS_SSDP",
+        "VDP_DS_MON",
+        "VDP_STORE_2",
+        "VDP_STORE",
+        "VDP_PROC",
+        "VDP_DS",
+        "SYNAPSE",
+        "REFTEL",
+        "REFSER2",
+        "SERING",
+        "CALVA",
+        "APIM",
+        "EAH",
+        "DOCG",
+        "VDR",
+        "RCZ",
+    ]
+
+    def split_header(header_text: str):
+        header_clean = (header_text or "").strip()
+        upper = header_clean.upper()
+
+        for system in known_systems:
+            if upper.startswith(system.upper()):
+                remainder = header_clean[len(system):].strip()
+                remainder = re.sub(r"^[-\s]+", "", remainder).strip()
+                version = remainder.rstrip(".") if remainder else ""
+                return system, version
+
+        return "", ""
+
+    def infer_version_from_body(system: str, fallback_version: str, body: str):
+        if fallback_version and fallback_version != "None":
+            return fallback_version
+        m = re.search(r"^Summary:\s*(.+)$", body, re.MULTILINE)
+        if not m:
+            return fallback_version or ""
+        summary = m.group(1).strip().rstrip(".")
+        if not summary:
+            return fallback_version or ""
+
+        if system == "DOCG":
+            return summary
+        if summary.upper().startswith(system.upper()):
+            return summary[len(system):].lstrip("- ").strip().rstrip(".")
+        return summary
 
     blocks = []
     for i, m in enumerate(matches):
-        if m.group(1):  # normal systems (APIM, EAH, VDR, PATRIC-SSDP, SYNAPSE, REFTEL)
-            system = m.group(1)
-            version = m.group(2).rstrip(".")
-            key = m.group(3)
-        elif m.group(4):  # DOCG-DOCG-X.Y.Z format
-            system = "DOCG"
-            version = m.group(5).strip().rstrip(".")
-            key = m.group(6)
-        elif m.group(7):  # RCZ-RCZ X.Y.Z format
-            system = "RCZ"
-            version = m.group(8).rstrip(".")
-            key = m.group(9)
-        else:  # CALVA-X.Y.Z format
-            system = m.group(10)
-            version = m.group(11).rstrip(".")
-            key = m.group(12)
+        header_text = (m.group(1) or "").strip()
+        key = (m.group(2) or "").strip()
         start = m.end()
         end = matches[i + 1].start() if i + 1 < len(matches) else len(raw)
         body = raw[start:end].strip()
 
+        system, version = split_header(header_text)
+        if not system:
+            continue
+
+        version = infer_version_from_body(system, version, body)
+
         blocks.append({
             "system": system,
             "version": version,
+            "enabler_key": key,
             "body": body
         })
 
     return blocks
-
 
 def extract_issues(body):
     issues = []
@@ -209,7 +248,7 @@ def classify(issue_type):
 
 
 def build_changes(blocks):
-    out = {"APIM": {}, "EAH": {}, "DOCG": {}, "VDR": {}, "PATRIC-SSDP": {}, "RCZ":{}, "SYNAPSE": {}, "REFTEL": {}, "CALVA": {}, "REFSER2": {}, "SERING": {}}
+    out = {"APIM": {}, "EAH": {}, "DOCG": {}, "VDR": {}, "PATRIC-SSDP": {}, "RCZ":{}, "SYNAPSE": {}, "REFTEL": {}, "CALVA": {}, "REFSER2": {}, "SERING": {}, "VDP_PROC": {}, "VDP_DS": {}, "VDP_DS_SSDP": {}, "VDP_DS_MON": {}, "VDP_STORE": {}, "VDP_STORE_2": {}}
 
     for b in blocks:
         sysname = b["system"]
@@ -222,7 +261,7 @@ def build_changes(blocks):
         )
 
         for iss in issues:
-            if sysname in ("DOCG", "VDR", "PATRIC-SSDP", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING") and iss["deploy_date"]:
+            if sysname in ("DOCG", "VDR", "PATRIC-SSDP", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING", "VDP_PROC", "VDP_DS", "VDP_DS_SSDP", "VDP_DS_MON", "VDP_STORE", "VDP_STORE_2") and iss["deploy_date"]:
                 out[sysname][ver]["DEPLOY"] = iss["deploy_date"]
 
         for iss in issues:
@@ -253,13 +292,13 @@ def make_box(title, color, items):
 
 def make_table(ver, boxhtml, status="", extra=""):
     return f"""
-    <table style="width:100%;border-collapse:collapse;margin:12px 0;">
-      <tr><th style="background:#F4F5F7;width:200px;">Version</th><td>{ver}</td></tr>
-      <tr><th style="background:#F4F5F7;">Status</th><td>{status}</td></tr>
-      <tr><th style="background:#F4F5F7;">Dependencies</th><td></td></tr>
-      <tr><th style="background:#F4F5F7;">INDUS configuration</th><td></td></tr>
-      <tr><th style="background:#F4F5F7;">Swagger Release</th><td>{extra}</td></tr>
-      <tr><th style="background:#F4F5F7;">Main Changes</th><td>{boxhtml}</td></tr>
+    <table style="width:100%;border-collapse:collapse;margin:12px 0;border:1px solid #ccc;">
+      <tr><th style="background:#F4F5F7;width:200px;padding:10px;border:1px solid #ccc;">Version</th><td style="padding:10px;border:1px solid #ccc;">{ver}</td></tr>
+      <tr><th style="background:#F4F5F7;padding:10px;border:1px solid #ccc;">Status</th><td style="padding:10px;border:1px solid #ccc;">{status}</td></tr>
+      <tr><th style="background:#F4F5F7;padding:10px;border:1px solid #ccc;">Dependencies</th><td style="padding:10px;border:1px solid #ccc;"></td></tr>
+      <tr><th style="background:#F4F5F7;padding:10px;border:1px solid #ccc;">INDUS configuration</th><td style="padding:10px;border:1px solid #ccc;"></td></tr>
+      <tr><th style="background:#F4F5F7;padding:10px;border:1px solid #ccc;">Swagger Release</th><td style="padding:10px;border:1px solid #ccc;">{extra}</td></tr>
+      <tr><th style="background:#F4F5F7;padding:10px;border:1px solid #ccc;">Main Changes</th><td style="padding:10px;border:1px solid #ccc;">{boxhtml}</td></tr>
     </table>
     """
 
@@ -269,7 +308,7 @@ def build_linked_table(blocks):
     <h2>Combined Linked Issues</h2>
     <table style="width:100%;border-collapse:collapse;border:1px solid #ccc;">
     <tr style="background:#eee;">
-    <th>System</th><th>Version</th><th>Key</th><th>Summary</th><th>Owner</th><th>Status</th><th>Issue Type</th>
+    <th style="padding:10px;border:1px solid #ccc;">System</th><th style="padding:10px;border:1px solid #ccc;">Version</th><th style="padding:10px;border:1px solid #ccc;">Key</th><th style="padding:10px;border:1px solid #ccc;">Summary</th><th style="padding:10px;border:1px solid #ccc;">Owner</th><th style="padding:10px;border:1px solid #ccc;">Status</th><th style="padding:10px;border:1px solid #ccc;">Issue Type</th>
     </tr>
     """
 
@@ -291,13 +330,13 @@ def build_linked_table(blocks):
 
             html += (
                 "<tr>"
-                f"<td>{system}</td>"
-                f"<td>{version}</td>"
-                f"<td><a target='_blank' href='https://stla-iotpf-jira.atlassian.net/browse/{key}'>{key}</a></td>"
-                f"<td>{summary.group(1).strip() if summary else ''}</td>"
-                f"<td>{owner.group(2).strip() if owner else ''}</td>"
-                f"<td>{status.group(1).strip() if status else ''}</td>"
-                f"<td>{itype.group(1).strip() if itype else ''}</td>"
+                f"<td style='padding:10px;border:1px solid #ccc;'>{system}</td>"
+                f"<td style='padding:10px;border:1px solid #ccc;'>{version}</td>"
+                f"<td style='padding:10px;border:1px solid #ccc;'><a target='_blank' href='https://stla-iotpf-jira.atlassian.net/browse/{key}'>{key}</a></td>"
+                f"<td style='padding:10px;border:1px solid #ccc;'>{summary.group(1).strip() if summary else ''}</td>"
+                f"<td style='padding:10px;border:1px solid #ccc;'>{owner.group(2).strip() if owner else ''}</td>"
+                f"<td style='padding:10px;border:1px solid #ccc;'>{status.group(1).strip() if status else ''}</td>"
+                f"<td style='padding:10px;border:1px solid #ccc;'>{itype.group(1).strip() if itype else ''}</td>"
                 "</tr>"
             )
 
@@ -401,6 +440,18 @@ prev_refser2 = safe(last_non_null(stopper_data, year, week, "REFSER2"))
 curr_refser2 = safe(get_stopper_value("REFSER2"))
 prev_sering = safe(last_non_null(stopper_data, year, week, "SERING"))
 curr_sering = safe(get_stopper_value("SERING"))
+prev_vdp_proc = safe(last_non_null(stopper_data, year, week, "VDP_PROC"))
+curr_vdp_proc = safe(get_stopper_value("VDP_PROC"))
+prev_vdp_ds = safe(last_non_null(stopper_data, year, week, "VDP_DS"))
+curr_vdp_ds = safe(get_stopper_value("VDP_DS"))
+prev_vdp_ds_ssdp = safe(last_non_null(stopper_data, year, week, "VDP_DS_SSDP"))
+curr_vdp_ds_ssdp = safe(get_stopper_value("VDP_DS_SSDP"))
+prev_vdp_ds_mon = safe(last_non_null(stopper_data, year, week, "VDP_DS_MON"))
+curr_vdp_ds_mon = safe(get_stopper_value("VDP_DS_MON"))
+prev_vdp_store = safe(last_non_null(stopper_data, year, week, "VDP_STORE"))
+curr_vdp_store = safe(get_stopper_value("VDP_STORE"))
+prev_vdp_store_2 = safe(last_non_null(stopper_data, year, week, "VDP_STORE_2"))
+curr_vdp_store_2 = safe(get_stopper_value("VDP_STORE_2"))
 curr_apim = safe(get_stopper_value("APIM"))
 curr_eah = safe(get_stopper_value("EAH"))
 curr_docg = safe(get_stopper_value("DOCG"))
@@ -414,7 +465,7 @@ curr_patric = safe(get_stopper_value("PATRIC-SSDP"))
 
 # Determine which components have releases this week
 def get_highlight_style(component):
-    """Returns highlight style if component has releases, otherwise normal style"""
+    """Returns bgcolor attribute for Confluence if component has releases"""
     # Check the current version for this component
     current_versions = {
         "APIM": curr_apim,
@@ -427,38 +478,191 @@ def get_highlight_style(component):
         "REFTEL": curr_reftel,
         "CALVA": curr_calva,
         "REFSER2": curr_refser2,
-        "SERING": curr_sering
+        "SERING": curr_sering,
+        "VDP_PROC": curr_vdp_proc,
+        "VDP_DS": curr_vdp_ds,
+        "VDP_DS_SSDP": curr_vdp_ds_ssdp,
+        "VDP_DS_MON": curr_vdp_ds_mon,
+        "VDP_STORE": curr_vdp_store,
+        "VDP_STORE_2": curr_vdp_store_2
     }
     
     current_version = current_versions.get(component, "None")
     if current_version and current_version != "None" and current_version.strip():
-        # Component has releases - highlight with green background
-        return 'style="background-color:#E3FCEF;font-weight:bold;"'
+        # Component has releases - use bgcolor with hex color code (light green)
+        return 'bgcolor="DFFCF0"'
     else:
-        # No releases - normal style
+        # No releases - no color
         return ''
+
+
+def normalize_version_for_lookup(component, version):
+    if version is None:
+        return ""
+    value = str(version).strip()
+    if not value or value == "None":
+        return ""
+
+    component_prefixes = [
+        f"{component}-",
+        f"{component} ",
+    ]
+
+    if component == "DOCG":
+        component_prefixes.append("DOCG-")
+    if component == "RCZ":
+        component_prefixes.append("RCZ ")
+
+    upper_value = value.upper()
+    for prefix in component_prefixes:
+        if upper_value.startswith(prefix.upper()):
+            return value[len(prefix):].strip()
+
+    return value
+
+
+def build_enabler_key_map(parsed_blocks):
+    enabler_keys = {}
+    for b in parsed_blocks:
+        system = b.get("system")
+        version = (b.get("version") or "").strip()
+        key = (b.get("enabler_key") or "").strip()
+        if not system or not version or not key:
+            continue
+        enabler_keys.setdefault(system, {})[version] = key
+    return enabler_keys
+
+
+enabler_key_map = build_enabler_key_map(blocks)
+
+JIRA_BASE = os.getenv("JIRA_BASE", "https://stla-iotpf-jira.atlassian.net")
+JIRA_USERNAME = os.getenv("JIRA_USERNAME")
+JIRA_API_TOKEN = os.getenv("JIRA_API_TOKEN")
+_jira_key_cache = {}
+
+
+def find_enabler_key_in_jira(component, version):
+    cache_key = (component, version)
+    if cache_key in _jira_key_cache:
+        return _jira_key_cache[cache_key]
+
+    if not JIRA_USERNAME or not JIRA_API_TOKEN:
+        _jira_key_cache[cache_key] = None
+        return None
+
+    version_txt = str(version or "").strip()
+    exact_hyphen = f"{component}-{version_txt}".strip("-")
+    exact_space = f"{component} {version_txt}".strip()
+    jql_candidates = [
+        (
+            'project = IOTPF '
+            'AND issuetype = "Enabler Version - IOT PF" '
+            f'AND summary ~ "{exact_hyphen}" '
+            'ORDER BY created DESC'
+        ),
+        (
+            'project = IOTPF '
+            'AND issuetype = "Enabler Version - IOT PF" '
+            f'AND summary ~ "{exact_space}" '
+            'ORDER BY created DESC'
+        ),
+        (
+            'project = IOTPF '
+            'AND issuetype = "Enabler Version - IOT PF" '
+            f'AND summary ~ "{component}" '
+            f'AND summary ~ "{version_txt}" '
+            'ORDER BY created DESC'
+        ),
+    ]
+
+    try:
+        for jql in jql_candidates:
+            resp = requests.get(
+                f"{JIRA_BASE}/rest/api/3/search/jql",
+                auth=(JIRA_USERNAME, JIRA_API_TOKEN),
+                headers={"Accept": "application/json"},
+                params={"jql": jql, "maxResults": 1, "fields": "key"},
+                timeout=20,
+            )
+            if resp.status_code != 200:
+                continue
+            issues = (resp.json() or {}).get("issues", [])
+            if issues:
+                key = issues[0].get("key")
+                _jira_key_cache[cache_key] = key
+                return key
+    except Exception:
+        pass
+
+    _jira_key_cache[cache_key] = None
+    return None
+
+
+def format_version_with_link(component, version):
+    if version is None:
+        return "None"
+
+    display_version = str(version).strip() or "None"
+    if display_version == "None":
+        return display_version
+
+    key_map = enabler_key_map.get(component, {})
+    normalized = normalize_version_for_lookup(component, display_version)
+    issue_key = key_map.get(normalized) or key_map.get(display_version)
+
+    if not issue_key:
+        issue_key = find_enabler_key_in_jira(component, display_version)
+    if not issue_key:
+        issue_key = find_enabler_key_in_jira(component, normalized)
+    if not issue_key:
+        return display_version
+
+    return f"<a target='_blank' href='{JIRA_BASE}/browse/{issue_key}'>{display_version}</a>"
+
+
+def summary_row(component, prev_version, curr_version):
+    row_style = get_highlight_style(component)
+    prev_html = format_version_with_link(component, prev_version)
+    curr_html = format_version_with_link(component, curr_version)
+    return (
+        f"<tr><td {row_style} style=\"padding:10px;border:1px solid #ccc;\">{component}</td>"
+        f"<td {row_style} style=\"padding:10px;border:1px solid #ccc;\">{prev_html}</td>"
+        f"<td {row_style} style=\"padding:10px;border:1px solid #ccc;\">{curr_html}</td></tr>"
+    )
+
+
+def build_release_summary_rows():
+    rows = [
+        ("APIM", prev_apim, curr_apim),
+        ("EAH", prev_eah, curr_eah),
+        ("DOCG", prev_docg, curr_docg),
+        ("VDR", prev_vdr, curr_vdr),
+        ("PATRIC-SSDP", prev_patric, curr_patric),
+        ("RCZ", prev_rcz, curr_rcz),
+        ("SYNAPSE", prev_synapse, curr_synapse),
+        ("REFTEL", prev_reftel, curr_reftel),
+        ("CALVA", prev_calva, curr_calva),
+        ("REFSER2", prev_refser2, curr_refser2),
+        ("SERING", prev_sering, curr_sering),
+        ("VDP_PROC", prev_vdp_proc, curr_vdp_proc),
+        ("VDP_DS", prev_vdp_ds, curr_vdp_ds),
+        ("VDP_DS_SSDP", prev_vdp_ds_ssdp, curr_vdp_ds_ssdp),
+        ("VDP_DS_MON", prev_vdp_ds_mon, curr_vdp_ds_mon),
+        ("VDP_STORE", prev_vdp_store, curr_vdp_store),
+        ("VDP_STORE_2", prev_vdp_store_2, curr_vdp_store_2),
+    ]
+    return "\n".join(summary_row(component, prev_version, curr_version) for component, prev_version, curr_version in rows)
 
 release_summary_html = f"""
 <h2>Release Summary</h2>
-<table style="width:100%;border-collapse:collapse;">
+<table style="width:100%;border-collapse:collapse;border:1px solid #ccc;">
 <tr style="background:#0747A6;color:white;">
-    <th>Enabler/Application</th>
-    <th>Last Version</th>
-    <th>New Version</th>
+    <th style="padding:10px;text-align:left;border:1px solid #0747A6;">Enabler/Application</th>
+    <th style="padding:10px;text-align:left;border:1px solid #0747A6;">Last Version</th>
+    <th style="padding:10px;text-align:left;border:1px solid #0747A6;">New Version</th>
 </tr>
 
-<tr {get_highlight_style("APIM")}><td>APIM</td><td>{prev_apim}</td><td>{curr_apim}</td></tr>
-<tr {get_highlight_style("EAH")}><td>EAH</td><td>{prev_eah}</td><td>{curr_eah}</td></tr>
-<tr {get_highlight_style("DOCG")}><td>DOCG</td><td>{prev_docg}</td><td>{curr_docg}</td></tr>
-<tr {get_highlight_style("VDR")}><td>VDR</td><td>{prev_vdr}</td><td>{curr_vdr}</td></tr>
-<tr {get_highlight_style("PATRIC-SSDP")}><td>PATRIC-SSDP</td><td>{prev_patric}</td><td>{curr_patric}</td></tr>
-<tr {get_highlight_style("RCZ")}><td>RCZ</td><td>{prev_rcz}</td><td>{curr_rcz}</td></tr>
-<tr {get_highlight_style("SYNAPSE")}><td>SYNAPSE</td><td>{prev_synapse}</td><td>{curr_synapse}</td></tr>
-<tr {get_highlight_style("REFTEL")}><td>REFTEL</td><td>{prev_reftel}</td><td>{curr_reftel}</td></tr>
-<tr {get_highlight_style("CALVA")}><td>CALVA</td><td>{prev_calva}</td><td>{curr_calva}</td></tr>
-<tr {get_highlight_style("REFSER2")}><td>REFSER2</td><td>{prev_refser2}</td><td>{curr_refser2}</td></tr>
-<tr {get_highlight_style("SERING")}><td>SERING</td><td>{prev_sering}</td><td>{curr_sering}</td></tr>
-
+{build_release_summary_rows()}
 </table>
 """
 
@@ -479,7 +683,13 @@ def count_components_with_releases():
         "REFTEL": curr_reftel,
         "CALVA": curr_calva,
         "REFSER2": curr_refser2,
-        "SERING": curr_sering
+        "SERING": curr_sering,
+        "VDP_PROC": curr_vdp_proc,
+        "VDP_DS": curr_vdp_ds,
+        "VDP_DS_SSDP": curr_vdp_ds_ssdp,
+        "VDP_DS_MON": curr_vdp_ds_mon,
+        "VDP_STORE": curr_vdp_store,
+        "VDP_STORE_2": curr_vdp_store_2
     }
     
     for component, version in all_current_versions.items():
@@ -504,11 +714,17 @@ def generate_component_toc():
         "REFTEL": "reftel",
         "CALVA": "calva",
         "REFSER2": "refser2",
-        "SERING": "sering"
+        "SERING": "sering",
+        "VDP_PROC": "vdp-proc",
+        "VDP_DS": "vdp-ds",
+        "VDP_DS_SSDP": "vdp-ds-ssdp",
+        "VDP_DS_MON": "vdp-ds-mon",
+        "VDP_STORE": "vdp-store",
+        "VDP_STORE_2": "vdp-store-2"
     }
     
     # Check each component for releases and add to TOC if it has releases
-    for component in ["APIM", "EAH", "DOCG", "VDR", "PATRIC-SSDP", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING"]:
+    for component in ["APIM", "EAH", "DOCG", "VDR", "PATRIC-SSDP", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING", "VDP_PROC", "VDP_DS", "VDP_DS_SSDP", "VDP_DS_MON", "VDP_STORE", "VDP_STORE_2"]:
         if component in pv and pv[component]:
             # Use component name as anchor - Confluence will auto-generate for native headings
             anchor_id = component_anchors[component]
@@ -623,7 +839,7 @@ section_html = ""
 
 # APIM
 apim_html = ""
-for ver in sorted(pv["APIM"].keys(), key=vtuple):
+for ver in sorted(pv["APIM"].keys(), key=vtuple, reverse=True):
     d = pv["APIM"][ver]
     apim_html += make_table(
         f"APIM-{ver}",
@@ -638,7 +854,7 @@ if apim_html.strip():
 
 # EAH
 eah_html = ""
-for ver in sorted(pv["EAH"].keys(), key=vtuple):
+for ver in sorted(pv["EAH"].keys(), key=vtuple, reverse=True):
     d = pv["EAH"][ver]
     eah_html += make_table(
         f"EAH-{ver}",
@@ -653,7 +869,7 @@ if eah_html.strip():
 
 # DOCG
 docg_html = ""
-for ver in sorted(pv["DOCG"].keys(), key=vtuple):
+for ver in sorted(pv["DOCG"].keys(), key=vtuple, reverse=True):
     d = pv["DOCG"][ver]
     extra = ""
     docg_html += make_table(
@@ -669,7 +885,7 @@ if docg_html.strip():
 
 # VDR
 vdr_html = ""
-for ver in sorted(pv.get("VDR", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("VDR", {}).keys(), key=vtuple, reverse=True):
     d = pv["VDR"][ver]
     extra = ""
     vdr_html += make_table(
@@ -685,7 +901,7 @@ if vdr_html.strip():
 
 # PATRIC-SSDP
 patric_html = ""
-for ver in sorted(pv.get("PATRIC-SSDP", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("PATRIC-SSDP", {}).keys(), key=vtuple, reverse=True):
     d = pv["PATRIC-SSDP"][ver]
     extra = ""
     patric_html += make_table(
@@ -701,7 +917,7 @@ if patric_html.strip():
 
 # RCZ
 rcz_html = ""
-for ver in sorted(pv.get("RCZ", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("RCZ", {}).keys(), key=vtuple, reverse=True):
     d = pv["RCZ"][ver]
     extra = ""
     rcz_html += make_table(
@@ -718,7 +934,7 @@ if rcz_html.strip():
 
 # SYNAPSE
 synapse_html = ""
-for ver in sorted(pv.get("SYNAPSE", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("SYNAPSE", {}).keys(), key=vtuple, reverse=True):
     d = pv["SYNAPSE"][ver]
     extra = ""
     synapse_html += make_table(
@@ -735,7 +951,7 @@ if synapse_html.strip():
 
 # REFTEL
 reftel_html = ""
-for ver in sorted(pv.get("REFTEL", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("REFTEL", {}).keys(), key=vtuple, reverse=True):
     d = pv["REFTEL"][ver]
     extra = ""
     reftel_html += make_table(
@@ -752,7 +968,7 @@ if reftel_html.strip():
 
 # CALVA
 calva_html = ""
-for ver in sorted(pv.get("CALVA", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("CALVA", {}).keys(), key=vtuple, reverse=True):
     d = pv["CALVA"][ver]
     extra = ""
     calva_html += make_table(
@@ -769,7 +985,7 @@ if calva_html.strip():
 
 # REFSER2
 refser2_html = ""
-for ver in sorted(pv.get("REFSER2", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("REFSER2", {}).keys(), key=vtuple, reverse=True):
     d = pv["REFSER2"][ver]
     extra = ""
     refser2_html += make_table(
@@ -786,7 +1002,7 @@ if refser2_html.strip():
 
 # SERING
 sering_html = ""
-for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple, reverse=True):
     d = pv["SERING"][ver]
     extra = ""
     sering_html += make_table(
@@ -800,6 +1016,108 @@ for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple):
 
 if sering_html.strip():
     section_html += "<h3 id='SERING'>SERING</h3>\n" + sering_html
+
+# VDP_PROC
+vdp_proc_html = ""
+for ver in sorted(pv.get("VDP_PROC", {}).keys(), key=vtuple, reverse=True):
+    d = pv["VDP_PROC"][ver]
+    extra = ""
+    vdp_proc_html += make_table(
+        f"VDP_PROC-{ver}",
+        make_box("Features", "#E3FCEF", d["FEATURES"])
+        + make_box("Code Refactoring", "#DEEBFF", d["CODE"])
+        + make_box("Bug Fixes", "#FFEBE6", d["BUGS"]),
+        status=d["STATUS"],
+        extra=extra
+    )
+
+if vdp_proc_html.strip():
+    section_html += "<h3 id='VDP_PROC'>VDP_PROC</h3>\n" + vdp_proc_html
+
+# VDP_DS
+vdp_ds_html = ""
+for ver in sorted(pv.get("VDP_DS", {}).keys(), key=vtuple, reverse=True):
+    d = pv["VDP_DS"][ver]
+    extra = ""
+    vdp_ds_html += make_table(
+        f"VDP_DS-{ver}",
+        make_box("Features", "#E3FCEF", d["FEATURES"])
+        + make_box("Code Refactoring", "#DEEBFF", d["CODE"])
+        + make_box("Bug Fixes", "#FFEBE6", d["BUGS"]),
+        status=d["STATUS"],
+        extra=extra
+    )
+
+if vdp_ds_html.strip():
+    section_html += "<h3 id='VDP_DS'>VDP_DS</h3>\n" + vdp_ds_html
+
+# VDP_DS_SSDP
+vdp_ds_ssdp_html = ""
+for ver in sorted(pv.get("VDP_DS_SSDP", {}).keys(), key=vtuple, reverse=True):
+    d = pv["VDP_DS_SSDP"][ver]
+    extra = ""
+    vdp_ds_ssdp_html += make_table(
+        f"VDP_DS_SSDP-{ver}",
+        make_box("Features", "#E3FCEF", d["FEATURES"])
+        + make_box("Code Refactoring", "#DEEBFF", d["CODE"])
+        + make_box("Bug Fixes", "#FFEBE6", d["BUGS"]),
+        status=d["STATUS"],
+        extra=extra
+    )
+
+if vdp_ds_ssdp_html.strip():
+    section_html += "<h3 id='VDP_DS_SSDP'>VDP_DS_SSDP</h3>\n" + vdp_ds_ssdp_html
+
+# VDP_DS_MON
+vdp_ds_mon_html = ""
+for ver in sorted(pv.get("VDP_DS_MON", {}).keys(), key=vtuple, reverse=True):
+    d = pv["VDP_DS_MON"][ver]
+    extra = ""
+    vdp_ds_mon_html += make_table(
+        f"VDP_DS_MON-{ver}",
+        make_box("Features", "#E3FCEF", d["FEATURES"])
+        + make_box("Code Refactoring", "#DEEBFF", d["CODE"])
+        + make_box("Bug Fixes", "#FFEBE6", d["BUGS"]),
+        status=d["STATUS"],
+        extra=extra
+    )
+
+if vdp_ds_mon_html.strip():
+    section_html += "<h3 id='VDP_DS_MON'>VDP_DS_MON</h3>\n" + vdp_ds_mon_html
+
+# VDP_STORE
+vdp_store_html = ""
+for ver in sorted(pv.get("VDP_STORE", {}).keys(), key=vtuple, reverse=True):
+    d = pv["VDP_STORE"][ver]
+    extra = ""
+    vdp_store_html += make_table(
+        f"VDP_STORE-{ver}",
+        make_box("Features", "#E3FCEF", d["FEATURES"])
+        + make_box("Code Refactoring", "#DEEBFF", d["CODE"])
+        + make_box("Bug Fixes", "#FFEBE6", d["BUGS"]),
+        status=d["STATUS"],
+        extra=extra
+    )
+
+if vdp_store_html.strip():
+    section_html += "<h3 id='VDP_STORE'>VDP_STORE</h3>\n" + vdp_store_html
+
+# VDP_STORE_2
+vdp_store_2_html = ""
+for ver in sorted(pv.get("VDP_STORE_2", {}).keys(), key=vtuple, reverse=True):
+    d = pv["VDP_STORE_2"][ver]
+    extra = ""
+    vdp_store_2_html += make_table(
+        f"VDP_STORE_2-{ver}",
+        make_box("Features", "#E3FCEF", d["FEATURES"])
+        + make_box("Code Refactoring", "#DEEBFF", d["CODE"])
+        + make_box("Bug Fixes", "#FFEBE6", d["BUGS"]),
+        status=d["STATUS"],
+        extra=extra
+    )
+
+if vdp_store_2_html.strip():
+    section_html += "<h3 id='VDP_STORE_2'>VDP_STORE_2</h3>\n" + vdp_store_2_html
 
 
 linked_html = build_linked_table(blocks)
@@ -820,8 +1138,12 @@ html = f"""
 
 write(SUMMARY_HTML, html)
 
+# Check if there are actual releases in the parsed data (not just stopper file)
+has_actual_releases = any(pv.get(comp, {}) for comp in pv.keys())
+
 meta = {
     "week": week_display,
+    "has_releases": has_actual_releases,
     "prev_versions": {
         "APIM": prev_apim,
         "EAH": prev_eah,
@@ -829,6 +1151,17 @@ meta = {
         "VDR": prev_vdr,
         "PATRIC-SSDP": prev_patric,
         "RCZ": prev_rcz,
+        "SYNAPSE": prev_synapse,
+        "REFTEL": prev_reftel,
+        "CALVA": prev_calva,
+        "REFSER2": prev_refser2,
+        "SERING": prev_sering,
+        "VDP_PROC": prev_vdp_proc,
+        "VDP_DS": prev_vdp_ds,
+        "VDP_DS_SSDP": prev_vdp_ds_ssdp,
+        "VDP_DS_MON": prev_vdp_ds_mon,
+        "VDP_STORE": prev_vdp_store,
+        "VDP_STORE_2": prev_vdp_store_2,
     },
     "curr_versions": {
         "APIM": curr_apim,
@@ -837,6 +1170,17 @@ meta = {
         "VDR": curr_vdr,
         "PATRIC-SSDP": curr_patric,
         "RCZ": curr_rcz,
+        "SYNAPSE": curr_synapse,
+        "REFTEL": curr_reftel,
+        "CALVA": curr_calva,
+        "REFSER2": curr_refser2,
+        "SERING": curr_sering,
+        "VDP_PROC": curr_vdp_proc,
+        "VDP_DS": curr_vdp_ds,
+        "VDP_DS_SSDP": curr_vdp_ds_ssdp,
+        "VDP_DS_MON": curr_vdp_ds_mon,
+        "VDP_STORE": curr_vdp_store,
+        "VDP_STORE_2": curr_vdp_store_2,
     },
 }
 

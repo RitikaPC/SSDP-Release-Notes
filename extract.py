@@ -194,7 +194,15 @@ def agile_board_issues(board_id: int, quickfilter=None, max_per_page=200) -> Lis
         if quickfilter is not None:
             params["quickFilter"] = quickfilter
 
-        resp = SESSION.get(url, params=params)
+        try:
+            resp = SESSION.get(url, params=params, timeout=30)
+        except requests.exceptions.Timeout:
+            print(f"Timeout fetching board issues at startAt={start_at}", file=sys.stderr)
+            sys.exit(1)
+        except requests.exceptions.RequestException as e:
+            print(f"Request error: {e}", file=sys.stderr)
+            sys.exit(1)
+            
         if resp.status_code != 200:
             print(f"Agile API failed {resp.status_code}: {resp.text}", file=sys.stderr)
             sys.exit(1)
@@ -220,7 +228,10 @@ def jira_get_issue_full(key: str) -> dict:
         )
     }
     try:
-        resp = SESSION.get(url, params=params)
+        resp = SESSION.get(url, params=params, timeout=30)
+    except requests.exceptions.Timeout:
+        print(f"Timeout fetching {key}", file=sys.stderr)
+        return {}
     except Exception as e:
         print(f"Error fetching {key}: {e}", file=sys.stderr)
         return {}
@@ -297,6 +308,36 @@ def get_deploying_to_prod_date_from_history(issue_json):
                     return created.split("T")[0]
     return None
 
+def get_awaiting_go_nogo_date_from_history(issue_json):
+    """Return first date (YYYY-MM-DD) where status -> 'Awaiting Go / No go PROD' (or variations) in changelog, else None"""
+    histories = issue_json.get("changelog", {}).get("histories", [])
+    for h in histories:
+        for item in h.get("items", []):
+            if item.get("field") == "status":
+                to_status = item.get("toString") or ""
+                to_status_lower = to_status.lower()
+                # Handle various capitalization and spacing patterns; require PROD as a whole word
+                if (
+                    "awaiting" in to_status_lower
+                    and "go" in to_status_lower
+                    and re.search(r"\bprod\b", to_status_lower)
+                ):
+                    created = h.get("created")
+                    if created:
+                        return created.split("T")[0]
+    return None
+
+def is_awaiting_go_nogo_status(status_name):
+    """Check if status is a variant of 'Awaiting Go / No go PROD'"""
+    if not status_name:
+        return False
+    lower_status = status_name.lower()
+    return (
+        "awaiting" in lower_status
+        and "go" in lower_status
+        and re.search(r"\bprod\b", lower_status)
+    )
+
 def get_rcz_release_date(issue_json):
     """
     RCZ rule:
@@ -351,6 +392,12 @@ reftel_candidate_keys = []
 calva_candidate_keys = []
 refser2_candidate_keys = []
 sering_candidate_keys = []
+vdp_proc_candidate_keys = []
+vdp_ds_candidate_keys = []
+vdp_ds_ssdp_candidate_keys = []
+vdp_ds_mon_candidate_keys = []
+vdp_store_candidate_keys = []
+vdp_store_2_candidate_keys = []
 
 for it in issues:
     key = it.get("key")
@@ -413,11 +460,48 @@ for it in issues:
     if issuetype in enabler_issue_types and summary.startswith("SERING"):
         sering_candidate_keys.append(key)
 
+    if issuetype in enabler_issue_types and (summary.startswith("VDP_PROC") or summary.startswith("VDP PROC")):
+        vdp_proc_candidate_keys.append(key)
+
+    if issuetype in enabler_issue_types and summary.startswith("VDP_DS"):
+        # Differentiate VDP_DS variants by checking the summary title
+        if "VDP_DS_SSDP" in summary or "VDP DS SSDP" in summary:
+            vdp_ds_ssdp_candidate_keys.append(key)
+        elif "VDP_DS_MON" in summary or "VDP DS MON" in summary:
+           vdp_ds_mon_candidate_keys.append(key)
+        else:
+            # Base VDP_DS (without SSDP or MON suffix)
+            vdp_ds_candidate_keys.append(key)
+    
+    # Check VDP_STORE_2 first before VDP_STORE to avoid duplication
+    if issuetype in enabler_issue_types and (summary.startswith("VDP_STORE_2") or summary.startswith("VDP STORE 2") or summary.startswith("VDP STORE_2")):
+        vdp_store_2_candidate_keys.append(key)
+    elif issuetype in enabler_issue_types and (summary.startswith("VDP_STORE") or summary.startswith("VDP STORE")):
+        vdp_store_candidate_keys.append(key)
+
+print(f"Discovered {len(records)} APIM/EAH candidates", file=sys.stderr)
+print(f"Discovered {len(docg_candidate_keys)} DOCG candidates", file=sys.stderr)
+print(f"Discovered {len(vdr_candidate_keys)} VDR candidates", file=sys.stderr)
+print(f"Discovered {len(patric_candidate_keys)} PATRIC-SSDP candidates", file=sys.stderr)
+print(f"Discovered {len(rcz_candidate_keys)} RCZ candidates", file=sys.stderr)
+print(f"Discovered {len(synapse_candidate_keys)} SYNAPSE candidates", file=sys.stderr)
+print(f"Discovered {len(reftel_candidate_keys)} REFTEL candidates", file=sys.stderr)
+print(f"Discovered {len(calva_candidate_keys)} CALVA candidates", file=sys.stderr)
+print(f"Discovered {len(refser2_candidate_keys)} REFSER2 candidates", file=sys.stderr)
+print(f"Discovered {len(sering_candidate_keys)} SERING candidates", file=sys.stderr)
+print(f"Discovered {len(vdp_proc_candidate_keys)} VDP_PROC candidates", file=sys.stderr)
+print(f"Discovered {len(vdp_ds_candidate_keys)} VDP_DS candidates", file=sys.stderr)
+print(f"Discovered {len(vdp_ds_ssdp_candidate_keys)} VDP_DS_SSDP candidates", file=sys.stderr)
+print(f"Discovered {len(vdp_ds_mon_candidate_keys)} VDP_DS_MON candidates", file=sys.stderr)
+print(f"Discovered {len(vdp_store_candidate_keys)} VDP_STORE candidates", file=sys.stderr)
+print(f"Discovered {len(vdp_store_2_candidate_keys)} VDP_STORE_2 candidates", file=sys.stderr)
+
 # -----------------------
-# APIM/EAH selection (history-based)
+# APIM/EAH selection (history-based + status-based)
 # -----------------------
 apim_eah_enablers = []  # list of dicts
 
+print("Processing APIM/EAH issues...", file=sys.stderr)
 for r in records:
     key = r["key"]
     sysname = r["system"]
@@ -427,10 +511,33 @@ for r in records:
     if not full:
         continue
 
-    prod_date_str = get_prod_date_from_history(full)
+    f = full.get("fields", {}) or {}
+    status_name = (f.get("status") or {}).get("name", "")
+
+    # Skip tickets with "Deploying to PPROD" status
+    if status_name == "Deploying to PPROD":
+        continue
+
+    # Get deploy date based on status
+    prod_date_str = None
+    
+    if status_name == "In production":
+        prod_date_str = get_prod_date_from_history(full)
+    elif status_name == "Deploying to PROD":
+        prod_date_str = get_deploying_to_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        prod_date_str = get_awaiting_go_nogo_date_from_history(full)
+    else:
+        # For other statuses, try to find any relevant transition
+        prod_date_str = get_prod_date_from_history(full)
+        if not prod_date_str:
+            prod_date_str = get_awaiting_go_nogo_date_from_history(full)
+        if not prod_date_str:
+            prod_date_str = get_deploying_to_prod_date_from_history(full)
+    
     prod_date = parse_iso_date(prod_date_str)
     if not prod_date:
-        # no "In production" transition found — ignore
+        # no applicable transition found — ignore
         continue
 
     iso_year, iso_week, _ = prod_date.isocalendar()
@@ -440,7 +547,7 @@ for r in records:
             "system": sysname,
             "version": version,
             "summary": r["summary"],
-            "status": r["status"],
+            "status": status_name or r.get("status", ""),
             "assignee": r.get("assignee") or "",
             "issuetype": r.get("issuetype") or "",
             "deploy_date": prod_date_str,
@@ -540,7 +647,7 @@ for key in vdr_candidate_keys:
     })
 
 # -----------------------
-# PATRIC-SSDP selection (unchanged except regex)
+# PATRIC-SSDP selection
 # -----------------------
 patric_enablers = []
 for key in patric_candidate_keys:
@@ -550,7 +657,11 @@ for key in patric_candidate_keys:
 
     f = full.get("fields", {}) or {}
     status_name = (f.get("status") or {}).get("name", "")
-    if status_name != "In production":
+    if status_name not in (
+        "In production",
+        "Deploying to PROD",
+        "Awaiting Go / No go PROD"
+    ):
         continue
 
     summary_full = (f.get("summary") or "").strip()
@@ -562,7 +673,15 @@ for key in patric_candidate_keys:
         if m:
             enabler_version = m.group(1)
 
-    deploy_date_str = get_prod_date_from_history(full)
+    # Get deploy date based on status
+    deploy_date_str = None
+    if status_name == "In production":
+        deploy_date_str = get_prod_date_from_history(full)
+    elif status_name == "Deploying to PROD":
+        deploy_date_str = get_deploying_to_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
+    
     deploy_date = parse_iso_date(deploy_date_str)
     if not deploy_date:
         continue
@@ -669,8 +788,10 @@ for key in synapse_candidate_keys:
     # Use appropriate date extraction based on status
     if status_name == "In production":
         deploy_date_str = get_prod_date_from_history(full)
-    elif status_name in ("Deploying to PROD", "Awaiting Go / No go PROD"):
+    elif status_name == "Deploying to PROD":
         deploy_date_str = get_deploying_to_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
     else:
         deploy_date_str = None
         
@@ -732,8 +853,10 @@ for key in reftel_candidate_keys:
     # Use appropriate date extraction based on status
     if status_name == "In production":
         deploy_date_str = get_prod_date_from_history(full)
-    elif status_name in ("Deploying to PROD", "Awaiting Go / No go PROD"):
+    elif status_name == "Deploying to PROD":
         deploy_date_str = get_deploying_to_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
     else:
         deploy_date_str = None
         
@@ -790,8 +913,10 @@ for key in calva_candidate_keys:
     # Use appropriate date extraction based on status
     if status_name == "In production":
         deploy_date_str = get_prod_date_from_history(full)
-    elif status_name in ("Deploying to PROD", "Awaiting Go / No go PROD"):
+    elif status_name == "Deploying to PROD":
         deploy_date_str = get_deploying_to_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
     else:
         deploy_date_str = None
         
@@ -848,8 +973,10 @@ for key in refser2_candidate_keys:
     # Use appropriate date extraction based on status
     if status_name == "In production":
         deploy_date_str = get_prod_date_from_history(full)
-    elif status_name in ("Deploying to PROD", "Awaiting Go / No go PROD"):
+    elif status_name == "Deploying to PROD":
         deploy_date_str = get_deploying_to_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
     else:
         deploy_date_str = None
         
@@ -880,6 +1007,7 @@ for key in refser2_candidate_keys:
 # SERING selection
 # -----------------------
 sering_enablers = []
+vdp_proc_enablers = []
 for key in sering_candidate_keys:
     full = jira_get_issue_full(key)
     if not full:
@@ -914,8 +1042,10 @@ for key in sering_candidate_keys:
     # Use appropriate date extraction based on status
     if status_name == "In production":
         deploy_date_str = get_prod_date_from_history(full)
-    elif status_name in ("Deploying to PROD", "Awaiting Go / No go PROD"):
+    elif status_name == "Deploying to PROD":
         deploy_date_str = get_deploying_to_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
     else:
         deploy_date_str = None
         
@@ -941,6 +1071,433 @@ for key in sering_candidate_keys:
         "deploy_date": deploy_date_str,
         "full": full
     })
+
+# -----------------------
+# VDP_PROC selection
+# -----------------------
+for key in vdp_proc_candidate_keys:
+    full = jira_get_issue_full(key)
+    if not full:
+        continue
+
+    f = full.get("fields", {}) or {}
+    status_name = (f.get("status") or {}).get("name", "")
+    # VDP_PROC supports In production and other deployment statuses
+    if status_name not in ("In production", "Deploying to PROD", "Preproduction") and not is_awaiting_go_nogo_status(status_name):
+        print(f"  VDP_PROC {key}: Filtered - status {status_name} not in allowed list", file=sys.stderr)
+        continue
+
+    enabler_name = (f.get("customfield_10041") or {}).get("value", "") or "VDP_PROC"
+    enabler_version = (f.get("customfield_10042") or "").strip()
+
+    if not enabler_version:
+        print(f"  VDP_PROC {key}: Filtered - no version found", file=sys.stderr)
+        continue
+
+    # Get deploy date based on status
+    deploy_date_str = None
+    if status_name == "In production":
+        deploy_date_str = get_prod_date_from_history(full)
+    elif is_awaiting_go_nogo_status(status_name):
+        # For "Awaiting Go / No go PROD", prioritize when it entered that status
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
+        # If not in history, try custom fields
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+    elif status_name in ("Preproduction", "Deploying to PROD"):
+        deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+        if not deploy_date_str:
+            deploy_date_str = get_deploying_to_prod_date_from_history(full)
+
+    deploy_date = parse_iso_date(deploy_date_str)
+    if not deploy_date:
+        print(f"  VDP_PROC {key}: Filtered - could not parse date '{deploy_date_str}'", file=sys.stderr)
+        continue
+
+    iso_year, iso_week, _ = deploy_date.isocalendar()
+    if iso_week != target_week or iso_year != target_year:
+        print(f"  VDP_PROC {key}: Filtered - date {deploy_date_str} is week {iso_week}/{iso_year}, target is {target_week}/{target_year}", file=sys.stderr)
+        continue
+
+    assignee = (f.get("assignee") or {}).get("displayName", "")
+    issuetype_name = (f.get("issuetype") or {}).get("name", "")
+    summary_full = (f.get("summary") or "").strip()
+    
+    print(f"  VDP_PROC {key}: INCLUDED - {enabler_version} ({status_name}) - {deploy_date_str} (week {iso_week}/{iso_year})", file=sys.stderr)
+
+    vdp_proc_enablers.append({
+        "key": key,
+        "enabler_name": enabler_name,
+        "enabler_version": enabler_version,
+        "summary": summary_full,
+        "status": status_name,
+        "assignee": assignee,
+        "issuetype": issuetype_name,
+        "deploy_date": deploy_date_str,
+        "full": full
+    })
+
+# -----------------------
+# VDP_DS selection (base component)
+# -----------------------
+vdp_ds_enablers = []
+for key in vdp_ds_candidate_keys:
+    full = jira_get_issue_full(key)
+    if not full:
+        continue
+
+    f = full.get("fields", {}) or {}
+    status_name = (f.get("status") or {}).get("name", "")
+    if status_name not in ("In production", "Deploying to PROD", "Preproduction") and not is_awaiting_go_nogo_status(status_name):
+        continue
+    if "VDP_DS_SSDP" in summary_full or "VDP DS SSDP" in summary_full:
+        continue
+    if "VDP_DS_MON" in summary_full or "VDP DS MON" in summary_full:
+        continue
+
+    enabler_name = (f.get("customfield_10041") or {}).get("value", "") or "VDP_DS"
+    enabler_version = (f.get("customfield_10042") or "").strip()
+
+    if not enabler_version:
+        continue
+
+    # Get deploy date based on status
+    deploy_date_str = None
+    if status_name == "In production":
+        deploy_date_str = get_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        # For "Awaiting Go / No go PROD", prioritize when it entered that status
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
+        # If not in history, try custom fields
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+    else:
+        deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+        if not deploy_date_str:
+            deploy_date_str = get_deploying_to_prod_date_from_history(full)
+
+    deploy_date = parse_iso_date(deploy_date_str)
+    if not deploy_date:
+        continue
+
+    iso_year, iso_week, _ = deploy_date.isocalendar()
+    if iso_week != target_week or iso_year != target_year:
+        continue
+
+    assignee = (f.get("assignee") or {}).get("displayName", "")
+    issuetype_name = (f.get("issuetype") or {}).get("name", "")
+
+    vdp_ds_enablers.append({
+        "key": key,
+        "enabler_name": enabler_name,
+        "enabler_version": enabler_version,
+        "summary": summary_full,
+        "status": status_name,
+        "assignee": assignee,
+        "issuetype": issuetype_name,
+        "deploy_date": deploy_date_str,
+        "full": full
+    })
+
+# -----------------------
+# VDP_DS_SSDP selection  
+# -----------------------
+vdp_ds_ssdp_enablers = []
+for key in vdp_ds_ssdp_candidate_keys:
+    full = jira_get_issue_full(key)
+    if not full:
+        continue
+
+    f = full.get("fields", {}) or {}
+    status_name = (f.get("status") or {}).get("name", "")
+    if status_name not in ("In production", "Deploying to PROD", "Awaiting Go / No go PROD", "Preproduction"):
+        continue
+
+    summary_full = (f.get("summary") or "").strip()
+    
+    # Verify this is VDP_DS_SSDP variant
+    if not ("VDP_DS_SSDP" in summary_full or "VDP DS SSDP" in summary_full):
+        continue
+
+    enabler_name = (f.get("customfield_10041") or {}).get("value", "") or "VDP_DS"
+    enabler_version = (f.get("customfield_10042") or "").strip()
+
+    if not enabler_version:
+        continue
+
+    # Get deploy date based on status
+    deploy_date_str = None
+    if status_name == "In production":
+        deploy_date_str = get_prod_date_from_history(full)
+    elif is_awaiting_go_nogo_status(status_name):
+        # For "Awaiting Go / No go PROD", prioritize when it entered that status
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
+        # If not in history, try custom fields
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+    else:
+        deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+        if not deploy_date_str:
+            deploy_date_str = get_deploying_to_prod_date_from_history(full)
+
+    deploy_date = parse_iso_date(deploy_date_str)
+    if not deploy_date:
+        continue
+
+    iso_year, iso_week, _ = deploy_date.isocalendar()
+    if iso_week != target_week or iso_year != target_year:
+        continue
+
+    assignee = (f.get("assignee") or {}).get("displayName", "")
+    issuetype_name = (f.get("issuetype") or {}).get("name", "")
+
+    vdp_ds_ssdp_enablers.append({
+        "key": key,
+        "enabler_name": enabler_name,
+        "enabler_version": enabler_version,
+        "summary": summary_full,
+        "status": status_name,
+        "assignee": assignee,
+        "issuetype": issuetype_name,
+        "deploy_date": deploy_date_str,
+        "full": full
+    })
+
+# -----------------------
+# VDP_DS_MON selection
+# -----------------------
+vdp_ds_mon_enablers = []
+for key in vdp_ds_mon_candidate_keys:
+    full = jira_get_issue_full(key)
+    if not full:
+        continue
+
+    f = full.get("fields", {}) or {}
+    status_name = (f.get("status") or {}).get("name", "")
+    if status_name not in ("In production", "Deploying to PROD", "Awaiting Go / No go PROD", "Preproduction"):
+        continue
+
+    summary_full = (f.get("summary") or "").strip()
+    
+    # Verify this is VDP_DS_MON variant
+    if not ("VDP_DS_MON" in summary_full or "VDP DS MON" in summary_full):
+        continue
+
+    enabler_name = (f.get("customfield_10041") or {}).get("value", "") or "VDP_DS"
+    enabler_version = (f.get("customfield_10042") or "").strip()
+
+    if not enabler_version:
+        continue
+
+    # Get deploy date based on status
+    deploy_date_str = None
+    if status_name == "In production":
+        deploy_date_str = get_prod_date_from_history(full)
+    elif status_name == "Awaiting Go / No go PROD":
+        # For "Awaiting Go / No go PROD", prioritize when it entered that status
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
+        # If not in history, try custom fields
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+    else:
+        deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+        if not deploy_date_str:
+            deploy_date_str = get_deploying_to_prod_date_from_history(full)
+
+    deploy_date = parse_iso_date(deploy_date_str)
+    if not deploy_date:
+        continue
+
+    iso_year, iso_week, _ = deploy_date.isocalendar()
+    if iso_week != target_week or iso_year != target_year:
+        continue
+
+    assignee = (f.get("assignee") or {}).get("displayName", "")
+    issuetype_name = (f.get("issuetype") or {}).get("name", "")
+
+    vdp_ds_mon_enablers.append({
+        "key": key,
+        "enabler_name": enabler_name,
+        "enabler_version": enabler_version,
+        "summary": summary_full,
+        "status": status_name,
+        "assignee": assignee,
+        "issuetype": issuetype_name,
+        "deploy_date": deploy_date_str,
+        "full": full
+    })
+
+# -----------------------
+# VDP_STORE selection
+# -----------------------
+vdp_store_enablers = []
+vdp_store_debug_count = 0
+vdp_store_filtered_count = 0
+for key in vdp_store_candidate_keys:
+    vdp_store_debug_count += 1
+    full = jira_get_issue_full(key)
+    if not full:
+        vdp_store_filtered_count += 1
+        print(f"  VDP_STORE {key}: no full data", file=sys.stderr)
+        continue
+
+    f = full.get("fields", {}) or {}
+    status_name = (f.get("status") or {}).get("name", "")
+    if status_name not in ("In production", "Deploying to PROD", "Preproduction") and not is_awaiting_go_nogo_status(status_name):
+        vdp_store_filtered_count += 1
+        print(f"  VDP_STORE {key}: status '{status_name}' not allowed", file=sys.stderr)
+        continue
+
+    summary_full = (f.get("summary") or "").strip()
+    
+    # Verify this is base VDP_STORE (not VDP_STORE_2 variant)
+    if "VDP_STORE_2" in summary_full or "VDP STORE 2" in summary_full or "VDP STORE_2" in summary_full:
+        vdp_store_filtered_count += 1
+        print(f"  VDP_STORE {key}: excluded (is VDP_STORE_2 variant)", file=sys.stderr)
+        continue
+
+    enabler_name = (f.get("customfield_10041") or {}).get("value", "") or "VDP_STORE"
+    enabler_version = (f.get("customfield_10042") or "").strip()
+
+    if not enabler_version:
+        vdp_store_filtered_count += 1
+        print(f"  VDP_STORE {key}: no enabler_version", file=sys.stderr)
+        continue
+
+    # Get deploy date based on status
+    deploy_date_str = None
+    if status_name == "In production":
+        deploy_date_str = get_prod_date_from_history(full)
+    elif is_awaiting_go_nogo_status(status_name):
+        # For "Awaiting Go / No go PROD", prioritize when it entered that status
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
+        # If not in history, try custom fields
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+    else:
+        deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+        if not deploy_date_str:
+            deploy_date_str = get_deploying_to_prod_date_from_history(full)
+
+    deploy_date = parse_iso_date(deploy_date_str)
+    if not deploy_date:
+        vdp_store_filtered_count += 1
+        print(f"  VDP_STORE {key}: no deploy date (raw: '{deploy_date_str}')", file=sys.stderr)
+        continue
+
+    iso_year, iso_week, _ = deploy_date.isocalendar()
+    if iso_week != target_week or iso_year != target_year:
+        vdp_store_filtered_count += 1
+        print(f"  VDP_STORE {key}: week mismatch {iso_year}-W{iso_week} != {target_year}-W{target_week}", file=sys.stderr)
+        continue
+
+    assignee = (f.get("assignee") or {}).get("displayName", "")
+    issuetype_name = (f.get("issuetype") or {}).get("name", "")
+
+    vdp_store_enablers.append({
+        "key": key,
+        "enabler_name": enabler_name,
+        "enabler_version": enabler_version,
+        "summary": summary_full,
+        "status": status_name,
+        "assignee": assignee,
+        "issuetype": issuetype_name,
+        "deploy_date": deploy_date_str,
+        "full": full
+    })
+    print(f"  VDP_STORE {key}: SELECTED {enabler_version} ({status_name})", file=sys.stderr)
+
+print(f"VDP_STORE: {len(vdp_store_enablers)} selected from {vdp_store_debug_count} candidates, {vdp_store_filtered_count} filtered", file=sys.stderr)
+
+# -----------------------
+# VDP_STORE_2 selection
+# -----------------------
+vdp_store_2_enablers = []
+vdp_store_2_debug_count = 0
+vdp_store_2_filtered_count = 0
+for key in vdp_store_2_candidate_keys:
+    vdp_store_2_debug_count += 1
+    full = jira_get_issue_full(key)
+    if not full:
+        vdp_store_2_filtered_count += 1
+        continue
+
+    f = full.get("fields", {}) or {}
+    status_name = (f.get("status") or {}).get("name", "")
+    if status_name not in ("In production", "Deploying to PROD", "Preproduction") and not is_awaiting_go_nogo_status(status_name):
+        continue
+
+    summary_full = (f.get("summary") or "").strip()
+
+    enabler_name = (f.get("customfield_10041") or {}).get("value", "") or "VDP_STORE_2"
+    enabler_version = (f.get("customfield_10042") or "").strip()
+
+    if not enabler_version:
+        continue
+
+    # Get deploy date based on status
+    deploy_date_str = None
+    if status_name == "In production":
+        deploy_date_str = get_prod_date_from_history(full)
+    elif is_awaiting_go_nogo_status(status_name):
+        # For "Awaiting Go / No go PROD", prioritize when it entered that status
+        deploy_date_str = get_awaiting_go_nogo_date_from_history(full)
+        # If not in history, try custom fields
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+    else:
+        deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
+        if not deploy_date_str:
+            deploy_date_str = get_deploying_to_prod_date_from_history(full)
+
+    deploy_date = parse_iso_date(deploy_date_str)
+    if not deploy_date:
+        continue
+
+    iso_year, iso_week, _ = deploy_date.isocalendar()
+    if iso_week != target_week or iso_year != target_year:
+        continue
+
+    assignee = (f.get("assignee") or {}).get("displayName", "")
+    issuetype_name = (f.get("issuetype") or {}).get("name", "")
+
+    vdp_store_2_enablers.append({
+        "key": key,
+        "enabler_name": enabler_name,
+        "enabler_version": enabler_version,
+        "summary": summary_full,
+        "status": status_name,
+        "assignee": assignee,
+        "issuetype": issuetype_name,
+        "deploy_date": deploy_date_str,
+        "full": full
+    })
+
+print(f"VDP_STORE_2: {len(vdp_store_2_enablers)} selected from {vdp_store_2_debug_count} candidates, {vdp_store_2_filtered_count} filtered", file=sys.stderr)
 
 # -----------------------
 # Write Linked_Issues_Report.txt
@@ -1400,6 +1957,276 @@ for sering in sorted(sering_enablers, key=lambda d: d.get("enabler_version") or 
         out_lines.append("")
     out_lines.append("")
 
+# VDP_PROC blocks
+for vdp_proc in sorted(vdp_proc_enablers, key=lambda d: d.get("enabler_version") or ""):
+    name = vdp_proc.get("enabler_name") or "VDP_PROC"
+    ver = vdp_proc.get("enabler_version") or ""
+    header_name = f"{name}-{ver}" if ver else name
+
+    out_lines.append(f"======= {header_name} ({vdp_proc['key']}) =======\n")
+    out_lines.append("")
+    out_lines.append(f"Issue: {vdp_proc['key']}")
+    out_lines.append(f"Summary: {vdp_proc['summary']}")
+    out_lines.append(f"Status: {vdp_proc['status']}")
+    if vdp_proc.get("assignee"):
+        out_lines.append(f"Owner: {vdp_proc['assignee']}")
+    if vdp_proc.get("issuetype"):
+        out_lines.append(f"Issue Type: {vdp_proc['issuetype']}")
+    if vdp_proc.get("deploy_date"):
+        out_lines.append(f"Deploy Date: {vdp_proc['deploy_date']}")
+    out_lines.append("")
+
+    linked = extract_linked_issues_from_issue_json(vdp_proc["full"])
+    if linked:
+        out_lines.append("Linked issues:")
+        out_lines.append("")
+        for l in linked:
+            k = l.get("key") or ""
+            summ = (l.get("summary") or "").replace("\n", " ").strip()
+            owner = l.get("assignee") or ""
+            st = l.get("status") or ""
+            typ = l.get("issuetype") or ""
+            created = l.get("created") or ""
+            out_lines.append(f"Issue: {k}")
+            out_lines.append(f"Summary: {summ}")
+            out_lines.append(f"Status: {st}")
+            if owner:
+                out_lines.append(f"Owner: {owner}")
+            if typ:
+                out_lines.append(f"Issue Type: {typ}")
+            if created:
+                out_lines.append(f"Created: {created}")
+            out_lines.append("")
+    else:
+        out_lines.append("No linked issues found.")
+        out_lines.append("")
+    out_lines.append("")
+
+# VDP_DS blocks (base component)
+for vdp_ds in sorted(vdp_ds_enablers, key=lambda d: d.get("enabler_version") or ""):
+    name = "VDP_DS"  # Display as VDP_DS
+    ver = vdp_ds.get("enabler_version") or ""
+    header_name = f"{name}-{ver}" if ver else name
+
+    out_lines.append(f"======= {header_name} ({vdp_ds['key']}) =======\n")
+    out_lines.append("")
+    out_lines.append(f"Issue: {vdp_ds['key']}")
+    out_lines.append(f"Summary: {vdp_ds['summary']}")
+    out_lines.append(f"Status: {vdp_ds['status']}")
+    if vdp_ds.get("assignee"):
+        out_lines.append(f"Owner: {vdp_ds['assignee']}")
+    if vdp_ds.get("issuetype"):
+        out_lines.append(f"Issue Type: {vdp_ds['issuetype']}")
+    if vdp_ds.get("deploy_date"):
+        out_lines.append(f"Deploy Date: {vdp_ds['deploy_date']}")
+    out_lines.append("")
+
+    linked = extract_linked_issues_from_issue_json(vdp_ds["full"])
+    if linked:
+        out_lines.append("Linked issues:")
+        out_lines.append("")
+        for l in linked:
+            k = l.get("key") or ""
+            summ = (l.get("summary") or "").replace("\n", " ").strip()
+            owner = l.get("assignee") or ""
+            st = l.get("status") or ""
+            typ = l.get("issuetype") or ""
+            created = l.get("created") or ""
+            out_lines.append(f"Issue: {k}")
+            out_lines.append(f"Summary: {summ}")
+            out_lines.append(f"Status: {st}")
+            if owner:
+                out_lines.append(f"Owner: {owner}")
+            if typ:
+                out_lines.append(f"Issue Type: {typ}")
+            if created:
+                out_lines.append(f"Created: {created}")
+            out_lines.append("")
+    else:
+        out_lines.append("No linked issues found.")
+        out_lines.append("")
+    out_lines.append("")
+
+# VDP_DS_SSDP blocks
+for vdp_ds_ssdp in sorted(vdp_ds_ssdp_enablers, key=lambda d: d.get("enabler_version") or ""):
+    name = "VDP_DS_SSDP"  # Display as VDP_DS_SSDP
+    ver = vdp_ds_ssdp.get("enabler_version") or ""
+    header_name = f"{name}-{ver}" if ver else name
+
+    out_lines.append(f"======= {header_name} ({vdp_ds_ssdp['key']}) =======\n")
+    out_lines.append("")
+    out_lines.append(f"Issue: {vdp_ds_ssdp['key']}")
+    out_lines.append(f"Summary: {vdp_ds_ssdp['summary']}")
+    out_lines.append(f"Status: {vdp_ds_ssdp['status']}")
+    if vdp_ds_ssdp.get("assignee"):
+        out_lines.append(f"Owner: {vdp_ds_ssdp['assignee']}")
+    if vdp_ds_ssdp.get("issuetype"):
+        out_lines.append(f"Issue Type: {vdp_ds_ssdp['issuetype']}")
+    if vdp_ds_ssdp.get("deploy_date"):
+        out_lines.append(f"Deploy Date: {vdp_ds_ssdp['deploy_date']}")
+    out_lines.append("")
+
+    linked = extract_linked_issues_from_issue_json(vdp_ds_ssdp["full"])
+    if linked:
+        out_lines.append("Linked issues:")
+        out_lines.append("")
+        for l in linked:
+            k = l.get("key") or ""
+            summ = (l.get("summary") or "").replace("\n", " ").strip()
+            owner = l.get("assignee") or ""
+            st = l.get("status") or ""
+            typ = l.get("issuetype") or ""
+            created = l.get("created") or ""
+            out_lines.append(f"Issue: {k}")
+            out_lines.append(f"Summary: {summ}")
+            out_lines.append(f"Status: {st}")
+            if owner:
+                out_lines.append(f"Owner: {owner}")
+            if typ:
+                out_lines.append(f"Issue Type: {typ}")
+            if created:
+                out_lines.append(f"Created: {created}")
+            out_lines.append("")
+    else:
+        out_lines.append("No linked issues found.")
+        out_lines.append("")
+    out_lines.append("")
+
+# VDP_DS_MON blocks
+for vdp_ds_mon in sorted(vdp_ds_mon_enablers, key=lambda d: d.get("enabler_version") or ""):
+    name = "VDP_DS_MON"  # Display as VDP_DS_MON
+    ver = vdp_ds_mon.get("enabler_version") or ""
+    header_name = f"{name}-{ver}" if ver else name
+
+    out_lines.append(f"======= {header_name} ({vdp_ds_mon['key']}) =======\n")
+    out_lines.append("")
+    out_lines.append(f"Issue: {vdp_ds_mon['key']}")
+    out_lines.append(f"Summary: {vdp_ds_mon['summary']}")
+    out_lines.append(f"Status: {vdp_ds_mon['status']}")
+    if vdp_ds_mon.get("assignee"):
+        out_lines.append(f"Owner: {vdp_ds_mon['assignee']}")
+    if vdp_ds_mon.get("issuetype"):
+        out_lines.append(f"Issue Type: {vdp_ds_mon['issuetype']}")
+    if vdp_ds_mon.get("deploy_date"):
+        out_lines.append(f"Deploy Date: {vdp_ds_mon['deploy_date']}")
+    out_lines.append("")
+
+    linked = extract_linked_issues_from_issue_json(vdp_ds_mon["full"])
+    if linked:
+        out_lines.append("Linked issues:")
+        out_lines.append("")
+        for l in linked:
+            k = l.get("key") or ""
+            summ = (l.get("summary") or "").replace("\n", " ").strip()
+            owner = l.get("assignee") or ""
+            st = l.get("status") or ""
+            typ = l.get("issuetype") or ""
+            created = l.get("created") or ""
+            out_lines.append(f"Issue: {k}")
+            out_lines.append(f"Summary: {summ}")
+            out_lines.append(f"Status: {st}")
+            if owner:
+                out_lines.append(f"Owner: {owner}")
+            if typ:
+                out_lines.append(f"Issue Type: {typ}")
+            if created:
+                out_lines.append(f"Created: {created}")
+            out_lines.append("")
+    else:
+        out_lines.append("No linked issues found.")
+        out_lines.append("")
+    out_lines.append("")
+
+# VDP_STORE blocks
+for vdp_store in sorted(vdp_store_enablers, key=lambda d: d.get("enabler_version") or ""):
+    name = "VDP_STORE"
+    ver = vdp_store.get("enabler_version") or ""
+    header_name = f"{name}-{ver}" if ver else name
+
+    out_lines.append(f"======= {header_name} ({vdp_store['key']}) =======")
+    out_lines.append("")
+    out_lines.append(f"Issue: {vdp_store['key']}")
+    out_lines.append(f"Summary: {vdp_store['summary']}")
+    out_lines.append(f"Status: {vdp_store['status']}")
+    if vdp_store.get("assignee"):
+        out_lines.append(f"Owner: {vdp_store['assignee']}")
+    if vdp_store.get("issuetype"):
+        out_lines.append(f"Issue Type: {vdp_store['issuetype']}")
+    if vdp_store.get("deploy_date"):
+        out_lines.append(f"Deploy Date: {vdp_store['deploy_date']}")
+    out_lines.append("")
+
+    linked = extract_linked_issues_from_issue_json(vdp_store["full"])
+    if linked:
+        out_lines.append("Linked issues:")
+        out_lines.append("")
+        for l in linked:
+            k = l.get("key") or ""
+            summ = (l.get("summary") or "").replace("\n", " ").strip()
+            owner = l.get("assignee") or ""
+            st = l.get("status") or ""
+            typ = l.get("issuetype") or ""
+            created = l.get("created") or ""
+            out_lines.append(f"Issue: {k}")
+            out_lines.append(f"Summary: {summ}")
+            out_lines.append(f"Status: {st}")
+            if owner:
+                out_lines.append(f"Owner: {owner}")
+            if typ:
+                out_lines.append(f"Issue Type: {typ}")
+            if created:
+                out_lines.append(f"Created: {created}")
+            out_lines.append("")
+    else:
+        out_lines.append("No linked issues found.")
+        out_lines.append("")
+    out_lines.append("")
+
+# VDP_STORE_2 blocks
+for vdp_store_2 in sorted(vdp_store_2_enablers, key=lambda d: d.get("enabler_version") or ""):
+    name = "VDP_STORE_2"
+    ver = vdp_store_2.get("enabler_version") or ""
+    header_name = f"{name}-{ver}" if ver else name
+
+    out_lines.append(f"======= {header_name} ({vdp_store_2['key']}) =======")
+    out_lines.append("")
+    out_lines.append(f"Issue: {vdp_store_2['key']}")
+    out_lines.append(f"Summary: {vdp_store_2['summary']}")
+    out_lines.append(f"Status: {vdp_store_2['status']}")
+    if vdp_store_2.get("assignee"):
+        out_lines.append(f"Owner: {vdp_store_2['assignee']}")
+    if vdp_store_2.get("issuetype"):
+        out_lines.append(f"Issue Type: {vdp_store_2['issuetype']}")
+    if vdp_store_2.get("deploy_date"):
+        out_lines.append(f"Deploy Date: {vdp_store_2['deploy_date']}")
+    out_lines.append("")
+
+    linked = extract_linked_issues_from_issue_json(vdp_store_2["full"])
+    if linked:
+        out_lines.append("Linked issues:")
+        out_lines.append("")
+        for l in linked:
+            k = l.get("key") or ""
+            summ = (l.get("summary") or "").replace("\n", " ").strip()
+            owner = l.get("assignee") or ""
+            st = l.get("status") or ""
+            typ = l.get("issuetype") or ""
+            created = l.get("created") or ""
+            out_lines.append(f"Issue: {k}")
+            out_lines.append(f"Summary: {summ}")
+            out_lines.append(f"Status: {st}")
+            if owner:
+                out_lines.append(f"Owner: {owner}")
+            if typ:
+                out_lines.append(f"Issue Type: {typ}")
+            if created:
+                out_lines.append(f"Created: {created}")
+            out_lines.append("")
+    else:
+        out_lines.append("No linked issues found.")
+        out_lines.append("")
+    out_lines.append("")
+
 # Save Linked_Issues_Report.txt
 content = "\n".join(out_lines).rstrip() + ("\n" if out_lines else "")
 with open(LINKED_FILE, "w", encoding="utf-8") as f:
@@ -1420,7 +2247,13 @@ store_entry = {
     "REFTEL": None,
     "CALVA": None,
     "REFSER2": None,
-    "SERING": None
+    "SERING": None,
+    "VDP_PROC": None,
+    "VDP_DS": None,
+    "VDP_DS_SSDP": None,
+    "VDP_DS_MON": None,
+    "VDP_STORE": None,
+    "VDP_STORE_2": None
 }
 
 # -----------------------
@@ -1552,13 +2385,84 @@ sering_versions = [
 if sering_versions:
     store_entry["SERING"] = ",".join(sorted(set(sering_versions), key=vtuple))
 
+# -----------------------
+# -----------------------
+# VDP_PROC → In production or Deploying to PROD ONLY
+# -----------------------
+vdp_proc_versions = [
+    v["enabler_version"]
+    for v in vdp_proc_enablers
+    if v.get("status") in ("In production", "Deploying to PROD", "Deploying To PROD")
+       and v.get("enabler_version")
+]
+if vdp_proc_versions:
+    store_entry["VDP_PROC"] = ",".join(sorted(set(vdp_proc_versions), key=vtuple))
+
+# -----------------------
+# VDP_DS → In production or Deploying to PROD ONLY
+# -----------------------
+vdp_ds_versions = [
+    v["enabler_version"]
+    for v in vdp_ds_enablers
+    if v.get("status") in ("In production", "Deploying to PROD", "Deploying To PROD")
+       and v.get("enabler_version")
+]
+if vdp_ds_versions:
+    store_entry["VDP_DS"] = ",".join(sorted(set(vdp_ds_versions), key=vtuple))
+
+# -----------------------
+# VDP_DS_SSDP → In production or Deploying to PROD ONLY
+# -----------------------
+vdp_ds_ssdp_versions = [
+    v["enabler_version"]
+    for v in vdp_ds_ssdp_enablers
+    if v.get("status") in ("In production", "Deploying to PROD", "Deploying To PROD")
+       and v.get("enabler_version")
+]
+if vdp_ds_ssdp_versions:
+    store_entry["VDP_DS_SSDP"] = ",".join(sorted(set(vdp_ds_ssdp_versions), key=vtuple))
+
+# -----------------------
+# VDP_DS_MON → In production or Deploying to PROD ONLY
+# -----------------------
+vdp_ds_mon_versions = [
+    v["enabler_version"]
+    for v in vdp_ds_mon_enablers
+    if v.get("status") in ("In production", "Deploying to PROD", "Deploying To PROD")
+       and v.get("enabler_version")
+]
+if vdp_ds_mon_versions:
+    store_entry["VDP_DS_MON"] = ",".join(sorted(set(vdp_ds_mon_versions), key=vtuple))
+
+# -----------------------
+# VDP_STORE → In production or Deploying to PROD ONLY
+# -----------------------
+vdp_store_versions = [
+    v["enabler_version"]
+    for v in vdp_store_enablers
+    if v.get("status") in ("In production", "Deploying to PROD", "Deploying To PROD")
+       and v.get("enabler_version")
+]
+if vdp_store_versions:
+    store_entry["VDP_STORE"] = ",".join(sorted(set(vdp_store_versions), key=vtuple))
+
+# -----------------------
+# VDP_STORE_2 → In production or Deploying to PROD ONLY
+# -----------------------
+vdp_store_2_versions = [
+    v["enabler_version"]
+    for v in vdp_store_2_enablers
+    if v.get("status") in ("In production", "Deploying to PROD", "Deploying To PROD")
+       and v.get("enabler_version")
+]
+if vdp_store_2_versions:
+    store_entry["VDP_STORE_2"] = ",".join(sorted(set(vdp_store_2_versions), key=vtuple))
+
 
 # -----------------------
 # Persist stopper
 # -----------------------
 existing = stopper.get(week_str)
-legacy_week_str = str(target_week)  # Legacy format for backward compatibility
-existing_legacy = stopper.get(legacy_week_str)
 
 def data_has_changed(existing_data, new_data):
     """Check if new data is different from existing data"""
@@ -1587,29 +2491,21 @@ if not should_update:
             print(f"Week {week_str} has new releases - updating existing entry")
         else:
             print(f"Week {week_str} already exists with same data: {existing}")
-    elif existing_legacy is not None:
-        should_update = data_has_changed(existing_legacy, store_entry)
-        if should_update:
-            print(f"Week {legacy_week_str} has new releases - updating existing entry")
-        else:
-            print(f"Week {legacy_week_str} already exists with same data: {existing_legacy}")
     else:
         should_update = True  # No existing data, so create new entry
 
 if should_update:
-    # Save in both new and legacy formats for backward compatibility
+    # Save only in ISO format
     stopper[week_str] = store_entry
-    stopper[legacy_week_str] = store_entry
     save_stopper(stopper)
     print(f"Week {week_str} snapshot written: {store_entry}")
-    print(f"Week {legacy_week_str} snapshot also saved for backward compatibility")
 else:
     print("Use --force to overwrite unchanged data.")
 
 # -----------------------
 # Summary output for CLI / debugging
 # -----------------------
-total_selected = len(apim_eah_enablers) + len(docg_enablers) + len(vdr_enablers) + len(patric_enablers) + len(rcz_enablers) + len(synapse_enablers) + len(reftel_enablers) + len(calva_enablers) + len(refser2_enablers) + len(sering_enablers)
+total_selected = len(apim_eah_enablers) + len(docg_enablers) + len(vdr_enablers) + len(patric_enablers) + len(rcz_enablers) + len(synapse_enablers) + len(reftel_enablers) + len(calva_enablers) + len(refser2_enablers) + len(sering_enablers) + len(vdp_proc_enablers) + len(vdp_ds_enablers) + len(vdp_ds_ssdp_enablers) + len(vdp_ds_mon_enablers)
 print("Done extract.py")
 print(json.dumps({
     "week": week_str,
@@ -1654,6 +2550,22 @@ print(json.dumps({
         {"key": d["key"], "enabler_version": d.get("enabler_version"), "status": d.get("status"), "deploy_date": d.get("deploy_date")}
         for d in sering_enablers
     ],
+    "vdp_proc_selected": [
+        {"key": d["key"], "enabler_version": d.get("enabler_version"), "status": d.get("status"), "deploy_date": d.get("deploy_date")}
+        for d in vdp_proc_enablers
+    ],
+    "vdp_ds_selected": [
+        {"key": d["key"], "enabler_version": d.get("enabler_version"), "status": d.get("status"), "deploy_date": d.get("deploy_date")}
+        for d in vdp_ds_enablers
+    ],
+    "vdp_ds_ssdp_selected": [
+        {"key": d["key"], "enabler_version": d.get("enabler_version"), "status": d.get("status"), "deploy_date": d.get("deploy_date")}
+        for d in vdp_ds_ssdp_enablers
+    ],
+    "vdp_ds_mon_selected": [
+        {"key": d["key"], "enabler_version": d.get("enabler_version"), "status": d.get("status"), "deploy_date": d.get("deploy_date")}
+        for d in vdp_ds_mon_enablers
+    ],
     "counts": {
         "APIM/EAH": len(apim_eah_enablers),
         "DOCG": len(docg_enablers),
@@ -1664,7 +2576,11 @@ print(json.dumps({
         "REFTEL": len(reftel_enablers),
         "CALVA": len(calva_enablers),
         "REFSER2": len(refser2_enablers),
-        "SERING": len(sering_enablers)
+        "SERING": len(sering_enablers),
+        "VDP_PROC": len(vdp_proc_enablers),
+        "VDP_DS": len(vdp_ds_enablers),
+        "VDP_DS_SSDP": len(vdp_ds_ssdp_enablers),
+        "VDP_DS_MON": len(vdp_ds_mon_enablers)
     },
     "linked_file": os.path.abspath(LINKED_FILE),
     "stopper_file": os.path.abspath(WEEKLY_STOPPER)

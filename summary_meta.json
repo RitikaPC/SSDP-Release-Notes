@@ -1,19 +1,42 @@
 {
-  "week": "2026-W04",
+  "week": "2026-W02",
+  "has_releases": true,
   "prev_versions": {
     "APIM": "10.7.0",
     "EAH": "2.36.0",
-    "DOCG": "25.4.3.10 - 1.7.1",
+    "DOCG": "25.4.3.9 - 1.7.0",
     "VDR": "1.4.2",
     "PATRIC-SSDP": "None",
-    "RCZ": "RCZ 4.0.21"
+    "RCZ": "RCZ 4.0.19",
+    "SYNAPSE": "None",
+    "REFTEL": "3.5.1",
+    "CALVA": "None",
+    "REFSER2": "None",
+    "SERING": "None",
+    "VDP_PROC": "2.29.0",
+    "VDP_DS": "None",
+    "VDP_DS_SSDP": "None",
+    "VDP_DS_MON": "None",
+    "VDP_STORE": "None",
+    "VDP_STORE_2": "None"
   },
   "curr_versions": {
     "APIM": "None",
     "EAH": "None",
-    "DOCG": "DOCG-25.4.3.12 - 1.7.3",
+    "DOCG": "25.4.3.10 - 1.7.1",
     "VDR": "None",
     "PATRIC-SSDP": "None",
-    "RCZ": "None"
+    "RCZ": "RCZ 4.0.21",
+    "SYNAPSE": "1.1.0",
+    "REFTEL": "None",
+    "CALVA": "CALVA-2.4.2",
+    "REFSER2": "None",
+    "SERING": "None",
+    "VDP_PROC": "None",
+    "VDP_DS": "None",
+    "VDP_DS_SSDP": "None",
+    "VDP_DS_MON": "None",
+    "VDP_STORE": "None",
+    "VDP_STORE_2": "None"
   }
 }

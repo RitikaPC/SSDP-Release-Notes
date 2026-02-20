@@ -8,6 +8,9 @@ import requests
 import datetime
 import sys
 import re
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 CONFLUENCE_BASE_URL = "https://eng-stla.atlassian.net/wiki"
 
@@ -16,6 +19,13 @@ API_TOKEN = os.getenv("CONFLUENCE_API_TOKEN")
 
 SPACE_KEY = os.getenv("CONFLUENCE_SPACE_KEY")
 PARENT_PAGE_ID = os.getenv("CONFLUENCE_PARENT_PAGE_ID")
+
+# Email configuration
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.office365.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+EMAIL_USERNAME = os.getenv("EMAIL_USERNAME")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+NOTIFICATION_RECIPIENTS = os.getenv("NOTIFICATION_RECIPIENTS", "").split(",") if os.getenv("NOTIFICATION_RECIPIENTS") else []
 
 # Hard fail if anything is missing (REQUIRED on Render)
 missing = [
@@ -86,6 +96,135 @@ def read_week():
     today = datetime.date.today()
     wk = today.isocalendar()[1]
     return f"{today.year}-W{wk:02d}"
+
+
+def check_page_exists(title):
+    """Check if a Confluence page with the given title already exists."""
+    search_url = f"{CONFLUENCE_BASE_URL}/rest/api/content"
+    params = {
+        "spaceKey": SPACE_KEY,
+        "title": title,
+        "limit": 1
+    }
+    
+    try:
+        r = requests.get(search_url, auth=(USERNAME, API_TOKEN), params=params, timeout=10)
+        if r.status_code == 200:
+            results = r.json().get("results", [])
+            return len(results) > 0
+    except Exception as e:
+        print(f"Warning: Could not check if page exists '{title}': {e}", file=sys.stderr)
+    return False
+
+
+def send_notification_email(week_display, confluence_url):
+    """Send email notification using Stellantis corporate email via Microsoft Graph API."""
+    client_id = os.getenv('AZURE_CLIENT_ID')
+    client_secret = os.getenv('AZURE_CLIENT_SECRET')
+    tenant_id = os.getenv('AZURE_TENANT_ID')
+    sender_email = os.getenv('STELLANTIS_EMAIL')
+    recipients = os.getenv('NOTIFICATION_RECIPIENTS', '').strip()
+    
+    if not all([client_id, client_secret, tenant_id, sender_email]):
+        print("⚠️  Microsoft Graph API not configured - missing Azure credentials")
+        print(f"\n📋 Manual notification needed:")
+        print(f"   Week: {week_display}")
+        print(f"   Link: {confluence_url}")
+        print(f"   Recipients: {recipients}")
+        return False
+        
+    if not recipients:
+        print("⚠️  No recipients configured")
+        return False
+    
+    recipient_list = [email.strip() for email in recipients.split(',') if email.strip()]
+    
+    print("📧 Sending email via Stellantis corporate email...")
+    
+    try:
+        # Get access token
+        token_url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
+        token_data = {
+            'grant_type': 'client_credentials',
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'scope': 'https://graph.microsoft.com/.default'
+        }
+        
+        token_response = requests.post(token_url, data=token_data)
+        if token_response.status_code != 200:
+            print(f"❌ Failed to get access token: {token_response.text}")
+            print(f"\n📋 Manual notification needed:")
+            print(f"   Week: {week_display}")
+            print(f"   Link: {confluence_url}")
+            print(f"   Recipients: {', '.join(recipient_list)}")
+            return False
+            
+        access_token = token_response.json().get('access_token')
+        
+        # Prepare email content
+        subject = f"SSDP Release Notes Generated - Week {week_display}"
+        body_content = f"""Dear Team,
+
+The SSDP Release Notes for Week {week_display} have been generated and published on Confluence.
+
+📋 **Release Notes Link**: {confluence_url}
+
+📌 **Important To-Dos:**
+• The page opens in a new tab - please ensure that pop-ups are enabled in your browser.
+• After the Go/No-Go meeting, make sure to update the Enabler workflow status correctly when moving to "In Production" / "Deploying to Prod".
+• Ensure the Deploy Date is updated accurately before generating the final release notes.
+• Verify and enter the correct Enabler version to avoid inconsistencies in the published page.
+
+This notification is sent only for newly generated release notes pages.
+
+Best regards,
+SSDRP Release Notes Automation
+"""
+        
+        # Prepare recipients for Graph API
+        to_recipients = [{'emailAddress': {'address': email}} for email in recipient_list]
+        
+        # Email payload
+        email_data = {
+            'message': {
+                'subject': subject,
+                'body': {
+                    'contentType': 'Text',
+                    'content': body_content
+                },
+                'toRecipients': to_recipients
+            },
+            'saveToSentItems': 'true'
+        }
+        
+        # Send email via Graph API
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+            'Content-Type': 'application/json'
+        }
+        
+        send_url = f"https://graph.microsoft.com/v1.0/users/{sender_email}/sendMail"
+        send_response = requests.post(send_url, headers=headers, json=email_data)
+        
+        if send_response.status_code == 202:
+            print(f"✅ Email sent via Stellantis email to: {', '.join(recipient_list)}")
+            return True
+        else:
+            print(f"❌ Graph API failed: {send_response.status_code} - {send_response.text}")
+            print(f"\n📋 Manual notification needed:")
+            print(f"   Week: {week_display}")
+            print(f"   Link: {confluence_url}")
+            print(f"   Recipients: {', '.join(recipient_list)}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Microsoft Graph API error: {e}")
+        print(f"\n📋 Manual notification needed:")
+        print(f"   Week: {week_display}")
+        print(f"   Link: {confluence_url}")
+        print(f"   Recipients: {', '.join(recipient_list)}")
+        return False
 
 
 def confluence_search_page(title):
@@ -176,6 +315,9 @@ def main():
     html = open(SUMMARY_HTML, "r", encoding="utf-8").read()
     html = f"<div>{html}</div>"
 
+    # Check if this is a first-time generation (page doesn't exist yet)
+    is_first_time_generation = not check_page_exists(title)
+
     page_id = confluence_search_page(title)
     if page_id:
         url = confluence_update_page(page_id, title, html)
@@ -184,6 +326,13 @@ def main():
 
     if url:
         print(f"CONFLUENCE_PAGE_URL={url}")
+        
+        # Send email notification only for first-time generation
+        if is_first_time_generation:
+            print(f"First-time generation detected for week {week} - sending notification email")
+            send_notification_email(week, url)
+        else:
+            print(f"Page update for week {week} - no email notification sent")
     else:
         print("Failed to publish page.")
         sys.exit(1)

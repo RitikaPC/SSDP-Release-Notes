@@ -1,50 +1,988 @@
-======= DOCG-DOCG-25.4.3.11 - 1.7.3 (IOTPF-14996) =======
+======= DOCG-25.3.3.2 (IOTPF-13405) =======
 
-Issue: IOTPF-14996
-Summary: DOCG-25.4.3.11 - 1.7.3
+Issue: IOTPF-13405
+Summary: DOCG-25.3.3.2 (1.1.3-sop-beta)
 Status: In production
+Owner: Pravin
 Issue Type: Enabler Version - IOT PF
-Deploy Date: 2026-01-23
+Deploy Date: 2026-01-06
 
 Linked issues:
 
-Issue: IOTPF-14710
-Summary: ICON Preprod /  Prod - Backoffice configuration_Not able to add R43000001 SCOMO ID in OTA component
+Issue: DOCG-6328
+Summary: [UN156 Automatic] - Campaign Changes
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6313
+Summary: [UN156 Automatic] - RAIA API Call
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6517
+Summary: [OP4C Reporting] - Export operations results
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6533
+Summary: [OP4C Monitoring] - Http calls request/response for VSP files
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6536
+Summary: [OP4C Monitoring] - Fix postop inventory timestamp
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6341
+Summary: [Inventory referential update] - SUPREM Feedback (Quality, SA) - Happy + Unuseful
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6336
+Summary: [OTA multi-step] - Quality Campaign
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6340
+Summary: [Quality Campaign Multi VIN] - Make the Inventory CMM Feedback blocking for Operation Success
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6591
+Summary: [CSERV-927][Campaign Creation] - DOTE Dummy Scomo ID & Versions Handling
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6488
+Summary: [DM Campaign] - Add New Kafka Topics in Debugger page
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6518
+Summary: [OP4C Reporting] - Export campaigns details
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6638
+Summary: [ECU Replacement] - Add VHL Update Support in Debug Page
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6674
+Summary: [DOCG][INT]VHL ID card – Campaigns and history not visible
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-13020
+Summary: [CSERV-872] PROD - DOCG PROD doesnt have the Rerun, clone , Stop option on Campaign monitoring page.
 Status: Done
 Issue Type: Bug - IOT PF
 
-Issue: DOCG-7336
-Summary: DOCG - PROD - No special characters in Campaign Name
+Issue: DOCG-6701
+Summary: [DOCG][INT][OP4C Reporting]Source Reference is not renamed as  expected Reference
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6704
+Summary: [DOCG][INT]Liquibase change required.
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6704
+Summary: [DOCG][INT]Liquibase change required.
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6680
+Summary: [DOCG][INT/Preprod]-OTA Campaign Issues
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-13503
+Summary: [VehicleDomain][Change domain type] - When user changes the domain type(Example- Client to preparation)then Vehicle Change Domain is not working.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6697
+Summary: [DOCG][INT] Campaign-Monitor VIN list API failing
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6701
+Summary: [DOCG][INT][OP4C Reporting]Source Reference is not renamed as  expected Reference
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6702
+Summary: [DOCG - Int - preprod] - OTAInPlant Related issues
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6677
+Summary: [DOCG][INT/STAGING]HU device displayed twice in Step 3 of campaign creation, blocking campaign
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6732
+Summary: [DOCG][INT]-Campaign creation failing and moving to "Creation in progress" status
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6733
+Summary: [DOCG-6340][INT]-Quality Camp Multi VIN CMM issues
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-13525
+Summary: [ICAS]][PROD] [CSERV-1143]Incorrect warning for for completed Inventory campaigns
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-13524
+Summary: ICON Preprod - Vehicle ID Card page - Campaigns are not displayed in chronological order
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-12801
+Summary: [Delete FOTA Campaigns] - User not able to delete Campaigns for "Waiting for Approval"
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-13315
+Summary: [CSERV-678]-PP- For all the inactive vehicles time & date is incorrect.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6748
+Summary: [INT/Staging] - OTAInPlant - DOCG Pagination issue
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6751
+Summary: [PROD/Staging/INT] - UI Changes for Campaign
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-13559
+Summary: ICON Preprod [CSERV-1167] OTA Campaign installation is failed for VSM due to ESA key Issue
+Status: CLOE validation
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6551
+Summary: [ECU Replacement] - AM Service Reactivation API Integration
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6672
+Summary: [DOCG-6538][INT]-The user manual impact message is not present in JSON- Automatic
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.3.4 (IOTPF-14099) =======
+
+Issue: IOTPF-14099
+Summary: DOCG-25.4.3 (1.7.0)
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6958
+Summary: [DOCG][INT]-VHL registration is getting failed
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6906
+Summary: [ECU Replacement] - Request the Full Vehicle Payload
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6993
+Summary: [VHL REG]- bypass CMM flag in backoffcie
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6599
+Summary: [Quality Campaign] - Upload CSV File
+Status: To X2X validation
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-7002
+Summary: [Factory Upgdare] - All Connectivity Options must be available in Draft Form
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6814
+Summary: [OTA in garage] - Expose an API to abort a campaign from the garage
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6891
+Summary: [Service Activation] - SUPREM Prescription Includes Instances
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6910
+Summary: [OTA In Garage] - Prescription Includes Instances
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6666
+Summary: [Chained Update][Time & Size Mgmt] - Integrate time & size calculation
+Status: To X2X validation
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6539
+Summary: [Chained Update][UN156] - Campaign Changes - UI/Backend
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: IOTPF-13938
+Summary: Fleet Test - OTA campaign - On creating Ota campaign with multiple VINS (30) VINs without VSP, the VINs are reflecting as failed and passed(who has baseline installed), but on making it as Active, vin status is changed to Pending
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-13781
+Summary: WITH VSP - Fleet Test - OTA campaign - On creating Ota campaign with multiple VINS (30) VINs with VSP + DOTE + RTBM+IVI, the VINs are reflecting in progress instead of passed
+Status: Wait
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-14167
+Summary: ICON Preprod - OTA campaign created in DOCG is received in Redbend with incomplete SCOM IDs
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6957
+Summary: [DOCG][DEV][Chained update]Field Persistence, VIN Selection, and Validation Issues Across Steps
+Status: Open
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6885
+Summary: [DOCG][PP][UI]-Time Display Issue Between OTA Campaign and Backoffice Installation Plan
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6917
+Summary: [Quality Campaign] - SUPREM Prescription Includes Instances
+Status: To X2X validation
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6699
+Summary: [Time & Size Mgmt] - Quality campaign - Accomodate duration calculation
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6698
+Summary: [Vehicle Search] - Different Error Message if Vehicle Not Found
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6673
+Summary: [DOCG][INT]OTA CAMPAIGN -- Not asking to add target reference for the second device
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6976
+Summary: [DOCG][INT][SWREFACTORY]UI Issues Observed in Manifest and OTA Component Package Pages
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6922
+Summary: [DOCG][DEV]Unable to proceed to next step when selecting UN156 informative file upload option in chained update campaign
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6962
+Summary: [DOCG][INT][Refactor Software] Multiple Issues
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.3.4.13 (IOTPF-13632) =======
+
+Issue: IOTPF-13632
+Summary: DOCG-25.3.4.13 - (1.6.0)
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6790
+Summary: [Cosmos DAC] - KAFKA Asynch Notification: LWM2M GTW Operations (P2)
+Status: To X2X validation
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6981
+Summary: [DOCG][PROD] - Increase the Campaign Stop time out from 24Hrs to 60 Days
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.3.4.14 (IOTPF-14310) =======
+
+Issue: IOTPF-14310
+Summary: DOCG-25.3.4.14 - (1.6.0)
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6622
+Summary: [F2X][OTA Campaign Creation] - VSP Adaption for F2X
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.3.4.15 (IOTPF-14314) =======
+
+Issue: IOTPF-14314
+Summary: DOCG-25.3.4.15 - (1.6.0)
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6985
+Summary: [Cosmos DAC] - KAFKA Asynch Notification:Event change in contract
+Status: Wait
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.3.4.16 (IOTPF-14315) =======
+
+Issue: IOTPF-14315
+Summary: DOCG-25.3.4.16 - (1.5.2)
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6984
+Summary: [DOCG][PROD]OtaInPlant Canceled operation status to skip the wait timer
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.3.4.7.3 (IOTPF-14324) =======
+
+Issue: IOTPF-14324
+Summary: DOCG-25.3.4.7.3 - (1.5.2)
+Status: In production
+Owner: Varun SINGH
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6984
+Summary: [DOCG][PROD]OtaInPlant Canceled operation status to skip the wait timer
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6905
+Summary: [OTA In Plant] - Add multi-VIN support
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-7002
+Summary: [Factory Upgdare] - All Connectivity Options must be available in Draft Form
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-7009
+Summary: [Factory Upgrade] - Considering prod vin status upToDate/others to skip timer
+Status: Pending Deployment
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.4.2 (IOTPF-14210) =======
+
+Issue: IOTPF-14210
+Summary: DOCG-25.4.2 - 1.7.0
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6790
+Summary: [Cosmos DAC] - KAFKA Asynch Notification: LWM2M GTW Operations (P2)
+Status: To X2X validation
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6754
+Summary: [Cosmos DAC] - DM Operations - Create, Execute, Update (P1)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6752
+Summary: [Cosmos DAC] - Vehicle Registration LWM2M GTW (P1)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6755
+Summary: [Cosmos DAC] - KAFKA Asynch Notification: BS Sequence (P2)
+Status: Wait
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6769
+Summary: [Cosmos DAC] - Vehicle Registration Bootstrap (P1)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6349
+Summary: [Chained Update] - Update Step 2 - Select Upgrade Package - Quality Campaign
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6348
+Summary: [Chained Update] - Update Step 2 - Select Upgrade Package - Inventory
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6622
+Summary: [F2X][OTA Campaign Creation] - VSP Adaption for F2X
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6733
+Summary: [DOCG-6340][INT]-Quality Camp Multi VIN CMM issues
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6662
+Summary: [Time & Size Mgmt] - Update backoffice configuration
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6664
+Summary: [Time & Size Mgmt] - Update Manual Campaign Draft Phase
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6866
+Summary: DOCG - Disable Clone Campaign
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6876
+Summary: DOCG - Time & Size - Add No Installation Plan option & set 25 as default immobilization time if we don't get it from RB
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6839
+Summary: [DOCG-6664][INT/Staging]-Sorting of Balancing Time Issue on Back Office
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-13020
+Summary: [CSERV-872] PROD - DOCG PROD doesnt have the Rerun, clone , Stop option on Campaign monitoring page.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6921
+Summary: [DOCG][DEV]VSP creation failing for Manual Chained Update
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6794
+Summary: [DOCG] - Support for Separate P12 Certificate for each external API.
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6979
+Summary: [DOCG][INT][COSMOS]Cosmo VHL registration is getting failed
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6905
+Summary: [OTA In Plant] - Add multi-VIN support
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.4.3.10 - 1.7.1 (IOTPF-14826) =======
+
+Issue: IOTPF-14826
+Summary: DOCG-25.4.3.10 - 1.7.1
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-07
+
+Linked issues:
+
+Issue: DOCG-7235
+Summary: DOCG - Hide Factory Upgrade from the left panel menu - UI change
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-7234
+Summary: DOCG - Vin list - Send by default value as VYE instead of NEA
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.4.3.3 (1.7.0) (IOTPF-14510) =======
+
+Issue: IOTPF-14510
+Summary: DOCG-25.4.3.3 (1.7.0)
+Status: In production
+Owner: Varun SINGH
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-7070
+Summary: DOCG - OTA Campaign & VSP changes - JJ516/P24
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-7025
+Summary: The newly created OTA component is not registered on Redbend across all three environments: DEV, INT, and STAGING.
 Status: Internal validation
 Issue Type: Bug enabler - IOT PF - Team backlog
 
-Issue: DOCG-7334
-Summary: DOCG - PROD - Check Inventory button/ option is not available
-Status: To X2X validation
-Issue Type: Bug enabler - IOT PF - Team backlog
+Issue: DOCG-6985
+Summary: [Cosmos DAC] - KAFKA Asynch Notification:Event change in contract
+Status: Wait
+Issue Type: User story - IOT PF - Team backlog
 
-Issue: DOCG-7329
-Summary: OTA Campaign Redbend Retry
-Status: Done
-Issue Type: Bug enabler - IOT PF - Team backlog
+Issue: DOCG-7009
+Summary: [Factory Upgrade] - Considering prod vin status upToDate/others to skip timer
+Status: Pending Deployment
+Issue Type: User story - IOT PF - Team backlog
 
 
-======= DOCG-DOCG-25.4.3.12 - 1.7.3 (IOTPF-15024) =======
+======= DOCG-25.4.3.4 (1.7.0) (IOTPF-14518) =======
 
-Issue: IOTPF-15024
-Summary: DOCG-25.4.3.12 - 1.7.3
+Issue: IOTPF-14518
+Summary: DOCG-25.4.3.4 (1.7.0)
 Status: In production
 Issue Type: Enabler Version - IOT PF
-Deploy Date: 2026-01-23
+Deploy Date: 2026-01-06
 
 Linked issues:
 
-Issue: DOCG-7360
-Summary: DOCG - PROD - Service Activation not sending new feedback to AM
+Issue: DOCG-6891
+Summary: [Service Activation] - SUPREM Prescription Includes Instances
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.4.3.5 (IOTPF-14468) =======
+
+Issue: IOTPF-14468
+Summary: DOCG-25.4.3.5 - 1.7.0
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-7037
+Summary: DOCG - Success/ Fail Count mismatch on campaign card
 Status: Done
 Issue Type: Bug enabler - IOT PF - Team backlog
 
-Issue: IOTPF-14956
-Summary: ICON Preprod - Quality campaign is failed in DOCG with Creation failed status for NEAVVF4AUG20ECU72 VIN
-Status: CLOE validation
+Issue: DOCG-7032
+Summary: DOCG - Device list value for campaign details page contain redundant device type
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-14495
+Summary: ICON Preprod - Object Ids pushed via LWM2M Device Registration is not reflecting in DOCG
+Status: Done
 Issue Type: Bug - IOT PF
+
+Issue: DOCG-7054
+Summary: [DOCG][INT][Campaign]-Pagination Missing in Step 3 and Selected SCOMO IDs Lost When Navigating Pages
+Status: To X2X validation
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6927
+Summary: [Campaign Management] [CSERV]- Update VIN status based on RB codes and ERC list
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.4.3.6 (IOTPF-14616) =======
+
+Issue: IOTPF-14616
+Summary: DOCG-25.4.3.6 - 1.7.0
+Status: In production
+Owner: Pravin
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6891
+Summary: [Service Activation] - SUPREM Prescription Includes Instances
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-7106
+Summary: Service Activation Request Failing
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.4.3.7 (IOTPF-14624) =======
+
+Issue: IOTPF-14624
+Summary: DOCG-25.4.3.7 - 1.7.0
+Status: In production
+Owner: Varun SINGH
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-7072
+Summary: [OTA in Plant] - Check redundant UIN for TCU and HU in the form
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: IOTPF-11528
+Summary: [Interactive Tour Guide] Welcome to DOCG popup is displayed after every refresh
+Status: Done
+Issue Type: Bug - IOT PF
+
+
+======= DOCG-25.4.3.8 - 1.7.0 (IOTPF-14660) =======
+
+Issue: IOTPF-14660
+Summary: DOCG-25.4.3.8 - 1.7.0
+Status: In production
+Owner: Varun SINGH
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-7107
+Summary: [Vehicle] - Vehicle push/purge
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-7066
+Summary: [DEV]Multi-VIN – rawInventoryCorrelationKey value remains same for all VINs in Send_Raw_Inventory
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-14440
+Summary: ICON Preprod[VIN][Change domain type] - When user changes the domain type(Example- Client to preparation)then Vehicle Change Domain is not working.
+Status: Open
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6700
+Summary: [DOCG][INT/Staging] OTA Campaign -- Vins are not loading and no API calls while performing ADD vins to Campaign and Update Campaign
+Status: Internal validation
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-14553
+Summary: ICON Preprod - [Factory Upgrade] VSP creation is failed for IVI
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-14555
+Summary: ICON Preprod - [Factory Upgrade] Multi VIN_After VSP creation is failed for 1 VIN, OTA campaign is not created for 2nd VIN
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-14706
+Summary: Service activation remains pending on DOCG_ACTIVATION step under AM
+Status: Done
+Issue Type: Bug - IOT PF
+
+
+======= DOCG-DOCG-25.3.3.3 (1.1.3-sop-beta) (IOTPF-13884) =======
+
+Issue: IOTPF-13884
+Summary: DOCG-25.4.1 (1.1.4-sopbeta)
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-6554
+Summary: [Chained Update] - Demo Observations & Gaps Identified - Manual Campaign
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6597
+Summary: [Chained Update] - Upload CSV File
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6493
+Summary: [Chained Update] - SUPREM Feedback
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6797
+Summary: [User Interface]- UI/UX Optimization - Part2
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6548
+Summary: [UN156 Automatic] - Automatic Processes like Service Activation / OTA in Garage
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6623
+Summary: [User Interface]- UI/UX Optimization
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6690
+Summary: [Service Activation] - AM Feedback for MultiStep
+Status: To X2X validation
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6586
+Summary: [DM Campaign] - Remove Filtering of Identical Object Resource Values Across DM Campaign Requests
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6574
+Summary: [ECU Replacement] - ECU Replacement in History - Vehicle Card ID
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6553
+Summary: [Inventory referential update] - SUPREM Feedback (Quality, SA) - Failure - Part 1
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6551
+Summary: [ECU Replacement] - AM Service Reactivation API Integration
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6630
+Summary: [UN156] - Quality Campaign Multi-Vin + Multi-Step
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6617
+Summary: [Campaign Arbitration] - OTA in Garage Workaround
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6531
+Summary: [Compatibility Rules] - Add and Apply Compatibility Rules in Manual OTA Campaign
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6542
+Summary: [Compatibility Rules] - Add and Apply Compatibility Rules in Quality Campaign
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6348
+Summary: [Chained Update] - Update Step 2 - Select Upgrade Package - Inventory
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6342
+Summary: [Inventory referential update] -  SUPREM Feedback (Quality, SA) - Part 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6313
+Summary: [UN156 Automatic] - RAIA API Call
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6322
+Summary: [Backoffice Scope] - Implement/Fix secondary operations (delete, update)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: IOTPF-13948
+Summary: ECU REPLACEMENT -for non mandatory fiels coming in graphql response as null NPE is coming
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6912
+Summary: [DOCG][INT]Campaign Start Not Working on INT
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-13938
+Summary: Fleet Test - OTA campaign - On creating Ota campaign with multiple VINS (30) VINs without VSP, the VINs are reflecting as failed and passed(who has baseline installed), but on making it as Active, vin status is changed to Pending
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6915
+Summary: Unable to Create Campaign through CSV with DOTE
+Status: Open
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6897
+Summary: [VHL Registration] - UNKNOWN Fields ignoring form synapse payload
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6986
+Summary: [DOCG-6548][INT]--"OTA in Garage" Campaign Creation Failing
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-DOCG-25.4.3.1 (1.7.0) (IOTPF-14496) =======
+
+Issue: IOTPF-14496
+Summary: DOCG-25.4.3.1 (1.7.0)
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: DOCG-7031
+Summary: DOCG - OTAInPlant - Maintain Vin history post deletion
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-7017
+Summary: DOCG - New menu to show same data for Factory Upgrade as OTA Fota Monitoring
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6927
+Summary: [Campaign Management] [CSERV]- Update VIN status based on RB codes and ERC list
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-7057
+Summary: DOCG - PPROD - Quality Campaign testing fix with real lwm2m server
+Status: To X2X validation
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7052
+Summary: DOCG - Dummy Baseline Issue
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7030
+Summary: DOCG - [Vehicle Registration] - Fetch dynamic architecture name
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= DOCG-DOCG-25.4.3.2 (IOTPF-14379) =======
+
+Issue: IOTPF-14379
+Summary: DOCG-25.4.3.2 (1.7.0)
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+Linked issues:
+
+Issue: IOTPF-14488
+Summary: ICON Preprod - RTBM Campaign is failed during installation
+Status: Done
+Issue Type: Bug - IOT PF
+
+
+======= RCZ-RCZ 4.0.21 (IOTPF-14417) =======
+
+Issue: IOTPF-14417
+Summary: SSDP RCZ 4.0.21
+Status: In production
+Owner: ANASS
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-08
+
+Linked issues:
+
+Issue: RCZ-1605
+Summary: [SSDP][RCZ]  V3 : Mapping : Regression
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: RCZ-1612
+Summary: Implement publishing of config ID to Kafka upon successful deletion of drive alert config
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: RCZ-1667
+Summary: [SSDP][DriveAlerts]Change Partner and Customer Delete  apis to Post
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: RCZ-1552
+Summary: Remote operations - Engine start/stop
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= SYNAPSE-1.1.0 (IOTPF-13904) =======
+
+Issue: IOTPF-13904
+Summary: SYNAPSE-1.3.0
+Status: Deploying to PROD
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+No linked issues found.
+
+
+======= CALVA-2.3.0 (IOTPF-12854) =======
+
+Issue: IOTPF-12854
+Summary: CALVA-2.3.0
+Status: Deploying to PROD
+Owner: Nishanth K S
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+No linked issues found.
+
+
+======= CALVA-2.4.0 (IOTPF-13908) =======
+
+Issue: IOTPF-13908
+Summary: CALVA-2.4.0
+Status: Deploying to PROD
+Owner: Nishanth K S
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+No linked issues found.
+
+
+======= CALVA-2.4.1 (IOTPF-14273) =======
+
+Issue: IOTPF-14273
+Summary: CALVA-2.4.1
+Status: Deploying to PROD
+Owner: Nishanth K S
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+No linked issues found.
+
+
+======= CALVA-2.4.2 (IOTPF-14568) =======
+
+Issue: IOTPF-14568
+Summary: CALVA-2.4.2
+Status: Deploying to PROD
+Owner: Nishanth K S
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-01-06
+
+No linked issues found.
