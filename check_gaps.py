@@ -128,6 +128,7 @@ def confluence_page_exists(title):
     return False
 
 def main():
+    today_date = datetime.date.today()
     stopper_data = load_stopper()
     
     # Parse all weeks with data
@@ -157,10 +158,9 @@ def main():
     if last_published_year is None or last_published_week is None:
         print("No published weeks found, checking recent weeks", file=sys.stderr)
         # Check last 4 weeks before target as fallback
-        today = datetime.date.today()
         check_weeks = []
         for days_back in range(28, 0, -7):  # 4 weeks
-            check_date = today - datetime.timedelta(days=days_back)
+            check_date = today_date - datetime.timedelta(days=days_back)
             iso_year, iso_week, _ = check_date.isocalendar()
             check_weeks.append((iso_year, iso_week))
     else:
@@ -186,7 +186,7 @@ def main():
             # Check if this week is already in our list
             if not any(y == year and w == week for y, w, _ in weeks_with_data):
                 # Create display format
-                if year != today.year:
+                if year != today_date.year:
                     display = f"{year}-W{week:02d}"
                 else:
                     display = str(week)
@@ -209,8 +209,7 @@ def main():
     unpublished_list = []
     for year, week, display in unpublished_weeks:
         # Use year-prefixed format for weeks from different year
-        today = datetime.date.today()
-        if year != today.year:
+        if year != today_date.year:
             unpublished_list.append(f"{year}-W{week:02d}")
         else:
             unpublished_list.append(display)

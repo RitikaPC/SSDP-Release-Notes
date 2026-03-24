@@ -243,23 +243,28 @@ def run_cmd(cmd):
 @app.route("/run")
 def run_workflow():
     week = request.args.get("week")
+    backfill_raw = (request.args.get("backfill") or "").strip().lower()
+    backfill_enabled = backfill_raw in {"1", "true", "yes", "y"}
+
     if not week or not week.strip():
         week = None
 
-    # Check for unpublished weeks with updates
-    check_cmd = ["python3", "check_gaps.py"]
-    if week:
-        check_cmd += ["--week", week]
-    
-    code, out, err = run_cmd(check_cmd)
     unpublished_weeks = []
-    
-    if out:
-        try:
-            gap_result = json.loads(out)
-            unpublished_weeks = gap_result.get("unpublished_weeks", [])
-        except Exception:
-            pass
+
+    # Backfill is opt-in: only check and process unpublished weeks when explicitly requested
+    if backfill_enabled:
+        check_cmd = ["python3", "check_gaps.py"]
+        if week:
+            check_cmd += ["--week", week]
+
+        code, out, err = run_cmd(check_cmd)
+
+        if out:
+            try:
+                gap_result = json.loads(out)
+                unpublished_weeks = gap_result.get("unpublished_weeks", [])
+            except Exception:
+                pass
     
     # Process unpublished weeks first, then target week
     weeks_to_process = unpublished_weeks + ([week] if week else [None])
@@ -306,8 +311,14 @@ def run_workflow():
             # If we can't parse, assume there are releases to be safe
             has_new_releases = True
 
-        # Always publish the page (even if no new summary releases, there may be linked issues)
-        # The Confluence page will be created/updated with any content (linked issues, etc.)
+        if not has_new_releases:
+            published_urls.append({
+                "week": process_week or "current",
+                "url": None,
+                "message": "No releases this week"
+            })
+            continue
+
         publish_cmd = ["python3", "publish.py"]
         if process_week:
             publish_cmd += ["--week", process_week]
@@ -351,7 +362,8 @@ def run_workflow():
         "success": True,
         "page_url": main_url,
         "all_published": published_urls,
-        "filled_gaps": len(unpublished_weeks)
+        "filled_gaps": len(unpublished_weeks),
+        "backfill_enabled": backfill_enabled
     })
 
 if __name__ == "__main__":

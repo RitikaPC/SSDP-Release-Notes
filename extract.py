@@ -5,8 +5,8 @@ extract.py — Agile-board-based extractor with history-based selection for APIM
 Behavior (high level)
  - APIM / EAH:
      * Discovered from agile board summaries using regex
-     * Selected if their Jira changelog contains a first transition to "In production"
-       whose ISO week/year equals the chosen week/current year
+         * Selected only when current status is deployment-related (In production / Deploying to PROD / Awaiting Go / No go PROD)
+             and the corresponding transition date is in the chosen week/current year
  - DOCG:
      * Discovered from agile board issues with summary starting "DOCG"
      * Selected if status == "In production" and first "In production" transition date is in chosen week/year
@@ -27,6 +27,7 @@ import sys
 import re
 import json
 import datetime
+import time
 import requests
 from typing import List, Dict
 
@@ -166,7 +167,7 @@ def parse_iso_date(date_str: str):
 # Regexes to detect versions from summary (you chose option A - use summary)
 APIM_RE = re.compile(r"APIM[-\s]*([0-9]+\.[0-9]+\.[0-9]+)", re.IGNORECASE)
 EAH_RE = re.compile(r"EAH[-\s]*([0-9]+\.[0-9]+\.[0-9]+)", re.IGNORECASE)
-PATRIC_RE = re.compile(r"PATRIC-SSDP[-\s]*([0-9]+\.[0-9]+\.[0-9]+)", re.IGNORECASE)
+PATRIC_RE = re.compile(r"PATRIC(?:-SSDP)?[-\s]*([0-9]+\.[0-9]+\.[0-9]+)", re.IGNORECASE)
 RCZ_RE = re.compile(r"SSDP\s+RCZ[-\s]*([0-9]+\.[0-9]+\.[0-9]+)", re.IGNORECASE)
 SERING_RE = re.compile(r"SERING[-\s]*([0-9]+\.[0-9]+\.[0-9]+)", re.IGNORECASE)
 
@@ -176,6 +177,47 @@ SERING_RE = re.compile(r"SERING[-\s]*([0-9]+\.[0-9]+\.[0-9]+)", re.IGNORECASE)
 SESSION = requests.Session()
 SESSION.auth = (USERNAME, API_TOKEN)
 SESSION.headers.update({"Accept": "application/json"})
+
+def jira_get_with_retry(url: str, params: dict, timeout: int = 30, max_retries: int = 5):
+    last_resp = None
+    for attempt in range(max_retries + 1):
+        try:
+            resp = SESSION.get(url, params=params, timeout=timeout)
+            last_resp = resp
+        except requests.exceptions.Timeout:
+            if attempt == max_retries:
+                raise
+            sleep_seconds = min(30, 2 ** attempt)
+            time.sleep(sleep_seconds)
+            continue
+        except requests.exceptions.RequestException:
+            if attempt == max_retries:
+                raise
+            sleep_seconds = min(30, 2 ** attempt)
+            time.sleep(sleep_seconds)
+            continue
+
+        if resp.status_code == 429:
+            if attempt == max_retries:
+                return resp
+            retry_after = resp.headers.get("Retry-After")
+            try:
+                sleep_seconds = int(retry_after) if retry_after is not None else min(30, 2 ** attempt)
+            except (TypeError, ValueError):
+                sleep_seconds = min(30, 2 ** attempt)
+            time.sleep(max(1, sleep_seconds))
+            continue
+
+        if 500 <= resp.status_code < 600:
+            if attempt == max_retries:
+                return resp
+            sleep_seconds = min(30, 2 ** attempt)
+            time.sleep(sleep_seconds)
+            continue
+
+        return resp
+
+    return last_resp
 
 # -----------------------
 # Jira API helpers
@@ -195,7 +237,7 @@ def agile_board_issues(board_id: int, quickfilter=None, max_per_page=200) -> Lis
             params["quickFilter"] = quickfilter
 
         try:
-            resp = SESSION.get(url, params=params, timeout=30)
+            resp = jira_get_with_retry(url, params=params, timeout=30)
         except requests.exceptions.Timeout:
             print(f"Timeout fetching board issues at startAt={start_at}", file=sys.stderr)
             sys.exit(1)
@@ -228,11 +270,11 @@ def jira_get_issue_full(key: str) -> dict:
         )
     }
     try:
-        resp = SESSION.get(url, params=params, timeout=30)
+        resp = jira_get_with_retry(url, params=params, timeout=30)
     except requests.exceptions.Timeout:
         print(f"Timeout fetching {key}", file=sys.stderr)
         return {}
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         print(f"Error fetching {key}: {e}", file=sys.stderr)
         return {}
     if resp.status_code != 200:
@@ -298,15 +340,18 @@ def get_prod_date_from_history(issue_json):
     return None
 
 def get_deploying_to_prod_date_from_history(issue_json):
-    """Return first date (YYYY-MM-DD) where status -> 'Deploying to PROD' (or variant) in changelog, else None"""
+    """Return latest date (YYYY-MM-DD) where status -> 'Deploying to PROD' (or variant) in changelog, else None"""
     histories = issue_json.get("changelog", {}).get("histories", [])
+    matched_dates = []
     for h in histories:
         for item in h.get("items", []):
             if item.get("field") == "status" and item.get("toString") in ("Deploying to PROD", "Deploying To PROD"):
                 created = h.get("created")
                 if created:
-                    return created.split("T")[0]
-    return None
+                    matched_dates.append(created.split("T")[0])
+    if not matched_dates:
+        return None
+    return max(matched_dates)
 
 def get_awaiting_go_nogo_date_from_history(issue_json):
     """Return first date (YYYY-MM-DD) where status -> 'Awaiting Go / No go PROD' (or variations) in changelog, else None"""
@@ -439,7 +484,7 @@ for it in issues:
     if issuetype in enabler_issue_types and summary.startswith("VDR"):
         vdr_candidate_keys.append(key)
 
-    if issuetype in enabler_issue_types and summary.startswith("PATRIC-SSDP-"):
+    if issuetype in enabler_issue_types and (summary.startswith("PATRIC-SSDP-") or summary.startswith("PATRIC-")):
         patric_candidate_keys.append(key)
 
     if issuetype in enabler_issue_types and summary.startswith("SSDP RCZ"):
@@ -482,7 +527,7 @@ for it in issues:
 print(f"Discovered {len(records)} APIM/EAH candidates", file=sys.stderr)
 print(f"Discovered {len(docg_candidate_keys)} DOCG candidates", file=sys.stderr)
 print(f"Discovered {len(vdr_candidate_keys)} VDR candidates", file=sys.stderr)
-print(f"Discovered {len(patric_candidate_keys)} PATRIC-SSDP candidates", file=sys.stderr)
+print(f"Discovered {len(patric_candidate_keys)} PATRIC candidates", file=sys.stderr)
 print(f"Discovered {len(rcz_candidate_keys)} RCZ candidates", file=sys.stderr)
 print(f"Discovered {len(synapse_candidate_keys)} SYNAPSE candidates", file=sys.stderr)
 print(f"Discovered {len(reftel_candidate_keys)} REFTEL candidates", file=sys.stderr)
@@ -514,8 +559,8 @@ for r in records:
     f = full.get("fields", {}) or {}
     status_name = (f.get("status") or {}).get("name", "")
 
-    # Skip tickets with "Deploying to PPROD" status
-    if status_name == "Deploying to PPROD":
+    # APIM/EAH must currently be in a deployment-related status
+    if status_name not in ("In production", "Deploying to PROD", "Deploying To PROD") and not is_awaiting_go_nogo_status(status_name):
         continue
 
     # Get deploy date based on status
@@ -523,17 +568,12 @@ for r in records:
     
     if status_name == "In production":
         prod_date_str = get_prod_date_from_history(full)
-    elif status_name == "Deploying to PROD":
+    elif status_name in ("Deploying to PROD", "Deploying To PROD"):
         prod_date_str = get_deploying_to_prod_date_from_history(full)
-    elif status_name == "Awaiting Go / No go PROD":
+    elif is_awaiting_go_nogo_status(status_name):
         prod_date_str = get_awaiting_go_nogo_date_from_history(full)
     else:
-        # For other statuses, try to find any relevant transition
-        prod_date_str = get_prod_date_from_history(full)
-        if not prod_date_str:
-            prod_date_str = get_awaiting_go_nogo_date_from_history(full)
-        if not prod_date_str:
-            prod_date_str = get_deploying_to_prod_date_from_history(full)
+        continue
     
     prod_date = parse_iso_date(prod_date_str)
     if not prod_date:
@@ -647,7 +687,7 @@ for key in vdr_candidate_keys:
     })
 
 # -----------------------
-# PATRIC-SSDP selection
+# PATRIC selection
 # -----------------------
 patric_enablers = []
 for key in patric_candidate_keys:
@@ -665,7 +705,7 @@ for key in patric_candidate_keys:
         continue
 
     summary_full = (f.get("summary") or "").strip()
-    enabler_name = "PATRIC-SSDP"
+    enabler_name = "PATRIC"
 
     enabler_version = (f.get("customfield_10042") or "").strip()
     if not enabler_version:
@@ -1467,6 +1507,13 @@ for key in vdp_store_2_candidate_keys:
             deploy_date_str = full.get("fields", {}).get("customfield_10044")
         if not deploy_date_str:
             deploy_date_str = full.get("fields", {}).get("customfield_10043")
+    elif status_name in ("Deploying to PROD", "Deploying To PROD"):
+        # Prefer actual transition date over stale custom field values.
+        deploy_date_str = get_deploying_to_prod_date_from_history(full)
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10044")
+        if not deploy_date_str:
+            deploy_date_str = full.get("fields", {}).get("customfield_10043")
     else:
         deploy_date_str = full.get("fields", {}).get("customfield_10044")
         if not deploy_date_str:
@@ -1476,10 +1523,12 @@ for key in vdp_store_2_candidate_keys:
 
     deploy_date = parse_iso_date(deploy_date_str)
     if not deploy_date:
+        print(f"  VDP_STORE_2 {key}: no deploy date", file=sys.stderr)
         continue
 
     iso_year, iso_week, _ = deploy_date.isocalendar()
     if iso_week != target_week or iso_year != target_year:
+        print(f"  VDP_STORE_2 {key}: week mismatch {iso_year}-W{iso_week} != {target_year}-W{target_week}", file=sys.stderr)
         continue
 
     assignee = (f.get("assignee") or {}).get("displayName", "")
@@ -1496,6 +1545,7 @@ for key in vdp_store_2_candidate_keys:
         "deploy_date": deploy_date_str,
         "full": full
     })
+    print(f"  VDP_STORE_2 {key}: SELECTED {enabler_version} ({status_name})", file=sys.stderr)
 
 print(f"VDP_STORE_2: {len(vdp_store_2_enablers)} selected from {vdp_store_2_debug_count} candidates, {vdp_store_2_filtered_count} filtered", file=sys.stderr)
 
@@ -1643,10 +1693,10 @@ for vdr in sorted(vdr_enablers, key=lambda d: d.get("enabler_version") or ""):
         out_lines.append("")
     out_lines.append("")
 
-# PATRIC-SSDP blocks
+# PATRIC blocks
 for patric in sorted(patric_enablers, key=lambda d: d.get("enabler_version") or ""):
     ver = patric.get("enabler_version") or ""
-    header_name = f"PATRIC-SSDP-{ver}" if ver else "PATRIC-SSDP"
+    header_name = f"PATRIC-{ver}" if ver else "PATRIC"
 
     out_lines.append(f"======= {header_name} ({patric['key']}) =======")
     out_lines.append("")
@@ -2241,7 +2291,7 @@ store_entry = {
     "EAH": None,
     "DOCG": None,
     "VDR": None,
-    "PATRIC-SSDP": None,
+    "PATRIC": None,
     "RCZ": None,
     "SYNAPSE": None,
     "REFTEL": None,
@@ -2282,7 +2332,7 @@ if docg_versions:
 
 
 # -----------------------
-# PATRIC-SSDP → In production only
+# PATRIC → In production only
 # -----------------------
 patric_versions = [
     p["enabler_version"]
@@ -2290,7 +2340,7 @@ patric_versions = [
     if p.get("status") == "In production" and p.get("enabler_version")
 ]
 if patric_versions:
-    store_entry["PATRIC-SSDP"] = ",".join(sorted(set(patric_versions), key=vtuple))
+    store_entry["PATRIC"] = ",".join(sorted(set(patric_versions), key=vtuple))
 
 
 # -----------------------
@@ -2447,12 +2497,15 @@ if vdp_store_versions:
     store_entry["VDP_STORE"] = ",".join(sorted(set(vdp_store_versions), key=vtuple))
 
 # -----------------------
-# VDP_STORE_2 → In production or Deploying to PROD ONLY
+# VDP_STORE_2 → Include all valid deployment statuses
 # -----------------------
 vdp_store_2_versions = [
     v["enabler_version"]
     for v in vdp_store_2_enablers
-    if v.get("status") in ("In production", "Deploying to PROD", "Deploying To PROD")
+    if (
+        v.get("status") in ("In production", "Deploying to PROD", "Deploying To PROD")
+        or is_awaiting_go_nogo_status(v.get("status", ""))
+    )
        and v.get("enabler_version")
 ]
 if vdp_store_2_versions:
@@ -2570,7 +2623,7 @@ print(json.dumps({
         "APIM/EAH": len(apim_eah_enablers),
         "DOCG": len(docg_enablers),
         "VDR": len(vdr_enablers),
-        "PATRIC-SSDP": len(patric_enablers),
+        "PATRIC": len(patric_enablers),
         "RCZ": len(rcz_enablers),
         "SYNAPSE": len(synapse_enablers),
         "REFTEL": len(reftel_enablers),

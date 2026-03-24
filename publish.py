@@ -98,6 +98,28 @@ def read_week():
     return f"{today.year}-W{wk:02d}"
 
 
+def _ordinal_day(n: int) -> str:
+    if 11 <= (n % 100) <= 13:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
+
+
+def week_date_range_text(week_display: str) -> str:
+    m = re.match(r"^(?P<year>\d{4})-W(?P<week>\d{1,2})$", week_display)
+    if not m:
+        return ""
+
+    year = int(m.group("year"))
+    week = int(m.group("week"))
+    start_date = datetime.date.fromisocalendar(year, week, 1)
+    end_date = datetime.date.fromisocalendar(year, week, 7)
+    start_text = f"{start_date.day} {start_date.strftime('%b %Y')}"
+    end_text = f"{_ordinal_day(end_date.day)} {end_date.strftime('%B %Y')}"
+    return f"{start_text} to {end_text}"
+
+
 def check_page_exists(title):
     """Check if a Confluence page with the given title already exists."""
     search_url = f"{CONFLUENCE_BASE_URL}/rest/api/content"
@@ -239,14 +261,158 @@ def confluence_search_page(title):
     return results[0]["id"] if results else None
 
 
+SUMMARY_SECTIONS = {
+    "What we added:": [
+        "What we added:",
+        ":plus: What we added:",
+        "➕ What we added:",
+    ],
+    "What we changed:": [
+        "What we changed:",
+        ":git-extension: What we changed:",
+        "🔧 What we changed:",
+    ],
+    "What we Deprecated/ Removed:": [
+        "What we Deprecated/ Removed:",
+        ":put_litter_in_its_place: What we Deprecated/ Removed:",
+        "🚮 What we Deprecated/ Removed:",
+    ],
+    "What we fixed:": [
+        "What we fixed:",
+        ":hammer: What we fixed:",
+        "🔨 What we fixed:",
+        "🛠 What we fixed:",
+        "🛠️ What we fixed:",
+    ],
+}
+
+
+def _header_pattern_for(label: str) -> str:
+    variants = SUMMARY_SECTIONS.get(label, [label])
+    return "(?:" + "|".join(re.escape(v) for v in variants) + ")"
+
+
+def _normalize_content_for_check(content: str) -> str:
+    text = re.sub(r"<[^>]+>", "", content or "")
+    text = text.replace("&nbsp;", " ").strip()
+    return text
+
+
+def extract_manual_summary_sections(existing_html: str):
+    sections = {}
+    if not existing_html:
+        return sections
+
+    all_header_variants = []
+    for variants in SUMMARY_SECTIONS.values():
+        all_header_variants.extend(variants)
+    all_headers = "|".join(re.escape(h) for h in all_header_variants)
+
+    for header in SUMMARY_SECTIONS:
+        header_pattern = _header_pattern_for(header)
+        pattern = re.compile(
+            rf"<h[2-3][^>]*>\s*{header_pattern}\s*</h[2-3]>(?P<content>.*?)(?=<h[1-6][^>]*>|<hr[^>]*>|$)",
+            re.IGNORECASE | re.DOTALL,
+        )
+        match = pattern.search(existing_html)
+        if not match:
+            continue
+        content = (match.group("content") or "").strip()
+        if _normalize_content_for_check(content):
+            sections[header] = content
+
+    return sections
+
+
+def merge_manual_summary_sections(generated_html: str, existing_html: str) -> str:
+    preserved = extract_manual_summary_sections(existing_html)
+    if not preserved:
+        return generated_html
+
+    merged = generated_html
+    for header in SUMMARY_SECTIONS:
+        content = preserved.get(header)
+        if not content:
+            continue
+
+        header_pattern = _header_pattern_for(header)
+        pattern = re.compile(
+            rf"(<h[2-3][^>]*>\s*{header_pattern}\s*</h[2-3]>)\s*<p>\s*&nbsp;\s*</p>",
+            re.IGNORECASE | re.DOTALL,
+        )
+        merged = pattern.sub(rf"\1\n{content}", merged, count=1)
+
+    return merged
+
+
+DEFAULT_STATUS_BLOCK = (
+    "<p><strong>Status:</strong> "
+    "<ac:structured-macro ac:name=\"status\">"
+    "<ac:parameter ac:name=\"title\">IN PROGRESS</ac:parameter>"
+    "<ac:parameter ac:name=\"colour\">Blue</ac:parameter>"
+    "</ac:structured-macro>"
+    "</p>"
+)
+
+
+def extract_existing_status_block(existing_html: str) -> str:
+    """
+    Preserve any manually changed top-level status line.
+    We only scan before the Release Summary header to avoid matching table rows.
+    """
+    if not existing_html:
+        return ""
+
+    rs_header = re.search(
+        r"<h[1-6][^>]*id\s*=\s*['\"]release-summary['\"][^>]*>",
+        existing_html,
+        flags=re.IGNORECASE,
+    )
+    prefix = existing_html[: rs_header.start()] if rs_header else existing_html[:2000]
+
+    status_pattern = re.compile(
+        r"<p[^>]*>\s*(?:<strong>\s*)?Status:\s*(?:</strong>\s*)?.*?</p>",
+        re.IGNORECASE | re.DOTALL,
+    )
+    m = status_pattern.search(prefix)
+    return m.group(0).strip() if m else ""
+
+
+def upsert_top_status_block(html: str, status_block: str) -> str:
+    """Insert or replace the top-level status block right after opening <div>."""
+    if not html:
+        return html
+
+    # Replace existing top status line if present.
+    status_pattern = re.compile(
+        r"(<div[^>]*>\s*)(<p[^>]*>\s*(?:<strong>\s*)?Status:\s*(?:</strong>\s*)?.*?</p>)",
+        re.IGNORECASE | re.DOTALL,
+    )
+    if status_pattern.search(html):
+        return status_pattern.sub(rf"\1{status_block}", html, count=1)
+
+    # Otherwise insert after first wrapper div.
+    return re.sub(r"(<div[^>]*>)", rf"\1\n{status_block}", html, count=1, flags=re.IGNORECASE)
+
+
 def confluence_update_page(page_id, title, html):
     get_url = f"{CONFLUENCE_BASE_URL}/rest/api/content/{page_id}"
-    r_info = requests.get(get_url, auth=(USERNAME, API_TOKEN))
+    r_info = requests.get(
+        get_url,
+        auth=(USERNAME, API_TOKEN),
+        params={"expand": "body.storage,version"}
+    )
     if r_info.status_code != 200:
         print("Failed to fetch page info:", r_info.text)
         return None
 
     info = r_info.json()
+    existing_html = info.get("body", {}).get("storage", {}).get("value", "")
+    html = merge_manual_summary_sections(html, existing_html)
+    existing_status = extract_existing_status_block(existing_html)
+    if existing_status:
+        # Preserve manual status edits on every update.
+        html = upsert_top_status_block(html, existing_status)
     new_ver = info["version"]["number"] + 1
 
     data = {
@@ -279,6 +445,8 @@ def confluence_update_page(page_id, title, html):
 def confluence_create_page(title, html):
     url = f"{CONFLUENCE_BASE_URL}/rest/api/content"
 
+    html = upsert_top_status_block(html, DEFAULT_STATUS_BLOCK)
+
     data = {
         "type": "page",
         "title": title,
@@ -304,9 +472,9 @@ def confluence_create_page(title, html):
 
 def main():
     week = read_week()
-    
-    # Since we now always use year format, title generation is simpler
-    title = f"SSDP Release Notes Week {week}"
+
+    week_dates = week_date_range_text(week)
+    title = f"SSDP Release Notes Week {week} ({week_dates})" if week_dates else f"SSDP Release Notes Week {week}"
 
     if not os.path.exists(SUMMARY_HTML):
         print("summary_output.html missing")

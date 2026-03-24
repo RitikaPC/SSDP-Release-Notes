@@ -192,3 +192,17 @@ When you run the system, it creates these files:
 - `weekly_stopper.json` - Version history (used to track changes over time)
 
 You don't need to do anything with these files - they're created automatically.
+
+## Monthly Report (Confluence pages by month)
+
+Generate a monthly HTML report by reading weekly Confluence pages for the selected month.
+
+Example:
+
+```bash
+python3 monthly_report.py --month 2026-01 --output monthly_report_2026_01.html
+```
+
+The report includes:
+- `Release Summary` section combining manually added weekly release-summary content
+- `Release Notes details by week` section with links to the weekly Confluence pages

@@ -1,0 +1,88 @@
+<div>
+    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Executive Release Summary (planned)</h2>
+    <div style="margin:8px 0 14px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+        <p style="margin:0;"><em>To be filled manually.</em></p>
+    </div>
+
+    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Summary</h2>
+    
+            <h3 style="margin-top:16px;margin-bottom:8px;">➕ What we added:</h3>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="91d9fab8-8280-4b45-ad4f-5812a65116bc"><li local-id="a90ce34e-a34d-4355-847e-c30d96794a11"><p local-id="37a888d5d334"><strong>UN156 Compliance &amp; Automation:</strong> Introduced automatic processes for Service Activation and OTA in Garage to align with UN156 regulatory requirements. This includes the integration of <strong>RAIA API</strong> calls and support for informative file uploads during campaign drafts.</p></li><li local-id="1fdb64a9-fc6f-4212-91c4-ad678e02cf6a"><p local-id="53d01c045f29"><strong>Cosmos DAC Full Suite:</strong> Deployed the complete P1/P2 integration for Cosmos DAC, covering LWM2M Gateway operations, Bootstrap sequences, and asynchronous Kafka notifications for vehicle registration and DM operations.</p></li><li local-id="7216acb2-c86e-47f0-a9db-15013a8931fa"><p local-id="621264182694"><strong>Enhanced Service Activation:</strong> Updated Service Activation and Quality Campaigns to handle <strong>SUPREM prescriptions including instances</strong>, providing a more granular and accurate service delivery model.</p></li><li local-id="8f08faab-dc90-43e2-9149-537dba7cabcd"><p local-id="cd2a1fb254e4"><strong>Time &amp; Size Management:</strong> Implemented duration and package size calculations for campaigns, including default immobilization times and automated installation plan configurations.</p></li><li local-id="9b8d2224-e5a2-4f66-8e6f-fb648bb87e31"><p local-id="953fee40174d"><strong>OTA in Plant &amp; Garage Expansion:</strong> * <strong>Plant:</strong> Added multi-VIN support and redundant UIN checking for TCU/HU units.</p><ul local-id="7891cfdb-0573-49ad-8738-791e296212ac"><li local-id="1800ced5-ff47-4dbb-b1cf-debc182a5169"><p local-id="5096e5f48cf0"><strong>Garage:</strong> Exposed new APIs to abort campaigns directly from the garage and implemented workaround arbitration for ongoing campaigns.</p></li></ul></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="60220f50-1dd4-4f66-baa6-1b41872c5c8b"><li local-id="eb22922a-1b60-4f03-8193-d722559bf6f3"><p local-id="ef6855e5ebb2"><strong>Campaign Resilience:</strong> Implemented an automated <strong>Redbend Retry</strong> mechanism for OTA Campaigns to improve success rates during temporary synchronization failures between DOCG and Redbend.</p></li><li local-id="31b74826-3a04-4726-89b7-b2b7e7475ba9"><p local-id="41f7add85949"><strong>VDP Optimization:</strong> Refactored the VDP_STORE (VDS1) logic to disable the Redis cache for state management in Staging, ensuring data consistency and readiness for the latest Patric integration.</p></li></ul>
+                </div>
+                
+            
+            <h3 style="margin-top:24px;margin-bottom:8px;">🔧 What we changed:</h3>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="b8b1da0c-ef5c-4b4e-8a9c-2b2ce2a9d63a"><li local-id="b83440c9-ed53-445a-9d09-67e363ca7438"><p local-id="2b39f26c5af4"><strong>Advanced Campaign Logic:</strong> * Refined the <strong>Chained Update</strong> flow with CSV upload capabilities and integrated time/size management into the multi-step wizard.</p><ul local-id="34bf498e-7eac-42ca-ae82-8ea02f57c5ff"><li local-id="5194665e-a62d-4d82-893f-2765c74e28ff"><p local-id="7e4a9a43026d">Campaigns now update VIN status based on precise Redbend (RB) codes and ERC lists.</p></li></ul></li><li local-id="04c124c6-2f35-46ba-8b25-600aaa6cd8c8"><p local-id="13d157323eb3"><strong>UI/UX Optimization:</strong> * Reorganized the DOCG left panel by hiding legacy Factory Upgrade links in favor of the new <strong>FOTA Monitoring</strong> view.</p><ul local-id="6715ce56-245d-4aaf-8d36-b102f884ce57"><li local-id="d4d8031b-9bd7-4564-9df9-68fb1a109bde"><p local-id="0567f782a417">Improved the &quot;Vehicle ID Card&quot; to include ECU replacement history and dynamic architecture naming.</p></li></ul></li><li local-id="21af71a0-aa1c-436a-a251-8fe17598420a"><p local-id="b5faa3470e58"><strong>RCZ &amp; Drive Alerts:</strong> Migrated Drive Alert deletion APIs from <code>DELETE</code> to <code>POST</code> for partner/customer flows and implemented Kafka publishing for configuration IDs upon successful deletion.</p></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="1e424087-7733-493f-8b0a-0a2bd0ff3b19"><li local-id="f12b0862-d285-4430-a36e-350049ddc7bf"><p local-id="2d5fd05ee8b0"><strong>Input Validation:</strong> Enforced a &quot;No Special Characters&quot; policy for Campaign Names in Production to prevent downstream processing errors and ensure compatibility with legacy internal systems.</p></li><li local-id="be9915a1-4263-4faa-bcdd-7b10e567120b"><p local-id="2d1907a4ea05"><strong>Component Configuration:</strong> Updated the Backoffice to allow the addition of the specific <strong>SCOMO ID (R43000001)</strong> within OTA components, unblocking critical software configuration tasks.</p></li></ul>
+                </div>
+                
+            
+            <h3 style="margin-top:24px;margin-bottom:8px;">🚮 What we Deprecated/ Removed:</h3>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="66030d92-6dd4-4c89-a537-c56467807c5a"><li local-id="04e9f444-4199-496a-bbe6-bf1233c02613"><p local-id="5597b7392c2b"><strong>Clone Functionality:</strong> Temporarily disabled the &quot;Clone Campaign&quot; action in certain DOCG modules to ensure data consistency during the migration to the new architecture.</p></li><li local-id="cb22c1fa-f5bc-4a6c-a199-fc41760fb4b3"><p local-id="aae1c264e834"><strong>Filtering Logic:</strong> Removed the filtering of identical object resource values across DM Campaign requests to ensure full transparency of requested changes.</p></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <p local-id="bbc55927720a">&nbsp;No explicit deprecations or removals were executed in this release.</p>
+                </div>
+                
+            
+            <h3 style="margin-top:24px;margin-bottom:8px;">🔨 What we fixed:</h3>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="c18aa0b0-5be5-44c4-8ca1-63a97afbc0ba"><li local-id="aa882869-b90f-427a-a697-874076486d51"><p local-id="4a72569c5729"><strong>VSP &amp; Campaign Execution:</strong> Resolved critical failures in VSP creation for IVI and multi-VIN factory upgrades. Fixed the issue where newly created OTA components were not registering on Redbend across DEV/INT environments.</p></li><li local-id="1f258dd6-085b-4f98-8ded-f635ed1abf0a"><p local-id="1f763726b657"><strong>Domain &amp; Registration Stability:</strong> Fixed the &quot;Change Domain&quot; failure where moving a vehicle from Client to Preparation was not triggering correctly. Resolved several &quot;NPE&quot; (Null Pointer Exceptions) in ECU replacement flows.</p></li><li local-id="0f0e7011-8bae-4c80-b6a2-e593d8da2c2d"><p local-id="bb7d2bd39dad"><strong>Data Consistency:</strong> Patched the &quot;Success/Fail&quot; count mismatch on campaign cards and corrected the chronological ordering of campaigns in the Vehicle ID Card.</p></li><li local-id="85179bd1-cbc2-4013-8d3a-d2e8f7cc9630"><p local-id="4d073b2a8e4f"><strong>Connectivity &amp; Validation:</strong> Ensured all connectivity options are available in Draft forms for Factory Upgrades and fixed the &quot;Dummy Baseline&quot; issue that affected campaign statuses.</p></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="539b8382-17ca-4a0b-a4af-017d87470c8e"><li local-id="4455d071-b4a8-4cd2-90b5-a9c170c6f434"><p local-id="d15013479aab"><strong>Service Activation Feedback:</strong> Resolved a production issue where Service Activation was failing to send updated status feedback to the Account Management (AM) module, ensuring proper end-to-end orchestration.</p></li><li local-id="b2875b75-6ac0-40fe-bab3-91427ec444c7"><p local-id="cde40687a456"><strong>Telemetry &amp; Location Accuracy:</strong> * Fixed a critical bug in VDP_STORE where location/position data was missing from the <code>/telemetries</code> endpoint.</p><ul local-id="bad303b8-6534-4377-87e0-9967fb6859f9"><li local-id="a876fe07-4a56-46bc-806d-cbe21c960502"><p local-id="7ba28ff256dd">Resolved an error in the APIM Trips API occurring when filtering telemetry data by specific value types.</p></li></ul></li><li local-id="fa3b9dc1-6268-4255-a91d-f85d8e50fea5"><p local-id="3f2493fe90ce"><strong>Campaign &amp; Tooling Accessibility:</strong> * Restored the <strong>&quot;Check Inventory&quot;</strong> button and options within the DOCG interface, which were previously unavailable to users.</p><ul local-id="6e55d1ac-d622-49fb-aa90-61ea558144e7"><li local-id="7607f827-83b0-4af8-854d-d422979cb2a5"><p local-id="ea3aa66ba73d">Fixed a specific &quot;Creation Failed&quot; state for Quality Campaigns affecting high-priority VINs (NEAVV...).</p></li></ul></li></ul>
+                </div>
+                
+            
+
+    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Component Latest Versions</h2>
+    <table style="border-collapse:collapse;width:100%;margin-top:8px;">
+        <thead>
+            <tr>
+                <th style="text-align:left;padding:8px 10px;border:1px solid #DFE1E6;background:#F4F5F7;">Component</th>
+                <th style="text-align:left;padding:8px 10px;border:1px solid #DFE1E6;background:#F4F5F7;">Latest Version</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>APIM</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>10.7.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>EAH</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.36.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>DOCG</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>DOCG-25.4.3.12 - 1.7.3</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDR</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.4.2</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>PATRIC-SSDP</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>RCZ</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>RCZ 4.0.21</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>SYNAPSE</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.1.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>REFTEL</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>3.5.1</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>CALVA</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>CALVA-2.4.2</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>REFSER2</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>SERING</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_PROC</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.29.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS_SSDP</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS_MON</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_STORE</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_STORE_2</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+        </tbody>
+    </table>
+
+    <h2 style="margin-top:26px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Notes details by week</h2>
+    <ul style="line-height:1.9;">
+        <li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/2997420063/SSDP+Release+Notes+Week+2026-W02+5+Jan+2026+to+11th+January+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W02 (5 Jan 2026 to 11th January 2026)</a> (2026-W02)</li>
+<li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/2996994192/SSDP+Release+Notes+Week+2026-W04+19+Jan+2026+to+25th+January+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W04 (19 Jan 2026 to 25th January 2026)</a> (2026-W04)</li>
+    </ul>
+</div>
