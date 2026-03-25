@@ -45,6 +45,41 @@ if missing:
 
 SUMMARY_HTML = os.getenv("SUMMARY_HTML", "summary_output.html")
 WEEK_FILE = os.getenv("WEEK_FILE", "week_number.txt")
+META_FILE = os.getenv("META_FILE", "summary_meta.json")
+
+
+def should_publish_confluence() -> bool:
+    """
+    Skip Confluence create/update when summarize found no component releases
+    for the target week (same rules as app.py). Set PUBLISH_ALWAYS=1 to force.
+    """
+    if os.getenv("PUBLISH_ALWAYS", "").strip().lower() in ("1", "true", "yes"):
+        return True
+    if not os.path.exists(META_FILE):
+        print(
+            f"Warning: {META_FILE} not found after summarize; publishing anyway.",
+            file=sys.stderr,
+        )
+        return True
+    try:
+        with open(META_FILE, "r", encoding="utf-8") as f:
+            meta = json.load(f)
+    except Exception as exc:
+        print(
+            f"Warning: could not read {META_FILE}: {exc}; publishing anyway.",
+            file=sys.stderr,
+        )
+        return True
+
+    if "has_releases" in meta:
+        return bool(meta["has_releases"])
+
+    curr = meta.get("curr_versions", {}) or {}
+    return sum(
+        1
+        for v in curr.values()
+        if v and str(v).strip() and str(v).strip().lower() != "none"
+    ) > 0
 
 forced_week_raw = None
 forced_week = None
@@ -479,6 +514,12 @@ def main():
     if not os.path.exists(SUMMARY_HTML):
         print("summary_output.html missing")
         sys.exit(1)
+
+    if not should_publish_confluence():
+        print(
+            f"SKIP_PUBLISH: No releases for {week}; Confluence page not created or updated."
+        )
+        sys.exit(0)
 
     html = open(SUMMARY_HTML, "r", encoding="utf-8").read()
     html = f"<div>{html}</div>"

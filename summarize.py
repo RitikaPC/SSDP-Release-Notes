@@ -901,6 +901,7 @@ write(SUMMARY_HTML, html)
 
 meta = {
     "week": week_display,
+    "has_releases": num_releases > 0,
     "prev_versions": {
         "APIM": prev_apim,
         "EAH": prev_eah,
