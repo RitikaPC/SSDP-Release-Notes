@@ -1,0 +1,117 @@
+======= DOCG-25.4.3.9 - 1.7.0 (IOTPF-14715) =======
+
+Issue: IOTPF-14715
+Summary: DOCG-25.4.3.9 - 1.7.0
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-12-19
+
+Linked issues:
+
+Issue: DOCG-7110
+Summary: [DOCG][PROD]Add VIN – Submit Action Not Working on Final Step (Specific to ScomoIDs with Component Nature Other Than Software)
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-14132
+Summary: ICON Preprod - Data is not displaying in LWM2M LifeCycle EVENTS
+Status: Wait
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6956
+Summary: [DOCG][DEV/Staging]Not able to Create SCOMO ID / OTA Component
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7095
+Summary: [DOCG][PROD]VIN Selection Not Updating or Displaying in Step 6
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7232
+Summary: DOCG - PPROD - For IVI + RTBM - change 5 minute timeout (futureStopTime : “PT5M“) to 60 days to allow campaign to start
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6757
+Summary: [Cosmos DAC] - DM Object Provisioning (P3)
+Status: To X2X validation
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= PATRIC-2.17.0 (IOTPF-14583) =======
+
+Issue: IOTPF-14583
+Summary: PATRIC-2.17.0
+Status: Awaiting Go / No go PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-12-16
+
+Linked issues:
+
+Issue: VDP-3242
+Summary: [PATRIC_B2C][CVMP][PROD] Monitor not Triggered
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3248
+Summary: [PATRIC][CVMP] Fix NullPointerException related to ExtensionEventMapper
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3275
+Summary: [PATRIC][V1] Prepare releases/configs (PATRIC-2.17.0)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-3161
+Summary: [PATRIC][B2B/B2C] Adapt trips_states map to trips
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= PATRIC-2.17.1 (IOTPF-14652) =======
+
+Issue: IOTPF-14652
+Summary: PATRIC-2.17.1
+Status: Awaiting Go / No go PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-12-16
+
+Linked issues:
+
+Issue: VDP-3288
+Summary: [PATRIC_B2C][CVMP][PROD] Fix NullPointerException
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= RCZ-RCZ 4.0.19 (IOTPF-13182) =======
+
+Issue: IOTPF-13182
+Summary: SSDP RCZ 4.0.19
+Status: In production
+Owner: ANASS
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-12-16
+
+Linked issues:
+
+Issue: RV2C-1464
+Summary: [SSDP][RCZ] The charge program is not following the V2C specs.
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= REFTEL-3.5.1 (IOTPF-14610) =======
+
+Issue: IOTPF-14610
+Summary: REFTEL-3.5.1
+Status: Deploying to PROD
+Owner: Nishanth K S
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-12-19
+
+No linked issues found.

@@ -499,10 +499,11 @@ def confluence_create_page(title, html):
 
     if r.status_code in (200, 201):
         res = r.json()
-        return res["_links"]["base"] + res["_links"]["webui"]
+        url = res["_links"]["base"] + res["_links"]["webui"]
+        return url, res.get("id")
 
     print("Create failed:", r.text)
-    return None
+    return None, None
 
 
 def main():
@@ -515,9 +516,13 @@ def main():
         print("summary_output.html missing")
         sys.exit(1)
 
-    if not should_publish_confluence():
+    # If the Confluence page already exists, we still update it so that
+    # formatting changes (like heading levels) propagate even when there
+    # are no new releases in this run.
+    page_id = confluence_search_page(title)
+    if not page_id and not should_publish_confluence():
         print(
-            f"SKIP_PUBLISH: No releases for {week}; Confluence page not created or updated."
+            f"SKIP_PUBLISH: No releases for {week}; Confluence page not created."
         )
         sys.exit(0)
 
@@ -525,15 +530,28 @@ def main():
     html = f"<div>{html}</div>"
 
     # Check if this is a first-time generation (page doesn't exist yet)
-    is_first_time_generation = not check_page_exists(title)
+    is_first_time_generation = page_id is None
 
-    page_id = confluence_search_page(title)
     if page_id:
         url = confluence_update_page(page_id, title, html)
+        effective_id = page_id
     else:
-        url = confluence_create_page(title, html)
+        url, new_id = confluence_create_page(title, html)
+        effective_id = new_id or (confluence_search_page(title) if url else None)
 
     if url:
+        if effective_id:
+            try:
+                from confluence_page_width import apply_page_display_width
+
+                apply_page_display_width(
+                    CONFLUENCE_BASE_URL, (USERNAME, API_TOKEN), effective_id
+                )
+            except Exception as exc:
+                print(
+                    f"Warning: could not set page width: {exc}",
+                    file=sys.stderr,
+                )
         print(f"CONFLUENCE_PAGE_URL={url}")
         
         # Send email notification only for first-time generation

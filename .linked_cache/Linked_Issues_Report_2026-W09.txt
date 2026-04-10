@@ -1,0 +1,1475 @@
+======= APIM-11.3.0 (IOTPF-14556) =======
+
+Issue: IOTPF-14556
+Summary: APIM  11.3.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4023
+Summary: [RTC-3598470] [SSDP] [APIM] [EAH] Notification History
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-4186
+Summary: [RTC-3618815][SSDP-APIM][Activation Region]FIAT brand - APIM implementation [F2X] South America
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-3346
+Summary: [RTC-3301020][SSDP-APIM] - UNSET (delete) - Family Drive Alerts (Parental Controls)
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-3347
+Summary: [RTC-3301017][SSDP-APIM] - SET - Family Drive Alerts (Parental Controls)
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-4085
+Summary: [APIM]Create new API for PATCH Request in controller layer - Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4154
+Summary: Validation of fields in Request Object
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4035
+Summary: [APIM] Step4: Implement get Notification history API supports B2B and B2C
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4067
+Summary: [APIM]Integration test APIM-4064 [SSDP-APIM] Cockpit Profile Setting
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4278
+Summary: Test coverage for libraries/rights-adapter/src/main/java/com/stla/mph/apim/rights/service/RightsService.java
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4281
+Summary: Test coverage libraries/ignite-adapter/src/main/java/com/stla/mph/apim/ignite/adapter/domain/remote/services/IgniteRemoteOperationService.java
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4350
+Summary: Convert Spring boot test to mockito test.
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4305
+Summary: New FCL feign for connection to FCL NA endpoint
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4279
+Summary: Test coverage applications/apim/src/main/java/com/stla/mph/apim/controller/VehicleController.java
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4039
+Summary: [APIM]Update Integration test channel API and create new for get notification history
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4080
+Summary: [APIM]Response Structure In case of Error - Step 1
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4108
+Summary: [SSDP-APIM] VIP- Create New DAO Repository VipChangeLogRepository - Step 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4361
+Summary: Page size query param is not working as expected for get notification history API
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4385
+Summary: [APIM][DEV][SSDP] Fix VDP Data source model Charge Schedule. delayedEndTimeStatus spelling
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4366
+Summary: [APIM] Convert service tests to plain unit tests (group 1)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= APIM-11.4.0 (IOTPF-14655) =======
+
+Issue: IOTPF-14655
+Summary: APIM  11.4.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4393
+Summary: Create Monitor with channel attributes has not handled to support new enum
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4390
+Summary: [APIM] Cockpit Setting Changes as Per New Swagger Update
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4188
+Summary: Automated Integration Test
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4382
+Summary: A new temperature module has been introduced as part of the response of telemetry and latest telemetry under energies
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4110
+Summary: [SSDP-APIM] VIP- Create Mappers to Save Entity in Storage - Step 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4369
+Summary: [APIM] Increase coverage for VehicleContextResponse / KafkaIgniteProducer / MonitorRefMapper
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4367
+Summary: [APIM] Convert service tests to plain unit tests (group 2)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4396
+Summary: sdk - enable local build cache
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= APIM-11.6.0 (IOTPF-14726) =======
+
+Issue: IOTPF-14726
+Summary: APIM  11.6.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4365
+Summary: [APIM] Refactor controller tests to use WebMvcTest with test profile
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4109
+Summary: [SSDP-APIM] VIP- Create Mappers to Get Entity from Storage - Step 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4111
+Summary: [SSDP-APIM] VIP- Create New API for GET Request in Controller /vehicles/{vin}/changelog - Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4113
+Summary: [SSDP-APIM] VIP- Create New API for DELETE Request in Controller - Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4407
+Summary: Add Validation for Setting structure
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4409
+Summary: [APIM]Update Zone Trigger radius of circle type to float
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4406
+Summary: Update the correct DDL For Int, STaging and prod
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4373
+Summary: [APIM] Fix disabled remote operation tests and specific test methods
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4387
+Summary: Jspecify, Errorprone and Nullaway update
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4402
+Summary: Validation for create channel attributes for channel,monitor and remote. when type is header or query key should not be notification history
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4333
+Summary: [APIM]Need to support SSDP vehicles for xCalls - Step2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4325
+Summary: [APIM]Integration test APIM-4322 [RTC-2457874][SSDP-AEAM] Assist Call - APIM R2eX implementation [F2X]
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4356
+Summary: Fix other way for DirtiesContext and feature flag structure
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4375
+Summary: [APIM] Remove obsolete VehicleProfilleControllerTest + package common
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4413
+Summary: Fix JVM OOM issue in pipeline for APIM
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4370
+Summary: [APIM] Fix disabled Feign/auth tests
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= APIM-11.7.0 (IOTPF-14829) =======
+
+Issue: IOTPF-14829
+Summary: APIM  11.7.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4366
+Summary: [APIM] Convert service tests to plain unit tests (group 1)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4368
+Summary: [APIM] Convert service tests to plain unit tests (group 3)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4374
+Summary: [APIM] Fix disabled VehicleTrip and Channel container tests  Title
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4371
+Summary: [APIM] Fix disabled Ignite and Orchestrator adapter tests
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4414
+Summary: Convert parameterized test case to indivisual test case in Monitor contorller
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4400
+Summary: Update Latest telemetry logic to give preference for Co and if cos data exst extract management details
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4428
+Summary: Please update the Ignite SSDP map with CVMP activation platform
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4363
+Summary: Bug fix in Sonar Code Quality
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4372
+Summary: [APIM] Fix disabled Ping and APIM tests
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4433
+Summary: apim - replace powermock with plain mockito
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4438
+Summary: Fix Automate build release pipeline for APIM
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4443
+Summary: Remove the vehicle association check from capability flow
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4431
+Summary: APIM : TRIPS : Consumption : not provided even when present in DB
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4434
+Summary: sdk - replace powermock with plain mockito
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= APIM-11.11.0 (IOTPF-14910) =======
+
+Issue: IOTPF-14910
+Summary: APIM  11.11.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4063
+Summary: [RTC-3760783][SSDP-APIM] VIP-Vehicle driver Interaction Platform
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-4178
+Summary: [RTC-3418555][SSDP-APIM]Onboard Capability
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-4442
+Summary: Convert RczRemoteConverterServiceTest to @ExtendWith(MockitoExtension.class)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4374
+Summary: [APIM] Fix disabled VehicleTrip and Channel container tests  Title
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4446
+Summary: Update "MPHAPIMSTATIC" collection remove vin as required and create a partial index for vin
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4310
+Summary: Step 2: Create/Update "SupremDataConfig" class according to new staructure
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4181
+Summary: Integration test APIM-4178 [RTC-3418555][SSDP-APIM]Onboard Capability
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4114
+Summary: [SSDP-APIM] VIP- Implement Service Layer - Step 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4110
+Summary: [SSDP-APIM] VIP- Create Mappers to Save Entity in Storage - Step 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4454
+Summary: apim - bump static analysis deps
+Status: Open
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4456
+Summary: APIM: SSDP: B2B: B2C: Random Error between 404 and 500 for all API
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4112
+Summary: [SSDP-APIM] VIP- Create New API for POST Request in Controller - Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4364
+Summary: Step1 : Create methods to save/ retrieve msisdn and Activation region  with feature flag
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4071
+Summary: Integration test APIM-4063 [SSDP-APIM] VIP-Vehicle driver Interaction Platform
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4469
+Summary: apim - configure mockito java agent for java 21
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= APIM-11.12.0 (IOTPF-14995) =======
+
+Issue: IOTPF-14995
+Summary: APIM  11.12.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4351
+Summary: [RTC-3673150][SSDP-APIM]FIAT legacy inbound solution - corner case
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-4380
+Summary: Step 2: Implementation step to handle GSDP with msisdn in request
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4354
+Summary: Integration test APIM-4351 [RTC-3673150][SSDP-APIM]FIAT legacy inbound solution - corner case
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4501
+Summary: For RO wakeup in APIM please change the RCZ endpoints for CVMP vehicle
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4466
+Summary: apim - remove guava dependency
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4494
+Summary: Fix timestamp query param for VIP.
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4500
+Summary: Call center name is not needed for bcall/status Ignite request
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4512
+Summary: Fix Docker build issue for APIM. Remove certs imported during docker build
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4488
+Summary: sdk - configure mockito java agent for java 21
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4467
+Summary: sdk - remove guava dependency
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= APIM-11.14.0 (IOTPF-15047) =======
+
+Issue: IOTPF-15047
+Summary: APIM  11.14.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4539
+Summary: Handle Family code for F2X vehicles
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4139
+Summary: remove unused ping filter
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4545
+Summary: When one of EMEA or NA throw exception. other call is ignored and not handled
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4455
+Summary: Create a Error Decoder for Suprem Feign and handle error as per swagger
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= EAH-2.37.0 (IOTPF-14559) =======
+
+Issue: IOTPF-14559
+Summary: EAH-2.37.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4293
+Summary: [EAH] refactor lookupDbHelperService and settingsDataFetcher
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4023
+Summary: [RTC-3598470] [SSDP] [APIM] [EAH] Notification History
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-4256
+Summary: [EAH] [RCZ] refactoring vdp calls
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4361
+Summary: Page size query param is not working as expected for get notification history API
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4385
+Summary: [APIM][DEV][SSDP] Fix VDP Data source model Charge Schedule. delayedEndTimeStatus spelling
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4349
+Summary: [EAH] Release EAH 2.36.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= EAH-2.38.0 (IOTPF-14653) =======
+
+Issue: IOTPF-14653
+Summary: EAH-2.38.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4394
+Summary: [EAH] [Ignite-event-adapter] [DK] Type is not set while creating EAH payload.
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4387
+Summary: Jspecify, Errorprone and Nullaway update
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4335
+Summary: [EAH]- [RTC-2457874] Modify the condition to process based on RTBM and RTCU board types.
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4336
+Summary: [EAH]- [RTC-2457874] Change to query the callcentre details only based on phone number
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4382
+Summary: A new temperature module has been introduced as part of the response of telemetry and latest telemetry under energies
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4386
+Summary: [EAH] Release EAH 2.37.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4395
+Summary: eah - enable local build cache
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4393
+Summary: Create Monitor with channel attributes has not handled to support new enum
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= EAH-2.39.0 (IOTPF-14724) =======
+
+Issue: IOTPF-14724
+Summary: EAH-2.39.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4234
+Summary: [EAH] [Fifo-Notifier] Implementation of Spring Integration Aggregator for queuing NH payload and performing bulk mongo upsert operation
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4232
+Summary: [EAH] [Fifo-Notifier] Implementation of Notification History creation for each event
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4237
+Summary: [EAH] [Fifo-Notifier] Existing Fifo Bugs: vhc-json-mph-aeh-fifo-event-dev kafka listener will be responsible for creating processor and pushing events to retry kafka topic
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4399
+Summary: [EAH][Notification][swagger] Changes in platform-notification swagger to handle Time trigger data from patric
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4337
+Summary: [EAH]- [RTC-2457874] Adopt updated swagger changes
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4285
+Summary: [EAH] Revisit the Junits of fcm notifier
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4391
+Summary: [EAH] Fix compilation warnings eah
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4403
+Summary: [EAH] Release EAH 2.38.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4409
+Summary: [APIM]Update Zone Trigger radius of circle type to float
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= EAH-2.40.0 (IOTPF-14827) =======
+
+Issue: IOTPF-14827
+Summary: EAH-2.40.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4381
+Summary: [EAH] [FCM-notifier] optimize the logic of handleBatchResponse method.
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4421
+Summary: [EAH] - Adapt the changes from open point APIM-4415
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4224
+Summary: [EAH][SSDP] Patric SSDP Bulk Data Set Up
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4400
+Summary: Update Latest telemetry logic to give preference for Co and if cos data exst extract management details
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4412
+Summary: [EAH] Release EAH 2.39.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4431
+Summary: APIM : TRIPS : Consumption : not provided even when present in DB
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= EAH-2.41.0 (IOTPF-14912) =======
+
+Issue: IOTPF-14912
+Summary: EAH-2.41.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4445
+Summary: [EAH] Release EAH 2.40.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4456
+Summary: APIM: SSDP: B2B: B2C: Random Error between 404 and 500 for all API
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4110
+Summary: [SSDP-APIM] VIP- Create Mappers to Save Entity in Storage - Step 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4421
+Summary: [EAH] - Adapt the changes from open point APIM-4415
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4470
+Summary: [EAH] [XCALL-ADAPTER] Status API discrepancy in swagger and outbound payload
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= EAH-2.42.0 (IOTPF-15021) =======
+
+Issue: IOTPF-15021
+Summary: EAH-2.42.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4503
+Summary: EAH: No notification received
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4418
+Summary: [EAH] Revisit Rcz junits
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4419
+Summary: [EAH] Revisit Patric junits
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4435
+Summary: Handle method timing AOP exclusions to be configured via aop.xml
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4486
+Summary: [EAH] Release EAH 2.41.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4519
+Summary: [EAH][nc-notifier] Add support for stolen monitoring
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4488
+Summary: sdk - configure mockito java agent for java 21
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= EAH-2.43.0 (IOTPF-15049) =======
+
+Issue: IOTPF-15049
+Summary: EAH-2.43.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4465
+Summary: [EAH] improvise the logs to track from ssdp-event-adapter-> collector -> fcm/fifo notifier ->
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4502
+Summary: [EAH] [Xcall-Adapter] Implementation and Unit tests for Xcall A5U (F2X) vehicles remove field level validations to non mandatory
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4489
+Summary: eah - configure mockito java agent for java 21
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4444
+Summary: [SSDP][EAH] Build Bulk Patric Payload  and save in into Json for Load Testing
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4487
+Summary: eah - remove spring-data-common dependency from version catalog
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4520
+Summary: [EAH] Release EAH 2.42.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= EAH-2.44.0 (IOTPF-15214) =======
+
+Issue: IOTPF-15214
+Summary: EAH-2.44.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: APIM-4570
+Summary: [EAH] [fifo-notifier] Bulk write error
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= DOCG (IOTPF-15450) =======
+
+Issue: IOTPF-15450
+Summary: DOCG-26.1.2.15 - 1.8.1
+Status: In production
+Owner: Bhaskar KL
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-24
+
+Linked issues:
+
+Issue: DOCG-7536
+Summary: [DOCG][PP]-Service Activation OTA&DM failing at Inventory
+Status: To X2X validation
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7185
+Summary: DOCG - PPROD - Post OP Inventory - multiple inventories were received / sent
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG (IOTPF-15451) =======
+
+Issue: IOTPF-15451
+Summary: DOCG-26.1.2.14 - 1.8.1  (Prod)
+Status: In production
+Owner: Bhaskar KL
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-24
+
+No linked issues found.
+
+
+======= DOCG-DOCG-26.1.2.16 - 1.8.2 (IOTPF-15462) =======
+
+Issue: IOTPF-15462
+Summary: DOCG-26.1.2.16 - 1.8.2
+Status: In production
+Owner: Pravin
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-24
+
+Linked issues:
+
+Issue: DOCG-7536
+Summary: [DOCG][PP]-Service Activation OTA&DM failing at Inventory
+Status: To X2X validation
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-DOCG-26.1.2.17 - 1.8.3 (IOTPF-15485) =======
+
+Issue: IOTPF-15485
+Summary: DOCG-26.1.2.17 - 1.8.3
+Status: In production
+Owner: Pravin
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: DOCG-6929
+Summary: [Campaign Management] [OP4C][ICAS] [UI]- Search for a target reference during the OTA Component selection (step 3)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-7391
+Summary: [Service Activation] - Add DeviceType in ADA API
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= PATRIC-3.6.1 (IOTPF-12427) =======
+
+Issue: IOTPF-12427
+Summary: PATRIC-SSDP-3.6.1
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2891
+Summary: [VDP_DS_SSDP][PATRIC_SSDP] : vehicle.engines.type : we should have vehicle.engines.type instead of vehicle.engines.typeEngine
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2882
+Summary: [PATRIC_SSDP]APIM: SSDP: Monitor: body.values.data and body.values.value Empty (Mapping issue)
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2802
+Summary: [VDP_DS_SSDP][PATRIC_SSDP] : wrong structure of vehicle's "extension" block
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= PATRIC-3.6.2 (IOTPF-12581) =======
+
+Issue: IOTPF-12581
+Summary: PATRIC-SSDP-3.6.2
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2972
+Summary: [PATRIC_SSDP] No monitor Triggered
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2937
+Summary: [PATRIC] Prepare releases
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= PATRIC-3.6.3 (IOTPF-12828) =======
+
+Issue: IOTPF-12828
+Summary: PATRIC-SSDP-3.6.3
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2984
+Summary: SSDP VDP Stream : vehicle.energies.extension.electric.battery : we should not have "health" or "load" Empty
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2985
+Summary: SSDP VDP Stream : vehicle.energies.extension.electric.battery.health : we should have "vehicle.energies.extension.electric.battery.health.capacity" & "vehicle.energies.extension.electric.battery.health.resistance"
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3019
+Summary: [PATRIC][PATRIC_SSDP] Prepare releases(2.14.1 & 3.6.3)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= PATRIC-3.6.4 (IOTPF-12896) =======
+
+Issue: IOTPF-12896
+Summary: PATRIC-SSDP-3.6.4
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3028
+Summary: [PATRIC_SSDP] Fix tyreState telemetry enum name
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3030
+Summary: [PATRIC][PATRIC_SSDP] Prepare releases(3.6.4)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= PATRIC-3.6.5 (IOTPF-13165) =======
+
+Issue: IOTPF-13165
+Summary: PATRIC-SSDP-3.6.5
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3028
+Summary: [PATRIC_SSDP] Fix tyreState telemetry enum name
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= PATRIC-3.7.0 (IOTPF-13489) =======
+
+Issue: IOTPF-13489
+Summary: PATRIC-SSDP-3.7.0
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3080
+Summary: [PATRIC][PATRIC_SSDP] Implement a generic filter on source data flow( usefull sson : CARCOM) + support new Model
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3125
+Summary: [PATRIC_SSDP] Prepare releases(SP_38-39)[version:3.7.0]
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3041
+Summary: [PATRIC_SSDP] Implement "vehicle.energy.charging.settings.chargePreferenceRate" trigger
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-3115
+Summary: [PATRIC_SSDP] : Add Monitor's triggers validation during DB load
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= PATRIC-3.7.2 (IOTPF-13764) =======
+
+Issue: IOTPF-13764
+Summary: PATRIC-SSDP-3.7.2
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3137
+Summary: [PATRIC_SSDP] Prepare releases(SP_38-39)[version:3.7.1]
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3135
+Summary: [PATRIC_SSDP] Fix Monitor subscribe param validation
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= PATRIC-3.9.0 (IOTPF-14990) =======
+
+Issue: IOTPF-14990
+Summary: PATRIC-SSDP-3.9.0
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3258
+Summary: [PATRIC_SSDP] Change of Time Monitor trigger ( depreciate times and introduce schedule)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-3296
+Summary: [PATRIC_SSDP] Add "times" and "areas" triggered predicates to the monitor event payload.
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= SYNAPSE (IOTPF-15071) =======
+
+Issue: IOTPF-15071
+Summary: SYNAPSE-1.4.0
+Status: Deploying to PROD
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-24
+
+No linked issues found.
+
+
+======= SYNAPSE (IOTPF-15357) =======
+
+Issue: IOTPF-15357
+Summary: SYNAPSE-1.4.1
+Status: Deploying to PROD
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-24
+
+No linked issues found.
+
+
+======= VDP_PROC-2.33.0 (IOTPF-15201) =======
+
+
+Issue: IOTPF-15201
+Summary: VDP_PROC-2.33.0
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3313
+Summary: [VDP_PROC][PROC1] : Trip : Content : Not compatible for both APIM and MPH
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3342
+Summary: [VDP][DEV] [WPI: 3774234][J4U] Add JDA raw data conversion and mapping  to J4U / RTBM-V2 Arch appendix.
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-3389
+Summary: [PPROD][VDP_PROC][PROC1]: Previous Trip not closed
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_DS-2.11.0 (IOTPF-12424) =======
+
+
+Issue: IOTPF-12424
+Summary: VDP_PROC-2.33.0
+Status: In production
+Owner: Tiede Armand DJIRO
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2863
+Summary: [RTC: 2726302][WPI: 3329282][VDP][DEV][PROC][VDS] Add the MessageId from the Carbide source as Sampling metadata and Kinesis DS property
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2921
+Summary: [VDP/VDR] Prepare releases
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3079
+Summary: [VDP_DS1][VDP_STORE1]  Alerts V1/V2 Model Refactoring
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3077
+Summary: [VDP_STORE][VDS1] Implement source filter to ignore CARCOM source data flow
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_DS-2.11.1 (IOTPF-14122) =======
+
+
+Issue: IOTPF-14122
+Summary: VDP_PROC-2.33.0
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3176
+Summary: APIM: SSDP: Trips/:trips/telemetry: Error when filter by type for some values
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_DS-2.9.0 (IOTPF-12166) =======
+
+
+Issue: IOTPF-12166
+Summary: VDP_PROC-2.33.0
+Status: In production
+Owner: Tiede Armand DJIRO
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2821
+Summary: [VDP_DS][DEV][RTC:2974866]Add charge end time and status support to RTBM V2 (DC/CB source) mapping
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= VDP_DS_SSDP-2.10.0 (IOTPF-12380) =======
+
+
+Issue: IOTPF-12380
+Summary: VDP_DS_SSDP-2.10.0
+Status: In production
+Owner: Tiede Armand DJIRO
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2892
+Summary: [VDP_DS_SSDP] wrong structure of maintenance (daysBeforeMaintenance & mileageBeforeMaintenance)
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2890
+Summary: [VDP_DS]vehicle.doorsState is not mapped
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2906
+Summary: [VDP]SPEC][VDS] Add maintenance  new entry to Telemetry data
+Status: Done
+Issue Type: Task - IOT PF
+
+Issue: VDP-2907
+Summary: [VDP][DEV][VDS] Add maintenance  new entry to Telemetry data
+Status: Done
+Issue Type: Task - IOT PF
+
+Issue: VDP-2907
+Summary: [VDP][DEV][VDS] Add maintenance  new entry to Telemetry data
+Status: Done
+Issue Type: Task - IOT PF
+
+Issue: VDP-2863
+Summary: [RTC: 2726302][WPI: 3329282][VDP][DEV][PROC][VDS] Add the MessageId from the Carbide source as Sampling metadata and Kinesis DS property
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2891
+Summary: [VDP_DS_SSDP][PATRIC_SSDP] : vehicle.engines.type : we should have vehicle.engines.type instead of vehicle.engines.typeEngine
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2921
+Summary: [VDP/VDR] Prepare releases
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-2802
+Summary: [VDP_DS_SSDP][PATRIC_SSDP] : wrong structure of vehicle's "extension" block
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_DS_SSDP-2.10.1 (IOTPF-12714) =======
+
+
+Issue: IOTPF-12714
+Summary: VDP_DS_SSDP-2.10.1
+Status: In production
+Owner: Tiede Armand DJIRO
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2984
+Summary: SSDP VDP Stream : vehicle.energies.extension.electric.battery : we should not have "health" or "load" Empty
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2985
+Summary: SSDP VDP Stream : vehicle.energies.extension.electric.battery.health : we should have "vehicle.energies.extension.electric.battery.health.capacity" & "vehicle.energies.extension.electric.battery.health.resistance"
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3005
+Summary: [VDP] Prepare releases
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-2990
+Summary: SSDP VDP Stream : vehicle.doorsState is not mapped !!!
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3047
+Summary: [VDP_DS_SSDP] Missing (daysBeforeMaintenance & mileageBeforeMaintenance) on Telemetry feature
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_DS_SSDP-2.10.2 (IOTPF-13149) =======
+
+
+Issue: IOTPF-13149
+Summary: VDP_DS_SSDP-2.10.2
+Status: In production
+Owner: Tiede Armand DJIRO
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3058
+Summary: [VDP_DS_SSDP] Fix tyreState mapping in outputkit
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3067
+Summary: [VDP] Prepare releases(SP_32-33)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_DS_SSDP-2.11.0 (IOTPF-13491) =======
+
+
+Issue: IOTPF-13491
+Summary: VDP_DS_SSDP-2.11.0
+Status: In production
+Owner: Tiede Armand DJIRO
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3081
+Summary: [DATACHAIN_DOMAIN][VDP8DS_SSDP] [Model][OUTPUT_KIT]Remove empty field serialization on Telemetry data
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3084
+Summary: [DATACCHAIN_DOMAIN][VDP_DS_SSDP][OUTPUT_KIT] Fix mapping issues
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3077
+Summary: [VDP_STORE][VDS1] Implement source filter to ignore CARCOM source data flow
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_DS_SSDP-2.11.1 (IOTPF-14123) =======
+
+
+Issue: IOTPF-14123
+Summary: VDP_DS_SSDP-2.11.1
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3180
+Summary: [VDP_DS_SSDP] : should have a mapping of "vehicle.energies.extension.fuel.consumption.total"
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3181
+Summary: [VDP_DS_SSDP] : wrong mapping of "vehicle.preconditioning.airConditioning.programs"
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_DS_SSDP-2.11.2 (IOTPF-14306) =======
+
+
+Issue: IOTPF-14306
+Summary: VDP_DS_SSDP-2.11.2
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-3175
+Summary: [VDP_DS_SSDP][OUTPUT_KIT] : we must have a mapping for "vehicle.energies.extension.electric.charging.schedule.unitary"
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3281
+Summary: [VDP][V1] Prepare releases/configs (VD_DS_SSDP-v2.11.2)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= VDP_DS_SSDP-2.11.3 (IOTPF-15126) =======
+
+
+Issue: IOTPF-15126
+Summary: VDP_DS_SSDP-2.11.3
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2880
+Summary: VDP_DS : Data Mapping ATB3S/ BSRF : lifetime mileage - same valid values injected and receving different values in carbide and VDP sampling
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_DS_MON-2.11.0 (IOTPF-12425) =======
+
+
+Issue: IOTPF-12425
+Summary: VDP_DS_MON-2.11.0
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-02-26
+
+Linked issues:
+
+Issue: VDP-2863
+Summary: [RTC: 2726302][WPI: 3329282][VDP][DEV][PROC][VDS] Add the MessageId from the Carbide source as Sampling metadata and Kinesis DS property
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2921
+Summary: [VDP/VDR] Prepare releases
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3079
+Summary: [VDP_DS1][VDP_STORE1]  Alerts V1/V2 Model Refactoring
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3077
+Summary: [VDP_STORE][VDS1] Implement source filter to ignore CARCOM source data flow
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog

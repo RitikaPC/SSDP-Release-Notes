@@ -1,0 +1,73 @@
+======= VDP_PROC-1.5.4 (IOTPF-15712) =======
+
+
+Issue: IOTPF-15712
+Summary: VDP_PROC_2-1.5.4
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-17
+
+Linked issues:
+
+Issue: VDP-3495
+Summary: [X2-50] [VDP_PROC][PROC2] : vhl.eng.eExt.charging.schedule.programs is not working anymore
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3486
+Summary: [VDP_PROC][PROC2] Study a way to garantee the backwards compatibility
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3592
+Summary: [VDP_PROC][PROC2] Fix computed trip consumption sign ( negative values was pushed by PROC)
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3342
+Summary: [VDP][DEV] [WPI: 3774234][J4U] Add JDA raw data conversion and mapping  to J4U / RTBM-V2 Arch appendix.
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-3594
+Summary: [VDP_PROC][PROC2] Fix Stolen B2B missed fleetId field
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3555
+Summary: [VDP_PROC] version <VDP_PROC_2 1.5.1> in <PPROD> env : F2X VehicleInfo "THuile" : two objects are created instead of one
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3539
+Summary: [VDP_PROC][VDR] version <VDP_PROC_2 1.5.1> in <PPROD> env :  messages coming from rcz ssdp are rejected in vdp proc2
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3553
+Summary: [VDP_PROC] version <VDP_PROC_2 1.5.1> : RTBMV1 - Missing alert messages for fullCellStatus
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.6.8-P1 (IOTPF-15741) =======
+
+Issue: IOTPF-15741
+Summary: VDP_STORE_2-1.6.8-P1
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-18
+
+Linked issues:
+
+Issue: VDP-3608
+Summary: [VDP_STORE][VDS2][PROD][HOTFIX] Fleet filter is not applying to any other feature than State
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3628
+Summary: [VDP_STORE][VDS2][PROD][HOTFIX] Fix energy merging
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog

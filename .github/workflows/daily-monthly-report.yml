@@ -1,0 +1,37 @@
+name: Daily SSDP Monthly Report
+
+on:
+  schedule:
+    # Daily check for updated weekly pages and republish monthly if needed.
+    - cron: "15 06 * * *"
+  workflow_dispatch:
+
+jobs:
+  run-daily-monthly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Publish current month (only if changed)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MONTH="$(date -u +%Y-%m)"
+          echo "Publishing monthly report for ${MONTH}"
+          python3 monthly_report.py --month "${MONTH}" --publish --skip-if-unchanged
+        env:
+          CONFLUENCE_USERNAME: ${{ secrets.CONFLUENCE_USERNAME }}
+          CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
+          CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
+          CONFLUENCE_PARENT_PAGE_ID: ${{ secrets.CONFLUENCE_PARENT_PAGE_ID }}
+          # Prefer publishing under the monthly container if provided.
+          MONTHLY_PARENT_PAGE_ID: ${{ secrets.MONTHLY_PARENT_PAGE_ID }}

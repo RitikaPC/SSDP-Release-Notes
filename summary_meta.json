@@ -1,10 +1,11 @@
 {
-  "week": "2026-W12",
+  "week": "2026-W15",
+  "has_releases": true,
   "prev_versions": {
     "APIM": "11.14.0",
     "EAH": "2.44.0",
-    "DOCG": "DOCG-26.1.2.19 - 1.8.3",
-    "VDR": "1.4.2",
+    "DOCG": "DOCG-26.1.3.17 - 1.9.1",
+    "VDR": "None",
     "PATRIC": "3.9.0",
     "RCZ": "RCZ 4.0.18",
     "SYNAPSE": "1.1.0",
@@ -12,13 +13,13 @@
     "CALVA": "CALVA-2.4.2",
     "REFSER2": "None",
     "SERING": "None",
-    "VDP_PROC": "2.33.0",
-    "VDP_STORE_2": "1.6.8"
+    "VDP_PROC": "2.33.1",
+    "VDP_STORE_2": "1.6.8-P1"
   },
   "curr_versions": {
     "APIM": "None",
     "EAH": "None",
-    "DOCG": "None",
+    "DOCG": "DOCG-26.1.3.18 - 1.9.2",
     "VDR": "None",
     "PATRIC": "None",
     "RCZ": "None",
@@ -28,6 +29,6 @@
     "REFSER2": "None",
     "SERING": "None",
     "VDP_PROC": "None",
-    "VDP_STORE_2": "1.6.8-P1"
+    "VDP_STORE_2": "None"
   }
 }

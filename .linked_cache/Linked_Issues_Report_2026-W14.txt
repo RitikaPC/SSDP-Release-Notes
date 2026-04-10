@@ -1,0 +1,70 @@
+======= DOCG-DOCG-26.1.3.17 - 1.9.1 (IOTPF-15857) =======
+
+Issue: IOTPF-15857
+Summary: DOCG-26.1.3.17 - 1.9.1 (Hotfix)- Rolled back
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-04-02
+
+Linked issues:
+
+Issue: DOCG-7740
+Summary: DOCG: PRD DB Max Pool Update is not working
+Status: Wait
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7733
+Summary: [DOCG][Prod][JMSAdapter][Campaign] Add Kafka Key For Every Message Published by JMSAdapter
+Status: To X2X validation
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7731
+Summary: DOCG:POD is taking huge memory (Almost all application)
+Status: To X2X validation
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_PROC-1.5.5 (IOTPF-15764) =======
+
+
+Issue: IOTPF-15764
+Summary: VDP_PROC_2-1.5.5
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-30
+
+Linked issues:
+
+Issue: VDP-3648
+Summary: [VDP_PROC][PROC2] Fix Kafka consumer commit
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3644
+Summary: [VDP_PROC][PROC2][PROD] Prepare config for only F2X
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3412
+Summary: [VDP_PROC][PROC2][NEW ARCH] Add configs for new architectures[rtbmv1-nea10,rtbmv1-nea11]
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_PROC-2.33.1 (IOTPF-15877) =======
+
+
+Issue: IOTPF-15877
+Summary: VDP_PROC-2.33.1
+Status: In production
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-04-01
+
+Linked issues:
+
+Issue: VDP-3663
+Summary: [VDP_PROC][PROC1/2][PROD][J4U] Fix Alerts mapping
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog

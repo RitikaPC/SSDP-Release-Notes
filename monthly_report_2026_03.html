@@ -1,10 +1,82 @@
 <div>
-    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Executive Release Summary (planned)</h2>
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Executive Release Summary (planned)</h1>
     <div style="margin:8px 0 14px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
         <p style="margin:0;"><em>To be filled manually.</em></p>
     </div>
 
-    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Component Latest Versions</h2>
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Summary</h1>
+    
+            <h2 style="margin-top:16px;margin-bottom:8px;">➕ What we added:</h2>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <p local-id="d4e63ca22951">&nbsp;<strong>Targeted Maintenance Release:</strong> This specific release cycle focused exclusively on resolving a critical display bug within the vehicle interface, so no new functional features were introduced,</p>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="92e6ad59-1918-40fb-9455-9d3ca42cc7b8"><li local-id="4cdbf798-31a9-4273-b29a-5d7b08019e94"><p local-id="1bf3de377887"><strong>VDP_STORE_2 (VDS2) Foundational Rollout:</strong> A massive data-layer deployment introducing full support for core vehicle domains in the new architecture. This includes the integration of <strong>State, Telemetry, Position, Stolen, Alarm, Alert, and Trip</strong> features.</p></li><li local-id="0ad81be8-650a-45d5-9be4-5c4d74758696"><p local-id="a2606fadd698"><strong>Universal Charging Sessions:</strong> Enabled centralized Charging Session tracking for all architectures directly within VDS2.</p></li><li local-id="66e7bd4e-0d43-48c5-8a8f-bb7aff5fc406"><p local-id="f0493121ed0a"><strong>B2B Ecosystem Support:</strong> Implemented comprehensive B2B data support within VDS2 to ensure enterprise fleet data is captured and loadable by MPH APIs.</p></li><li local-id="f38852df-5f97-4638-a05b-e7014ff4e858"><p local-id="94156970c64a"><strong>Real-time Push Notifications (DOCG):</strong> Configured DOCG to trigger a push notification every time one is requested by the OTA Redbend (RB) Server within the operation topic, improving real-time user feedback during campaigns.</p></li><li local-id="e256f440-6d75-47e2-967b-e31965cbddf8"><p local-id="c74465b22d3d"><strong>Enhanced Telemetry Data:</strong> Added the Electric (ELEC) battery temperature block and mapping for Carbide architectures, and integrated Stolen vehicle data directly into the SSDP Telemetry collection.</p></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="1ef20acc23f9"><li local-id="bec11f6cc324"><p local-id="b168afe216fe"><strong>Targeted Maintenance Release:</strong> No net-new user-facing features were introduced in this cycle. The focus was strictly on restoring core data layer functionalities and preparing specific environment configurations.</p></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="f762abc8-f095-4c30-8e6d-185c56ade586"><li local-id="19a4bef6-98fb-457e-9fc3-d2ceb9d4458a"><p local-id="9fbf25f13bb9">This release period (Week 13, 2026) focused primarily on infrastructure optimization and resolving urgent production workflow blockers rather than introducing new end-user features.</p></li></ul>
+                </div>
+                
+            
+            <h2 style="margin-top:24px;margin-bottom:8px;">🔧 What we changed:</h2>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <p local-id="f3ded6a194c7">&nbsp;&nbsp;<strong>DOCG Version Bump:</strong> Upgraded the DOCG component from version 26.1.2.17 to <strong>26.1.2.18</strong> (baseline 1.8.3) to deploy the necessary UI fix. All other ecosystem enablers (APIM, EAH, VDR, PATRIC, etc.) remain unchanged on their current stable versions.</p>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="db238ea7-991e-4aa4-9a94-6b9f4e25ad9f"><li local-id="028530c0-481f-46ee-ab0e-4fef6299f90f"><p local-id="1d86e28bf4cf"><strong>Data Storage &amp; Retention Strategy:</strong> Completely overhauled document identification in VDS2 (replacing system <code>_id</code> with a functional ID) and introduced a dynamic <strong>TTL (Time-To-Live) / Expiration strategy</strong> defined per FleetID and feature.</p></li><li local-id="49bde7be-e976-4899-a744-5b795d39612d"><p local-id="4f6747bf4c21"><strong>Traffic Filtering:</strong> Implemented strict source filters in VDS2 to discard non-CARCOM source data flows, reducing system noise and preventing the storage of useless telemetry data.</p></li><li local-id="303db984-2486-4bd6-903e-8c2051820c1d"><p local-id="10bace69c99d"><strong>Performance Testing Prep (PATRIC):</strong> Refactored the Integration (INT) environment with database exports and a bridge of production sampling to prepare for heavy B2C performance benchmarking.</p></li><li local-id="d3db24d8-171f-4eb8-b1e5-019349cb50ec"><p local-id="de6f5e146fe9"><strong>Consumer Repartitioning:</strong> Optimized Kafka/Elastic consumer repartitioning and resolved Elastic agent startup errors for better data ingestion stability.</p></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="b61c8f551501"><li local-id="14de1f3a-eb7d-4103-8bdf-0c098965baca"><p local-id="296d087db604"><strong>Environment Configuration (VDP_PROC):</strong> Prepared and isolated the production configuration specifically for <strong>F2X</strong> deployments, ensuring tailored processing rules for this architecture.</p></li><li local-id="cfbaf012-a935-4f7b-95f5-ba46a9341f90"><p local-id="933694104a0c"><strong>Kafka Optimization:</strong> Refactored the Kafka consumer commit logic within the VDP_PROC (PROC2) stream to improve message processing reliability and prevent data consumption lags.</p></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="769e0fb0a9dc"><li local-id="963b0e59-13cc-4b82-bbe2-5077b6b28f4f"><p local-id="8e66f5585ba6">We successfully upgraded the DOCG component to the 1.9.0 baseline, specifically deploying version DOCG-26.1.3.14 on March 27, 2026.</p></li><li local-id="31bf2a64-09a0-46e8-a6a2-13480a7f5cd7"><p local-id="80ad97e990f1">We implemented a critical infrastructure improvement by increasing the DOCG Database Maximum-pool-size to 30, which will enhance connection management and overall system performance.</p></li><li local-id="c9469691-378d-42e7-ac17-4f92ab5de555"><p local-id="98fcdca702d8">In parallel, we rolled out an urgent Hotfix version (DOCG-26.1.2.20-1.8.4) directly to production to address immediate service activation blockers.</p></li></ul>
+                </div>
+                
+            
+            <h2 style="margin-top:24px;margin-bottom:8px;">🚮 What we Deprecated/ Removed:</h2>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="9fba3eec1821"><li local-id="a869db15ac42"><p local-id="6a6d155daca0"><strong>VDS1 Charging Sessions:</strong> With the successful transition to VDP_STORE_2, charging session storage in the legacy VDS1 environment has been officially disabled.</p></li></ul>
+                </div>
+                
+            
+            <h2 style="margin-top:24px;margin-bottom:8px;">🔨 What we fixed:</h2>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <p local-id="7de5cf18f03f"><strong>IVI Release Notes Visibility (CSERV-1997):</strong> Resolved a critical issue in the ICON Preprod environment where release notes and descriptions configured within the DOCG Backoffice were failing to render on the In-Vehicle Infotainment (IVI) screens. This fix ensures that end-users will correctly see the necessary descriptions and instructions for their OTA updates directly in their vehicles.</p>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="13ef9538-b138-495c-b4ef-ad99a6a415e9"><li local-id="6717c191-d4d1-4330-9ad2-96e5d3ea43e3"><p local-id="a5e06dcd295f"><strong>Data Privacy Compliance:</strong> Fixed a critical issue in VDP_STORE_2 where privacy values in the CO and COS objects were not updating to reflect the customer's active choices.</p></li><li local-id="9ba68a14-4514-446f-a49d-cd4443286f38"><p local-id="2b959e9580cb"><strong>B2B &amp; B2C Sync Issues:</strong> Resolved multiple database update failures where B2B data was freezing, and B2C charging sessions were failing to store properly.</p></li><li local-id="b16a8499-9dc1-4135-b69d-8e36ef561d3d"><p local-id="c98b719224dc"><strong>Monitor Reliability (PATRIC):</strong> Fixed a bug where Monitor Start/Stop triggers were failing to execute for both B2B and B2C flows.</p></li><li local-id="92ee35d5-859a-4f3d-84e3-d3977ab1247a"><p local-id="c500e29fb94b"><strong>Campaign &amp; Inventory Accuracy:</strong> Patched the DOCG Post-Op flow to prevent the system from receiving and sending multiple redundant inventories during a single operation.</p></li><li local-id="390c54e9-3e3b-4c62-98e1-e5e159db1f2c"><p local-id="77011b6117c0"><strong>Telemetry Visibility:</strong> Resolved API errors preventing the retrieval of <code>telemetries/latest</code> (specifically missing stolen info) and filtering issues within the Trips API.</p></li></ul>
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="0c6f48f041c8"><li local-id="eb195985-661d-4690-83c0-ff1af56c2599"><p local-id="566c96e2ae4d"><strong>Data Visibility &amp; Fleet Filtering (HOTFIX):</strong> Resolved a critical production issue in <strong>VDP_STORE_2</strong> where the Fleet filter was exclusively applying to the &quot;State&quot; feature. This hotfix ensures fleet-based data segmentation is correctly applied across <em>all</em> telemetry and vehicle data features.</p></li><li local-id="efe282a6-41d5-4133-9ccf-9eca00554a49"><p local-id="bd605c688254"><strong>Energy Data Integrity (HOTFIX):</strong> Patched a bug causing failures in &quot;energy merging&quot; within VDP_STORE_2, ensuring that electric and fuel energy data streams are correctly combined and stored without loss or corruption.</p></li></ul> </div>
+    
+    <div style="min-width: 300.0px;max-width: 35.0%;background: rgb(248,249,250);padding: 20.0px;border-radius: 4.0px;border: 1.0px solid rgb(224,224,224);">
+    </div>
+    
+    <div style="min-width: 300.0px;max-width: 35.0%;background: rgb(248,249,250);padding: 20.0px;border-radius: 4.0px;border: 1.0px solid rgb(224,224,224);">
+                </div>
+                
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="969d14adec5d"><li local-id="608c0111-f106-4697-ba0b-cf3c28761f2b"><p local-id="1a9a39c36bcc">Resolved an urgent production issue where the DOTE Scomo was not being added to campaigns.</p></li><li local-id="1674f0c4-8611-4072-8725-742640da7f0a"><p local-id="37ea4ec09303">Corrected a critical flaw in the Service Activation (OTA) process where &quot;cancel&quot; or &quot;TimeOut&quot; statuses were being ignored, which previously left workflows stuck in an open state.</p></li><li local-id="1bffc632-f5ec-45ca-ab77-2b8d094f8dbf"><p local-id="1ead21647fdd">Patched the ADA and DM Service Activation pipeline to ensure data is successfully sent to Account Management (AM) and that correlation IDs are properly assigned for DM workflows.</p></li><li local-id="70091382-4d55-4694-a921-0d7df33a02de"><p local-id="8d7ef54858ad">Fixed the OTA Service Activation feedback loop so that AM Feedback is accurately sent even when a Redbend (RB) cancellation or failure status occurs</p></li></ul>
+                </div>
+                
+            
+
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Component Latest Versions</h1>
     <table style="border-collapse:collapse;width:100%;margin-top:8px;">
         <thead>
             <tr>
@@ -15,58 +87,29 @@
         <tbody>
             <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>APIM</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>11.14.0</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>EAH</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.44.0</td></tr>
-<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>DOCG</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>DOCG-26.1.2.18 - 1.8.3</td></tr>
-<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDR</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.4.2</td></tr>
-<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>PATRIC-SSDP</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>3.9.0</td></tr>
-<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>RCZ</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>RCZ 4.0.23</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>DOCG</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>DOCG-26.1.3.14 - 1.9.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDR</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>PATRIC</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>3.9.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>RCZ</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>RCZ 4.0.18</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>SYNAPSE</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.1.0</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>REFTEL</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>3.5.1</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>CALVA</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>CALVA-2.4.2</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>REFSER2</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>SERING</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
-<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_PROC</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.33.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_PROC</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.5.4</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.11.1</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS_SSDP</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.11.3</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS_MON</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.11.0</td></tr>
 <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_STORE</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
-<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_STORE_2</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.6.8</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_STORE_2</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.6.8-P1</td></tr>
         </tbody>
     </table>
 
-    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Summary</h2>
-    
-            <h3 style="margin-top:16px;">➕ What we added:</h3>
-            
-                <div style="margin:8px 0 14px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
-                    <p local-id="83526e45ed86"><strong>Targeted Maintenance Release:</strong> This specific release cycle focused exclusively on resolving a critical display bug within the vehicle interface, so no new functional features were introduced</p><p local-id="a62414db43cf">&nbsp;</p>
-                </div>
-                
-            
-            <h3 style="margin-top:16px;">🔧 What we changed:</h3>
-            
-                <div style="margin:8px 0 14px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
-                    <p local-id="a6eeafc1a5b1">&nbsp;<strong>DOCG Version Bump:</strong> Upgraded the DOCG component from version 26.1.2.17 to <strong>26.1.2.18</strong> (baseline 1.8.3) to deploy the necessary UI fix. All other ecosystem enablers (APIM, EAH, VDR, PATRIC, etc.) remain unchanged on their current stable versions</p>
-                </div>
-                
-            
-            <h3 style="margin-top:16px;">🚮 What we Deprecated/ Removed:</h3>
-            
-                <div style="margin:8px 0 14px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
-                    <p local-id="76b0d5f97560">&nbsp;<strong>No explicit deprecations or removals</strong> were executed in this release</p>
-                </div>
-                
-            
-            <h3 style="margin-top:16px;">🔨 What we fixed:</h3>
-            
-                <div style="margin:8px 0 14px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
-                    <p local-id="916b424c6b33"><strong>IVI Release Notes Visibility (CSERV-1997):</strong> Resolved a critical issue in the ICON Preprod environment where release notes and descriptions configured within the DOCG Backoffice were failing to render on the In-Vehicle Infotainment (IVI) screens. This fix ensures that end-users will correctly see the necessary descriptions and instructions for their OTA updates directly in their vehicles.</p><p local-id="139b167813b9">&nbsp;</p>
-                </div>
-                
-            
-
-    <h2 style="margin-top:26px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Notes details by week</h2>
+    <h1 style="margin-top:26px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Notes details by week</h1>
     <ul style="line-height:1.9;">
-        <li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/2950529508/SSDP+Release+Notes+Week+2026-W10+2+Mar+2026+to+8th+March+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W10 (2 Mar 2026 to 8th March 2026)</a> (2026-W10)</li>
-<li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/2989392163/SSDP+Release+Notes+Week+2026-W11+9+Mar+2026+to+15th+March+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W11 (9 Mar 2026 to 15th March 2026)</a> (2026-W11)</li>
+        <li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/3080355841/SSDP+Release+Notes+Week+2026-W10+2+Mar+2026+to+8th+March+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W10 (2 Mar 2026 to 8th March 2026)</a> (2026-W10)</li>
+<li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/3080290384/SSDP+Release+Notes+Week+2026-W11+9+Mar+2026+to+15th+March+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W11 (9 Mar 2026 to 15th March 2026)</a> (2026-W11)</li>
+<li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/3066986579/SSDP+Release+Notes+Week+2026-W12+16+Mar+2026+to+22nd+March+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W12 (16 Mar 2026 to 22nd March 2026)</a> (2026-W12)</li>
+<li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/3088056782/SSDP+Release+Notes+Week+2026-W13+23+Mar+2026+to+29th+March+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W13 (23 Mar 2026 to 29th March 2026)</a> (2026-W13)</li>
     </ul>
 </div>

@@ -1,0 +1,756 @@
+======= APIM-10.5.0 (IOTPF-14291) =======
+
+Issue: IOTPF-14291
+Summary: APIM  10.5.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-20
+
+Linked issues:
+
+Issue: APIM-3346
+Summary: [RTC-3301020][SSDP-APIM] - UNSET (delete) - Family Drive Alerts (Parental Controls)
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-3347
+Summary: [RTC-3301017][SSDP-APIM] - SET - Family Drive Alerts (Parental Controls)
+Status: Done
+Issue Type: Epic
+
+Issue: APIM-4075
+Summary: [APIM]Create a new ddl and create collection in INT,Preprod,Prod - Step 0
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4084
+Summary: [APIM]Create new API for POST Request in controller - Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4088
+Summary: [APIM]Create new API for DELETE Request in controller layer - Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4104
+Summary: [SSDP-APIM] VIP- Create DDL and Collection in INT, Preprod, Prod - Step 0
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4047
+Summary: [APIM] Impact to get channel and get channel by ID
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4107
+Summary: [SSDP-APIM] VIP- Create Request and Response Objects for GET/POST API - Step 1
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4183
+Summary: Handle Ignite xCall Status Request - Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4177
+Summary: Update xCall Data POST API - Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4081
+Summary: [APIM]Create mappers to save/update the entity in settings storage - Step 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4185
+Summary: Update IgniteRoDispatcher-Step 3
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4059
+Summary: [APIM] : Step 3 Create mappers to map notification history entity to response DTO
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4264
+Summary: Add feature flag to enable this feature on preprod/prod
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4207
+Summary: Watcher Setup
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-3781
+Summary: Integration test APIM-3346 [RTC-3301020][SSDP-APIM] - UNSET (delete) - Family Drive Alerts (Parental Controls)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4192
+Summary: Response Entity in MonitorController is not consistent
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4260
+Summary: udpate gradle to 9.2
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4266
+Summary: Eliminate System.setProperty usage in tests
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4269
+Summary: Refactor test setup to use module-convention plugin
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4271
+Summary: Move ObjectMapperHelper to testing-utils module
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4252
+Summary: Add more unit tests for RczRoDispatcherService.java
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4273
+Summary: Delete MongoDB container extension in tests
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4267
+Summary: Remove unnecessary SpringBootTest contexts
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4277
+Summary: Test case coverage for libraries/rcz/src/main/java/com/stla/mph/apim/rcz/mappers/charging/RczChargingMapper.java
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4257
+Summary: Add new unit tests  for SupremService
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4268
+Summary: Remove @RunWith(SpringRunner.class) from test classes
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4127
+Summary: SonarQ Bug on APIM app
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4143
+Summary: Update calva Response to fetch ActivationRegion - Step 1
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4262
+Summary: APIM : TRIPS : State : Mapping : Issues
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4259
+Summary: Change the mapping for charging session createdAt field
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4276
+Summary: [APIM][SDK][Family Drive Alerts- UNSET]  Reupdate driveAlert RO model
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= EAH-2.34.0 (IOTPF-14292) =======
+
+Issue: IOTPF-14292
+Summary: EAH-2.34.0
+Status: In production
+Owner: Anushree Jain
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-20
+
+Linked issues:
+
+Issue: APIM-4176
+Summary: [EAH] Resolve warnings during startup of applications
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4276
+Summary: [APIM][SDK][Family Drive Alerts- UNSET]  Reupdate driveAlert RO model
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: APIM-4259
+Summary: Change the mapping for charging session createdAt field
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4262
+Summary: APIM : TRIPS : State : Mapping : Issues
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: APIM-4254
+Summary: [EAH] Release EAH 2.33.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4260
+Summary: udpate gradle to 9.2
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: APIM-4093
+Summary: [EAH][FCM Notifier] Modify FCM notifier to store the notification object in DB after processing
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.2.1.1 (IOTPF-11785) =======
+
+Issue: IOTPF-11785
+Summary: DOCG-25.2.1.1
+Status: In production
+Owner: Bhaskar KL
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-20
+
+Linked issues:
+
+Issue: IOTPF-11655
+Summary: ICON - Pagination is not working in Vehicle ID Card Page
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11637
+Summary: Search functionality is not appropriate at Vehicle ID card- campaign section.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6247
+Summary: [J4U CFT] - Vehicle Registration - Bootstrap device registration event name change and in History
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6248
+Summary: [J4U CFT] - Vehicle Registration - Handle empty array for the nonempty fields as per synapse contract
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6251
+Summary: [J4U CFT] - OTA in plant - 25Q2.Sprint 2
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: DOCG-6249
+Summary: [DOCG][INT]DC Purge - Automatic Software Registers on Second Payload Attempt Despite Initial Failure
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.2.1.2 (IOTPF-11842) =======
+
+Issue: IOTPF-11842
+Summary: DOCG-25.2.1.2
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+No linked issues found.
+
+
+======= DOCG-25.2.1.3 (IOTPF-11878) =======
+
+Issue: IOTPF-11878
+Summary: DOCG-25.2.1.3
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+No linked issues found.
+
+
+======= DOCG-25.2.2 (IOTPF-11879) =======
+
+Issue: IOTPF-11879
+Summary: DOCG-25.2.2
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: DOCG-6256
+Summary: [J4U CFT] - OTAInPlant - Vin Operation Details post vin deletion
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: IOTPF-11331
+Summary: [Change domain type] - The user is not receiving notifications or success messages after changing the domain type to the target domain.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11772
+Summary: ICON - OTA Campaign created for multi component is only displaying one ScomoId in device Details
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11852
+Summary: ICON - J4U Inventory : "transactionId": is null in DOCG-CMM-OTA-INV-PPROD
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11635
+Summary: Vehicle ID card details are not getting updated as per the campaign(s) VIN status.
+Status: Done
+Issue Type: Bug - IOT PF
+
+
+======= DOCG-25.2.2.1 (IOTPF-11939) =======
+
+Issue: IOTPF-11939
+Summary: DOCG-25.2.2.1
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: DOCG-4948
+Summary: [DOCG][INT]Didn't get proper Bootstrap session status
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-11656
+Summary: BackOffice Configuration- 'Installation Plan Configuration' - User is able to edit the plan but not able to submit the new plan and also not able to edit the existing.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6245
+Summary: [DEV/INT/Preprod] User Management - No failure message while adding Roles in Roles Management
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-11641
+Summary: ICON - OTA Campaign_Update/Clone Campaign feature is not working
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11318
+Summary: [SSDP Preprod] OTA Campaign_User is able to Update Start Date in Active/Completed Campaigns
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11255
+Summary: Adding the VIN to campaign is showing random behaviours everytime we try adding VIN to new campaigns.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11470
+Summary: [Add VIN in FOTA Campaigns] - [UI] - Operations & Monitoring /Workflow Orchestration User not able to add VIN in Campaigns
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-10839
+Summary: [SSDP Preprod] Update Campaign_New Campaign page is displaying after clicking Update action
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11883
+Summary: [OTA Campaign][Change domain type] - When user changes the domain type(Example- Client to preparation) of a VIN which has an active campaign, the status of the VIN does not change after user changes the Domain.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6257
+Summary: Vehcile Rgistration through Debug Page
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: DOCG-6260
+Summary: [DOCG Vehicle] - Handling TCU part or chargemodule in DOCG as Synapse doesn't send it
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.2.2.3 (IOTPF-12039) =======
+
+Issue: IOTPF-12039
+Summary: DOCG-25.2.2.3
+Status: In production
+Owner: Pravin
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: DOCG-6261
+Summary: [DOCG]MAX Amount of Time Admitted and Maximum Size Package Admitted Not Pre-Populating in Campaign Creation (1st step)
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6237
+Summary: [DOCG][DEV] VINs are not loading according to the page size selected
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6206
+Summary: [DOCG][DEV] OTA Manual Campaign- Multiple issues in Confirm VINs step
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-10840
+Summary: [Add VIN in FOTA Campaigns] - [UI] - Operations & Monitoring / User not able to add VIN in Campaigns by using CSV file
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6256
+Summary: [J4U CFT] - OTAInPlant - Vin Operation Details post vin deletion
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= DOCG-25.2.2.4 (IOTPF-12128) =======
+
+Issue: IOTPF-12128
+Summary: DOCG-25.2.2.4
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: IOTPF-12062
+Summary: ICON - Check Inventory is getting failed with 500 Internal Server Error
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6280
+Summary: [DOCG][DEV]UI does not refresh after deleting VHL Architecture Version or Device Model
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-10736
+Summary: [DOCG UI] - The user is unable to see the version number in the DOCG application.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-4948
+Summary: [DOCG][INT]Didn't get proper Bootstrap session status
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6157
+Summary: [DOCG][INT] Vehicle Update is in Update in Progress status
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-12067
+Summary: ICON - Manifest Registration via Kafka Payload is not working for HU device type
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6279
+Summary: [DOCG][INT]Quality campaign VIN not loading
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6275
+Summary: [DOCG][INT]-Campaign description label is missing/Able to attach multiple files
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.2.2.5 (IOTPF-12237) =======
+
+Issue: IOTPF-12237
+Summary: DOCG-25.2.2.5
+Status: In production
+Owner: Pravin
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+No linked issues found.
+
+
+======= DOCG-25.2.3 (IOTPF-12204) =======
+
+Issue: IOTPF-12204
+Summary: DOCG-25.2.3
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: IOTPF-11334
+Summary: [SSDP Preprod] OTA Campaign after Updating Start Date & Expiration Date in DOCG is not updated in Redbend
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6206
+Summary: [DOCG][DEV] OTA Manual Campaign- Multiple issues in Confirm VINs step
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6276
+Summary: [DOCG][INT]-Add VINs failing
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-11654
+Summary: Campaigns- While Drafting a campaign, if a user refreshes the screen, then few labels and text fields get disappeared.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6293
+Summary: [DOCG][INT] Adding VINs with CSV while drafting campaign error
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6294
+Summary: [DOCG][INT]campaign clone -Campaign description error
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6292
+Summary: [DOCG][Preprod] [Vehicle registration] wrong device type mapped for Head unit devices in LWM2M server
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.2.3.2 (IOTPF-12206) =======
+
+Issue: IOTPF-12206
+Summary: DOCG-25.2.3.2
+Status: In production
+Owner: Pravin
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: DOCG-6206
+Summary: [DOCG][DEV] OTA Manual Campaign- Multiple issues in Confirm VINs step
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-12230
+Summary: [Add VIN in FOTA Campaigns] - [UI] - User is not be able to add VIN in Campaigns.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6289
+Summary: [DOCG][PROD]-"No data found" on Operations and Monitoring page "Kind of Campaign" dropdown
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-11534
+Summary: [OTA Manual Campaign] No VINs are loaded when we move back and come back to Confirm VINs step
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-12306
+Summary: [FOTA Campaigns][UI] -User not be able to create RTBM+HU Campaign
+Status: Done
+Issue Type: Bug - IOT PF
+
+
+======= DOCG-25.2.3.6 (IOTPF-12926) =======
+
+Issue: IOTPF-12926
+Summary: DOCG-25.2.3.6
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: IOTPF-12929
+Summary: Activation blocked at DOCG step - DM campaign creation failure.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6528
+Summary: DOCG-PROD Enable SSL flag for Variant Coding upload
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.2.4 (IOTPF-12400) =======
+
+Issue: IOTPF-12400
+Summary: DOCG-25.2.4
+Status: In production
+Owner: Varun SINGH
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: IOTPF-12374
+Summary: VHLReg- A payload received from Synapse is missing few optional fields from DOCG
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-12341
+Summary: [FOTA Campaigns][UI] -Delete Option not showing in Operation and Monitoring page for Campaign in "Waiting for Approval".
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6354
+Summary: [DOCG][DEV][Vehicle Registration]-Vehicle is not registering when the nameModel variable is NULL
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6289
+Summary: [DOCG][PROD]-"No data found" on Operations and Monitoring page "Kind of Campaign" dropdown
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-12307
+Summary: ICON - OTA in Plant - Duplicate values are displaying for Device Types in DOCG UI
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-12310
+Summary: ICON - OTA in Plant - VSP creation is getting failed for HU device type
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-12063
+Summary: ICON - Device type details displaying in DOCG campaign detail page is incorrect
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11973
+Summary: VIN deletion is not deleting all the instances of campaign/inventory as recreating the VIN is showing all the previous instances in DOCG as well as in RB.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11972
+Summary: [SSDP Preprod] VIN Details & WF- Not able to delete VINS
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6357
+Summary: [Campaign/Backoffice] - Link multiple architectures to the same domain selector
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.2.4.1 (IOTPF-12475) =======
+
+Issue: IOTPF-12475
+Summary: DOCG-25.2.4.1
+Status: In production
+Owner: Varun SINGH
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: IOTPF-12141
+Summary: VIN status for campaign is not matching in VIN details DOCG and RB
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11972
+Summary: [SSDP Preprod] VIN Details & WF- Not able to delete VINS
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-11973
+Summary: VIN deletion is not deleting all the instances of campaign/inventory as recreating the VIN is showing all the previous instances in DOCG as well as in RB.
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6363
+Summary: [DOCG][INT]-VSP is creation in progress when adding VIN to campaign
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-12243
+Summary: ICON - Issue with Clone campaign in Add OTA Component page for Multi component Campaign Registration
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6368
+Summary: [DOCG] [INT] - SA key not loading for the remote device
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: IOTPF-12438
+Summary: [Add VIN in FOTA Campaigns] - [UI] - User is not be able to add VIN in Campaigns from Workflow Page
+Status: Done
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-6406
+Summary: [DOCG][INT][ F2X(SEAR) Vehicle/software & Campaign workflow] – Workflow not initiated for SEAR vehicle electronic architecture
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= DOCG-25.2.4.2 (IOTPF-12586) =======
+
+Issue: IOTPF-12586
+Summary: DOCG-25.2.4.2
+Status: In production
+Owner: Varun SINGH
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-21
+
+Linked issues:
+
+Issue: DOCG-6405
+Summary: [Software Draft] Device types listing issue – Device list not changing based on vehicle electronic architecture.
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-6420
+Summary: Delta SW DC purge is failing
+Status: Done
+Issue Type: Sub-task - IOT PF
+
+Issue: DOCG-6323
+Summary: [Campaign Scope] - Update draft campaign Step 1
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= DOCG-25.3.4.7.4 (IOTPF-14370) =======
+
+Issue: IOTPF-14370
+Summary: DOCG-25.3.4.7.4 - 1.5.4
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-19
+
+Linked issues:
+
+Issue: DOCG-7011
+Summary: DOCG - PPROD - Scomo ID check box causing Pagination issue
+Status: Ready for dev
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= REFTEL-3.4.2 (IOTPF-13017) =======
+
+Issue: IOTPF-13017
+Summary: REFTEL-3.4.2
+Status: In production
+Owner: Nishanth K S
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2025-11-17
+
+No linked issues found.

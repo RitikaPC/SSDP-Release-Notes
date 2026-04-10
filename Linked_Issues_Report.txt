@@ -1,43 +1,49 @@
-======= VDP_PROC-1.5.5 (IOTPF-15764) =======
+======= DOCG-DOCG-26.1.3.18 - 1.9.2 (IOTPF-15898) =======
 
-
-Issue: IOTPF-15764
-Summary: VDP_PROC_2-1.5.5
-Status: Awaiting Go / No go PROD
-Owner: miguel.bartolomeu1
-Issue Type: Enabler Version - IOT PF
-Deploy Date: 2026-03-18
-
-Linked issues:
-
-Issue: VDP-3648
-Summary: [VDP_PROC][PROC2] Fix Kafka consumer commit
-Status: Done
-Issue Type: Technical story - IOT PF - Team backlog
-
-Issue: VDP-3644
-Summary: [VDP_PROC][PROC2][PROD] Prepare config for only F2X
-Status: Done
-Issue Type: Technical story - IOT PF - Team backlog
-
-
-======= VDP_STORE_2-1.6.8-P1 (IOTPF-15741) =======
-
-Issue: IOTPF-15741
-Summary: VDP_STORE_2-1.6.8-P1
+Issue: IOTPF-15898
+Summary: DOCG-Hotfix-26.1.3.18 - 1.9.2
 Status: In production
-Owner: miguel.bartolomeu1
 Issue Type: Enabler Version - IOT PF
-Deploy Date: 2026-03-18
+Deploy Date: 2026-04-06
 
 Linked issues:
 
-Issue: VDP-3608
-Summary: [VDP_STORE][VDS2][PROD][HOTFIX] Fleet filter is not applying to any other feature than State
+Issue: DOCG-7729
+Summary: DOCG: PROD-Hotfix: USB Map Replacement is getting null value exception
 Status: Done
 Issue Type: Bug enabler - IOT PF - Team backlog
 
-Issue: VDP-3628
-Summary: [VDP_STORE][VDS2][PROD][HOTFIX] Fix energy merging
+Issue: IOTPF-15831
+Summary: ICON Preprod- DOCG[26.1.3.16] - USB Map Replacement is not working
+Status: CLOE validation
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-15826
+Summary: ICON Preprod[VIN] - ECU replacement not working for R2EX
+Status: Open
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-15842
+Summary: ICON Preprod- DOCG[26.1.3.16] - PostOP inventory is not  received in DOCG after campaign is installed successfully
+Status: Pending Deployment
+Issue Type: Bug - IOT PF
+
+Issue: IOTPF-15827
+Summary: ICON Preprod[VIN] - Getting multiple Kafka events response for RTBM ECU replacement
+Status: Open
+Issue Type: Bug - IOT PF
+
+Issue: DOCG-7741
+Summary: DOCG:PRD: Hotfix. Make PostOp inventory parallel
+Status: To X2X validation
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7641
+Summary: DOCG - Service Activation - DOCG Not able to handle RB Success/UpToDate status
+Status: Analyzing
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7686
+Summary: [IDOCG][INT/PP]USB Map Preparation Campaign Failing with Authorization Error (403)
 Status: Done
 Issue Type: Bug enabler - IOT PF - Team backlog

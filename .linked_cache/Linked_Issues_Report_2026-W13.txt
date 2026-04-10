@@ -1,0 +1,45 @@
+======= DOCG-DOCG-26.1.2.20 - 1.8.4 (IOTPF-15752) =======
+
+Issue: IOTPF-15752
+Summary: DOCG-Hotfix-26.1.2.20 - 1.8.4
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-27
+
+Linked issues:
+
+Issue: DOCG-7652
+Summary: [Urgent] DOCG-PRD: DOTE Scomo is not adding in the campaign
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7619
+Summary: DOCG - Service Activation - OTA - Not handling OTA cancel/TimeOut status so WF remains open
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7620
+Summary: DOCG - ADA + DM Service Activation -Nothing sent to AM (+ no correlation ID for DM WF)
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7640
+Summary: DOCG - Service Activation - OTA - AM Feedback not sent in case of RB cancel/Failure status
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7661
+Summary: Update DB Maximum-pool-size to 30
+Status: To X2X validation
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= DOCG-DOCG-26.1.3.14 - 1.9.0 (IOTPF-15800) =======
+
+Issue: IOTPF-15800
+Summary: DOCG-26.1.3.15 - 1.9.0
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-27
+
+No linked issues found.

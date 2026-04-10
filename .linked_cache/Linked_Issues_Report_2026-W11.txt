@@ -1,0 +1,599 @@
+======= DOCG-DOCG-26.1.2.19 - 1.8.3 (IOTPF-15598) =======
+
+Issue: IOTPF-15598
+Summary: DOCG-26.1.2.19 - 1.8.3
+Status: In production
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-12
+
+Linked issues:
+
+Issue: DOCG-7185
+Summary: DOCG - PPROD - Post OP Inventory - multiple inventories were received / sent
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: DOCG-7485
+Summary: [Campaign Management] - Send push notification each time requested by OTA RB Server in the operation topic
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= PATRIC-2.17.3 (IOTPF-15548) =======
+
+Issue: IOTPF-15548
+Summary: PATRIC-2.17.3
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3545
+Summary: Pprod: Patric: B2B: B2C: Monitor Start / Stop not triggered
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3354
+Summary: [PATRIC][B2C] Prepare INT env for performance tests ( database export + bridge of prod sampling)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= RCZ-RCZ 4.0.18 (IOTPF-13129) =======
+
+Issue: IOTPF-13129
+Summary: SSDP RCZ 4.0.18
+Status: In production
+Owner: ANASS
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-13
+
+No linked issues found.
+
+
+======= VDP_PROC-1.5.3 (IOTPF-15607) =======
+
+
+Issue: IOTPF-15607
+Summary: VDP_PROC_2-1.5.3
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-09
+
+Linked issues:
+
+Issue: VDP-3559
+Summary: [VDP_PROC] version <VDP_PROC_2 1.5.2> : BSRFSOP5_GEN_2-PHEV.battery : VDP PROC does not consume this message
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3552
+Summary: [VDP_PROC] version <VDP_PROC_2 1.5.1> : BSRFSOP5_GEN_(1,2)-PHEV messages are not consumed
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3560
+Summary: [VDP_PROC] version <VDP_PROC_2 1.5.2> : RTBMV2_GEN_2-PHEV : Missing charging.schedule.delayedEndTime and delayedEndTimeStatus
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3561
+Summary: [VDP_PROC] version <VDP_PROC_2 1.5.2> : the format of the Position object before and after are not the same
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3498
+Summary: [VDP_PROC] version <VDP_PROC_2 1.5.1> in <PPROD> env : VDP_PROC_1 vs VDP_PROC_2 -> data lost on VDP_PROC_2
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.0.0 (IOTPF-10573) =======
+
+Issue: IOTPF-10573
+Summary: VDP_STORE_2-1.0.0
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-1623
+Summary: [RTC: 2679099][VDP_STORE][SSDP][VDS2] Refine feature implementation
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-1744
+Summary: [RTC: 2679099][VDP_STORE][SSDP][VDS2] Add a new helm configs charts repository
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-1803
+Summary: [RTC: 2679099][VDP_STORE][SSDP][VDS2][SPIKE] Study replacing _id by a functional Id
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-1783
+Summary: [RTC: 2679099][VDP_STORE][SSDP][VDS2] BaseMapper refactoring/splitting
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-2612
+Summary: [VDS2] CREATE RELEASE 1.0.0
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.2.0 (IOTPF-12426) =======
+
+Issue: IOTPF-12426
+Summary: VDP_STORE_2-1.2.0
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-2881
+Summary: [VDS2]APIM: SSDP: Error when Get charging/sessions
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-2921
+Summary: [VDP/VDR] Prepare releases
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.3.1 (IOTPF-11601) =======
+
+Issue: IOTPF-11601
+Summary: VDP_STORE_2-1.3.1
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-1804
+Summary: [2679099][VDP_STORE][SSDP][VDS2] Improve metrics
+Status: Wait
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-2737
+Summary: [RTC: 2420280][VDP_STORE][VDS2] REVIEW VDS2 & Integrate STATE feature
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2845
+Summary: [RTC: 2420280][VDP_STORE][VDS2] Add More functional tests for STATE
+Status: Open
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2848
+Summary: [RTC: 2420280][VDP_STORE][VDS2] Message Data filtering by fleet
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-1624
+Summary: [RTC: 2420280][VDP_STORE][VDS2] REVIEW VDS2 & Integrate TRIP feature
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-1819
+Summary: [RTC: 2420280][VDP_STORE][VDS2] REVIEW VDS2 & Integrate TELEMETRY feature
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2968
+Summary: [RTC: 2420280][VDP_STORE][VDS2] REVIEW VDS2 & Integrate POSITION feature
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2969
+Summary: [RTC: 2420280][VDP_STORE][VDS2] REVIEW VDS2 & Integrate STOLEN feature
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2971
+Summary: [RTC: 2420280][VDP_STORE][VDS2] REVIEW VDS2 & Integrate ALARM feature
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-2970
+Summary: [RTC: 2420280][VDP_STORE][VDS2] REVIEW VDS2 & Integrate ALERT feature
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-3018
+Summary: [VDP_STORE[VDS2] Implement B2B support
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3078
+Summary: [VDP_STORE][VDS2] Implement a filter to discard non CARCOM source data flow
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.4.0 (IOTPF-13706) =======
+
+Issue: IOTPF-13706
+Summary: VDP_STORE_2-1.4.0
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3097
+Summary: [VDP][VDS][ALL ARCH] [DEV]Add new Types support to Telemetries collection
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3099
+Summary: [VDP][VDS][DEV][RTC: 3508140] Define the data storage TTL for each FleetID and each feature.
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3072
+Summary: APIM : GET /accounts/vehicles/{id}/telemetries/latest does not return stolen information
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3060
+Summary: [VDP_STORE][VDS1] [MPH] [APIM] : Date's treatment & Mapping !
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.5.0 (IOTPF-13934) =======
+
+Issue: IOTPF-13934
+Summary: VDP_STORE_2-1.5.0
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3148
+Summary: [VDS2] Fix document identifiers
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3141
+Summary: [VDP_STORE][ALL ARCH][VDS1][VDS2][CHARGING SESSION] Enable CHARGING SESSION for all in VDS2 , disable it in VDS1
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3169
+Summary: [VDP][V2] Prepare releases(SP_40-41)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3170
+Summary: [VDP][V1] Prepare releases(SP_40-41)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3166
+Summary: [VDP_STORE][VDS2] Push data in cos & com field in FLOQST collection
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.5.1 (IOTPF-14117) =======
+
+Issue: IOTPF-14117
+Summary: VDP_STORE_2-1.5.1
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3176
+Summary: APIM: SSDP: Trips/:trips/telemetry: Error when filter by type for some values
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3148
+Summary: [VDS2] Fix document identifiers
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3154
+Summary: [VDP_STORE][VDS2] Improve more VDS2
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.5.2 (IOTPF-14296) =======
+
+Issue: IOTPF-14296
+Summary: VDP_STORE_2-1.5.2
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3191
+Summary: [DATACHAIN-STORE] Avoid writing useless Telemetry data
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.5.4 (IOTPF-14477) =======
+
+Issue: IOTPF-14477
+Summary: VDP_STORE_2-1.5.4
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3250
+Summary: [VDP_STORE][VDS2] Ignore schema validation on VDS2
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3255
+Summary: [VDS2][ALL SOURCES][PROD FEATURES][STAGING][STEP2] Prepare indus configs
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.5.5 (IOTPF-14538) =======
+
+Issue: IOTPF-14538
+Summary: VDP_STORE_2-1.5.5
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3264
+Summary: [VDP_STORE][VDS2] Fix doc propagation in VDS2 + header absence (cos, com fields)
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3268
+Summary: [VDP][V2] Prepare releases/configs (VDS2-1.5.5)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.5.6 (IOTPF-14575) =======
+
+Issue: IOTPF-14575
+Summary: VDP_STORE_2-1.5.6
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3269
+Summary: [VDP_STORE][VDS2] Fix com field "mnt" node absence in FLOQST mongo collection
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3271
+Summary: [VDP_STORE][VDS2] Fix NullPointerException
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3273
+Summary: [VDP][V2] Prepare releases/configs (VDS2-1.5.6)
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.5.7 (IOTPF-14649) =======
+
+Issue: IOTPF-14649
+Summary: VDP_STORE_2-1.5.7
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3241
+Summary: [VDP][DEV][VDS1][VDS2] Add stolen data to the SSDP TLM collection
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-3123
+Summary: [VDP_STORE][VDS1&2][DDL][B2C][SSDP] Comparing & clean up
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+Issue: VDP-3286
+Summary: VDP_STORE : VDS2 : B2B data base is no longer updated
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3295
+Summary: [VDS2] Fix unsupported merging a VDS1 document into a VDS2 document
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.5.8 (IOTPF-14729) =======
+
+Issue: IOTPF-14729
+Summary: VDP_STORE_2-1.5.8
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3302
+Summary: [VDP_STORE][VDS2] R2EX : VDS : Status : Stockage not done in B2C
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3272
+Summary: [VDP_STORE][VDS2] Study an expiration time field (replacing ttl one for new documents)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.6.0 (IOTPF-14918) =======
+
+Issue: IOTPF-14918
+Summary: VDP_STORE_2-1.6.0
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3323
+Summary: [VDS2] Investigate and fix B2B data not updated
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.6.1 (IOTPF-14932) =======
+
+Issue: IOTPF-14932
+Summary: VDP_STORE_2-1.6.1
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3325
+Summary: [VDP_STORE][VDS2][SSDP][B2C/B2B] Charging Sessions not stored in Db
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3332
+Summary: [VDS2] Data produced for B2B is not loadable by MPH API ( some updatedAt fields were missing)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.6.2 (IOTPF-14989) =======
+
+Issue: IOTPF-14989
+Summary: VDP_STORE_2-1.6.2
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3326
+Summary: [VDP_STORE][VDS2] Fix "kin" field ( data should be stored as number not a String
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3330
+Summary: [VDP][V2] Prepare releases(SP_02-03)
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.6.3 (IOTPF-15058) =======
+
+Issue: IOTPF-15058
+Summary: VDP_STORE_2-1.6.3
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3352
+Summary: VDP_STORE_V2 : Document : CO object missing or/and updated
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+Issue: VDP-3310
+Summary: [VDP_STORE][VDS2][DEV][RTC: PI 3656830]Carbide arch add ELEC battery temperature block and mapping
+Status: Done
+Issue Type: User story - IOT PF - Team backlog
+
+Issue: VDP-3368
+Summary: [VDP_STORE][VDS2] Validate Charging sessions for all architectures
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.6.6 (IOTPF-15358) =======
+
+Issue: IOTPF-15358
+Summary: VDP_STORE_2-1.6.6
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3365
+Summary: [VDS2][PROC2][DS2][MONITOR] Fix Elastic agent error at startup
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.6.7 (IOTPF-15540) =======
+
+Issue: IOTPF-15540
+Summary: VDP_STORE_2-1.6.7
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3503
+Summary: [VDP_STORE][VDS2] Privacy : B2C : privacy value in CO and COS are not updated to reflect customer choice
+Status: Done
+Issue Type: Bug enabler - IOT PF - Team backlog
+
+
+======= VDP_STORE_2-1.6.8 (IOTPF-15516) =======
+
+Issue: IOTPF-15516
+Summary: VDP_STORE_2-1.6.8
+Status: Deploying to PROD
+Owner: miguel.bartolomeu1
+Issue Type: Enabler Version - IOT PF
+Deploy Date: 2026-03-10
+
+Linked issues:
+
+Issue: VDP-3505
+Summary: [VDP_STORE][VDS2] Fix consumer repartitioning
+Status: Done
+Issue Type: Technical story - IOT PF - Team backlog

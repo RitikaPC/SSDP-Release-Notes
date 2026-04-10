@@ -19,6 +19,8 @@ import sys
 import re
 import json
 import datetime
+import subprocess
+from pathlib import Path
 
 LINKED_FILE = os.getenv("LINKED_FILE", "Linked_Issues_Report.txt")
 SUMMARY_HTML = os.getenv("SUMMARY_HTML", "summary_output.html")
@@ -224,8 +226,23 @@ def build_changes(blocks):
             {"FEATURES": [], "CODE": [], "BUGS": [], "DEPLOY": "", "STATUS": ""}
         )
 
+        _systems_with_deploy_date = (
+            "APIM",
+            "EAH",
+            "DOCG",
+            "VDR",
+            "PATRIC",
+            "RCZ",
+            "SYNAPSE",
+            "REFTEL",
+            "CALVA",
+            "REFSER2",
+            "SERING",
+            "VDP_PROC",
+            "VDP_STORE_2",
+        )
         for iss in issues:
-            if sysname in ("DOCG", "VDR", "PATRIC", "RCZ", "SYNAPSE", "REFTEL", "CALVA", "REFSER2", "SERING", "VDP_PROC", "VDP_STORE_2") and iss["deploy_date"]:
+            if sysname in _systems_with_deploy_date and iss["deploy_date"]:
                 out[sysname][ver]["DEPLOY"] = iss["deploy_date"]
 
         for iss in issues:
@@ -312,6 +329,26 @@ raw = load_text(LINKED_FILE)
 blocks = parse_blocks(raw)
 pv = build_changes(blocks)
 
+
+def _build_pv_from_linked_file(path: str):
+    raw_text = load_text(path)
+    if not raw_text:
+        return {}
+    blocks_local = parse_blocks(raw_text)
+    return build_changes(blocks_local)
+
+
+_RESOLVE_LAST_DEPLOY_DATES = os.getenv("RESOLVE_LAST_DEPLOY_DATES", "1").strip() not in (
+    "",
+    "0",
+    "false",
+    "False",
+    "no",
+)
+_LAST_DEPLOY_CACHE_DIR = Path(os.getenv("LAST_DEPLOY_CACHE_DIR", ".linked_cache"))
+_LAST_DEPLOY_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+_pv_by_week_cache: dict[str, dict] = {}
+
 year, week, week_display = read_week()
 
 stopper_data = json.load(open(STOPPER_FILE)) if os.path.exists(STOPPER_FILE) else {}
@@ -377,6 +414,44 @@ def last_non_null(stopper, target_year, target_week, key):
     return None
 
 
+def last_non_null_with_week(stopper, target_year, target_week, key):
+    """Return (val, week_key_str) for last non-null before (target_year, target_week)."""
+    parsed = []
+    for k in stopper.keys():
+        y, w, raw = None, None, k
+        m = re.match(r"^(?P<y>\d{4})-W?(?P<w>\d{1,2})$", k)
+        if m:
+            y = int(m.group("y"))
+            w = int(m.group("w"))
+        else:
+            m2 = re.match(r"^(?P<w>\d{1,2})$", k)
+            if m2:
+                w = int(m2.group("w"))
+                y = None
+        if w is None:
+            continue
+
+        if y is None:
+            if target_week <= 10 and w > 40:
+                y_effective = target_year - 1
+            else:
+                y_effective = target_year
+        else:
+            y_effective = y
+
+        if (y_effective, w) < (target_year, target_week):
+            val = stopper.get(k, {}).get(key)
+            if val not in (None, "", "None"):
+                parsed.append((y_effective, w, k, val))
+
+    parsed.sort()
+    if not parsed:
+        return None, None
+
+    y, w, rawkey, val = parsed[-1]
+    return val, f"{y}-W{w:02d}"
+
+
 def safe(v):
     """Return the latest version from a version string, or 'None' if empty"""
     if not v:
@@ -429,6 +504,30 @@ if prev_vdp_store_2 == curr_vdp_store_2 and curr_vdp_store_2 != "None":
 if prev_patric == "None":
     prev_patric = prev_patric_ssdp
 
+# Week source for "Last deploy date" (where the previous version was last non-null)
+prev_week_map = {
+    "APIM": last_non_null_with_week(stopper_data, year, week, "APIM")[1],
+    "EAH": last_non_null_with_week(stopper_data, year, week, "EAH")[1],
+    "DOCG": last_non_null_with_week(stopper_data, year, week, "DOCG")[1],
+    "VDR": last_non_null_with_week(stopper_data, year, week, "VDR")[1],
+    "PATRIC-SSDP": last_non_null_with_week(stopper_data, year, week, "PATRIC-SSDP")[1],
+    "PATRIC": last_non_null_with_week(stopper_data, year, week, "PATRIC")[1],
+    "RCZ": last_non_null_with_week(stopper_data, year, week, "RCZ")[1],
+    "SYNAPSE": last_non_null_with_week(stopper_data, year, week, "SYNAPSE")[1],
+    "REFTEL": last_non_null_with_week(stopper_data, year, week, "REFTEL")[1],
+    "CALVA": last_non_null_with_week(stopper_data, year, week, "CALVA")[1],
+    "REFSER2": last_non_null_with_week(stopper_data, year, week, "REFSER2")[1],
+    "SERING": last_non_null_with_week(stopper_data, year, week, "SERING")[1],
+    "VDP_PROC": last_non_null_with_week(stopper_data, year, week, "VDP_PROC")[1],
+    "VDP_STORE_2": last_non_null_with_week(stopper_data, year, week, "VDP_STORE_2")[1],
+}
+
+# If we fell back PATRIC-SSDP or PATRIC values, keep week mapping consistent.
+if prev_patric_ssdp == prev_patric and prev_week_map.get("PATRIC-SSDP") is None:
+    prev_week_map["PATRIC-SSDP"] = prev_week_map.get("PATRIC")
+if prev_patric == prev_patric_ssdp and prev_week_map.get("PATRIC") is None:
+    prev_week_map["PATRIC"] = prev_week_map.get("PATRIC-SSDP")
+
 def latest_version_from_changes(system_name):
     versions = list(pv.get(system_name, {}).keys())
     if not versions:
@@ -472,6 +571,10 @@ def normalize_version_for_lookup(component, version):
         return ""
     value = str(version).strip()
     value = re.sub(r"\s+", " ", value)
+    if component in ("CALVA", "REFSER2", "SERING"):
+        # extract.py headers are like "CALVA-2.4.2 (IOTPF-...)" but stopper values are
+        # stored as "CALVA-2.4.2". Our parse_blocks extracts only "2.4.2" as the version key.
+        value = re.sub(rf"^{component}-", "", value, flags=re.IGNORECASE)
     if component == "DOCG":
         value = re.sub(r"^DOCG-", "", value, flags=re.IGNORECASE)
     if component == "RCZ":
@@ -498,6 +601,83 @@ def build_release_key_lookup(blocks):
 
 release_key_lookup = build_release_key_lookup(blocks)
 
+_SYSTEMS_FOR_DEPLOY_LOOKUP = {
+    "PATRIC-SSDP": ["PATRIC-SSDP", "PATRIC"],
+    "PATRIC": ["PATRIC", "PATRIC-SSDP"],
+}
+
+
+def version_bumped_this_row(component: str, prev_version, curr_version) -> bool:
+    """True when New Version differs from Last Version (new release row)."""
+    curr = str(curr_version or "").strip()
+    if not curr or curr == "None":
+        return False
+    prev = str(prev_version or "").strip()
+    if not prev or prev == "None":
+        return True
+    return normalize_version_for_lookup(component, prev) != normalize_version_for_lookup(
+        component, curr
+    )
+
+
+def get_deploy_date_for_version(component: str, version_str: str) -> str:
+    """Deploy date from Linked_Issues_Report (extract: in production / deploying to PROD)."""
+    if not version_str or str(version_str).strip() in ("", "None"):
+        return ""
+    norm = normalize_version_for_lookup(component, version_str)
+    for sk in _SYSTEMS_FOR_DEPLOY_LOOKUP.get(component, [component]):
+        for ver_key, entry in (pv.get(sk) or {}).items():
+            if normalize_version_for_lookup(sk, ver_key) == norm:
+                dep = (entry.get("DEPLOY") or "").strip()
+                if dep:
+                    return dep
+    return ""
+
+
+def get_deploy_date_for_version_in_pv(pv_obj: dict, component: str, version_str: str) -> str:
+    """Same as get_deploy_date_for_version but using an explicit pv object."""
+    if not version_str or str(version_str).strip() in ("", "None"):
+        return ""
+    norm = normalize_version_for_lookup(component, version_str)
+    for sk in _SYSTEMS_FOR_DEPLOY_LOOKUP.get(component, [component]):
+        for ver_key, entry in (pv_obj.get(sk) or {}).items():
+            if normalize_version_for_lookup(sk, ver_key) == norm:
+                dep = (entry.get("DEPLOY") or "").strip()
+                if dep:
+                    return dep
+    return ""
+
+
+def _ensure_pv_for_week(week_key: str) -> dict:
+    """Ensure we have a pv snapshot for a given week_key from a cached linked report."""
+    if not week_key:
+        return {}
+    if week_key in _pv_by_week_cache:
+        return _pv_by_week_cache[week_key]
+
+    cache_path = _LAST_DEPLOY_CACHE_DIR / f"Linked_Issues_Report_{week_key}.txt"
+    if not cache_path.exists():
+        # Fetch linked report for that week (expensive: hits JIRA).
+        repo_dir = Path(__file__).resolve().parent
+        env = os.environ.copy()
+        env["LINKED_FILE"] = str(cache_path)
+        subprocess.run(
+            [
+                "python3",
+                str(repo_dir / "extract.py"),
+                "--week",
+                week_key,
+                "--force",
+            ],
+            cwd=str(repo_dir),
+            env=env,
+            check=True,
+        )
+
+    pv_week = _build_pv_from_linked_file(str(cache_path))
+    _pv_by_week_cache[week_key] = pv_week
+    return pv_week
+
 
 def format_version_with_link(component, version):
     if not version or version == "None":
@@ -515,11 +695,46 @@ def release_summary_row(component, prev_version, curr_version):
     cell_bg = get_highlight_bg(component)
     prev_html = format_version_with_link(component, prev_version)
     curr_html = format_version_with_link(component, curr_version)
+    bumped = version_bumped_this_row(component, prev_version, curr_version)
+
+    def _fmt_date_ddmmyyyy(s: str) -> str:
+        s = (s or "").strip()
+        if not s:
+            return ""
+        try:
+            # Linked_Issues_Report stores ISO dates like YYYY-MM-DD
+            dt = datetime.date.fromisoformat(s)
+            return dt.strftime("%d/%m/%Y")
+        except Exception:
+            return s
+
+    last_deploy_raw = ""
+    if prev_version is not None and str(prev_version).strip() not in ("", "None"):
+        last_deploy_raw = get_deploy_date_for_version(component, prev_version)
+        if not last_deploy_raw and _RESOLVE_LAST_DEPLOY_DATES:
+            week_key = prev_week_map.get(component)
+            pv_prev = _ensure_pv_for_week(week_key)
+            last_deploy_raw = get_deploy_date_for_version_in_pv(
+                pv_prev, component, prev_version
+            )
+
+    last_deploy_html = (
+        _fmt_date_ddmmyyyy(last_deploy_raw) if last_deploy_raw else "—"
+    ) if prev_version is not None and str(prev_version).strip() not in ("", "None") else ""
+
+    deploy_raw = (
+        get_deploy_date_for_version(component, curr_version) if bumped else ""
+    )
+    deploy_html = (
+        _fmt_date_ddmmyyyy(deploy_raw) if deploy_raw else ("—" if bumped else "")
+    )
     return (
         f"<tr>"
         f"<td {cell_bg} style=\"padding:10px;border:1px solid #ccc;\">{component}</td>"
         f"<td {cell_bg} style=\"padding:10px;border:1px solid #ccc;\">{prev_html}</td>"
+        f"<td {cell_bg} style=\"padding:10px;border:1px solid #ccc;\">{last_deploy_html}</td>"
         f"<td {cell_bg} style=\"padding:10px;border:1px solid #ccc;\">{curr_html}</td>"
+        f"<td {cell_bg} style=\"padding:10px;border:1px solid #ccc;\">{deploy_html}</td>"
         f"</tr>"
     )
 
@@ -531,7 +746,9 @@ release_summary_html = f"""
 <tr style="background:#0747A6;color:white;">
     <th style="padding:10px;text-align:left;border:1px solid #0747A6;">Enabler/Application</th>
     <th style="padding:10px;text-align:left;border:1px solid #0747A6;">Last Version</th>
+    <th style="padding:10px;text-align:left;border:1px solid #0747A6;">Last deploy date</th>
     <th style="padding:10px;text-align:left;border:1px solid #0747A6;">New Version</th>
+    <th style="padding:10px;text-align:left;border:1px solid #0747A6;">Deploy date</th>
 </tr>
 
 {release_summary_row("APIM", prev_apim, curr_apim)}

@@ -18,6 +18,9 @@ USERNAME = os.getenv("CONFLUENCE_USERNAME")
 API_TOKEN = os.getenv("CONFLUENCE_API_TOKEN")
 SPACE_KEY = os.getenv("CONFLUENCE_SPACE_KEY")
 PARENT_PAGE_ID = os.getenv("CONFLUENCE_PARENT_PAGE_ID")
+# Optional override so monthly reports can be created under a different Confluence container
+# without changing the weekly release location.
+MONTHLY_PARENT_PAGE_ID = os.getenv("MONTHLY_PARENT_PAGE_ID", PARENT_PAGE_ID)
 WEEKLY_STOPPER = os.getenv("WEEKLY_STOPPER", "weekly_stopper.json")
 
 SUMMARY_SECTION_VARIANTS = {
@@ -57,6 +60,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Publish monthly report to Confluence under CONFLUENCE_PARENT_PAGE_ID",
     )
+    parser.add_argument(
+        "--skip-if-unchanged",
+        action="store_true",
+        help="When publishing, skip Confluence update if generated content is unchanged",
+    )
     return parser.parse_args()
 
 
@@ -67,7 +75,8 @@ def validate_env(require_parent: bool = False) -> None:
         "CONFLUENCE_SPACE_KEY": SPACE_KEY,
     }
     if require_parent:
-        required["CONFLUENCE_PARENT_PAGE_ID"] = PARENT_PAGE_ID
+        # Prefer the monthly override if provided.
+        required["MONTHLY_PARENT_PAGE_ID"] = MONTHLY_PARENT_PAGE_ID
 
     missing = [
         name
@@ -90,22 +99,71 @@ def parse_month(month_text: str) -> Tuple[int, int]:
 
 
 def iso_weeks_in_month(year: int, month: int) -> List[Tuple[int, int]]:
-    _, last_day = calendar.monthrange(year, month)
-    weeks = set()
-    for day in range(1, last_day + 1):
-        d = datetime.date(year, month, day)
-        iso = d.isocalendar()
-        iso_year = iso[0]
-        iso_week = iso[1]
+    """
+    Monthly ownership rule (requested):
+    Baseline: assign a week to the month that contains its ISO week start (Monday).
+    Reassignment: if that week contains >=2 days in the *next* calendar month, move
+    the week to the next month report instead.
 
-        # Monthly ownership rule:
-        # A week belongs to the month where its ISO week-start day (Monday) falls.
-        # Example: week Feb 23 to Mar 1 belongs to February only.
-        week_start = datetime.date.fromisocalendar(iso_year, iso_week, 1)
-        if week_start.year == year and week_start.month == month:
-            weeks.add((iso_year, iso_week))
+    This ensures boundary weeks like “week starts in Feb but has only 1 day in Mar”
+    stay in Feb (so March won’t incorrectly include them).
+    """
+    def month_bounds(y: int, m: int) -> Tuple[datetime.date, datetime.date]:
+        _, last = calendar.monthrange(y, m)
+        return datetime.date(y, m, 1), datetime.date(y, m, last)
 
-    return sorted(weeks)
+    def count_days_in_month(week_monday: datetime.date, target_y: int, target_m: int) -> int:
+        """Count how many days in [week_monday, week_monday+6] land in (target_y, target_m)."""
+        week_end = week_monday + datetime.timedelta(days=6)
+        cnt = 0
+        cur = week_monday
+        while cur <= week_end:
+            if cur.year == target_y and cur.month == target_m:
+                cnt += 1
+            cur += datetime.timedelta(days=1)
+        return cnt
+
+    # Previous and next calendar months relative to (year, month)
+    prev_year = year - 1 if month == 1 else year
+    prev_month = 12 if month == 1 else month - 1
+
+    next_year = year + 1 if month == 12 else year
+    next_month = 1 if month == 12 else month + 1
+
+    result: set[Tuple[int, int]] = set()
+
+    def add_week_if_reassigned(week_monday: datetime.date, baseline_month_is_current: bool) -> None:
+        iso_year, iso_week = week_monday.isocalendar()[0], week_monday.isocalendar()[1]
+
+        if baseline_month_is_current:
+            # Week is baseline-owned by current month; reassign to next if it has >=2 days in next month.
+            days_in_next = count_days_in_month(week_monday, next_year, next_month)
+            if days_in_next >= 2:
+                return
+            result.add((iso_year, iso_week))
+        else:
+            # Week is baseline-owned by previous month; if it has >=2 days in current month, reassign here.
+            days_in_current = count_days_in_month(week_monday, year, month)
+            if days_in_current >= 2:
+                result.add((iso_year, iso_week))
+
+    # Enumerate ISO weeks by their Monday dates that fall in either the current month or previous month.
+    cur_start, cur_end = month_bounds(year, month)
+    prev_start, prev_end = month_bounds(prev_year, prev_month)
+
+    day = prev_start
+    while day <= prev_end:
+        if day.weekday() == 0:  # Monday
+            add_week_if_reassigned(day, baseline_month_is_current=False)
+        day += datetime.timedelta(days=1)
+
+    day = cur_start
+    while day <= cur_end:
+        if day.weekday() == 0:  # Monday
+            add_week_if_reassigned(day, baseline_month_is_current=True)
+        day += datetime.timedelta(days=1)
+
+    return sorted(result)
 
 
 def confluence_search_week_page(prefix_title: str) -> Optional[Dict]:
@@ -125,14 +183,47 @@ def confluence_search_week_page(prefix_title: str) -> Optional[Dict]:
     if not results:
         return None
 
-    # pick best title match: startswith weekly prefix
-    for item in results:
-        title = item.get("title", "")
-        if title.startswith(prefix_title):
-            return item
+    candidates = [
+        item
+        for item in results
+        if (item.get("title") or "").startswith(prefix_title)
+    ]
+    if not candidates:
+        return results[0]
 
-    # fallback first result
-    return results[0]
+    if len(candidates) == 1:
+        return candidates[0]
+
+    # Same ISO week sometimes exists twice (e.g. old title vs updated template). Prefer
+    # the page whose storage matches our Release Summary + subsection shape so monthly
+    # aggregation is not empty.
+    best: Optional[Dict] = None
+    best_key: Tuple[int, int] = (-1, -1)
+    for item in candidates:
+        page_id = item.get("id")
+        if not page_id:
+            continue
+        html, _ = confluence_get_page_storage(str(page_id))
+        sections = extract_release_summary_sections(html)
+        score = sum(
+            1 for v in sections.values() if _normalize_text_check(v or "")
+        )
+        ver = int((item.get("version") or {}).get("number") or 0)
+        key: Tuple[int, int] = (score, ver)
+        if key > best_key:
+            best_key = key
+            best = item
+
+    if best:
+        if len(candidates) > 1:
+            print(
+                f"Note: {len(candidates)} pages match {prefix_title!r}; "
+                f"using title {best.get('title')!r} (summary subsections score {best_key[0]}).",
+                file=sys.stderr,
+            )
+        return best
+
+    return candidates[0]
 
 
 def confluence_get_page_storage(page_id: str) -> Tuple[str, str]:
@@ -161,12 +252,110 @@ def confluence_find_page_id_by_title(title: str) -> Optional[str]:
     return results[0].get("id") if results else None
 
 
-def confluence_update_page(page_id: str, title: str, html: str) -> Optional[str]:
+# Same behaviour as publish.py: IN PROGRESS on first create; preserve manual changes on update.
+DEFAULT_STATUS_BLOCK = (
+    "<p><strong>Status:</strong> "
+    "<ac:structured-macro ac:name=\"status\">"
+    "<ac:parameter ac:name=\"title\">IN PROGRESS</ac:parameter>"
+    "<ac:parameter ac:name=\"colour\">Blue</ac:parameter>"
+    "</ac:structured-macro>"
+    "</p>"
+)
+
+def extract_existing_exec_summary_block(existing_html: str) -> str:
+    """
+    Preserve whatever humans wrote in the "Executive Release Summary" section.
+
+    Capture from the Executive heading through (but not including) the next
+    "Release Summary" heading.
+    """
+    if not existing_html:
+        return ""
+    pattern = re.compile(
+        r"(?P<block>"
+        r"<h[1-6][^>]*>\s*Executive\s+Release\s+Summary.*?</h[1-6]>\s*"
+        r".*?)"
+        r"(?=<h[1-6][^>]*>\s*Release\s+Summary\s*</h[1-6]>)",
+        re.IGNORECASE | re.DOTALL,
+    )
+    m = pattern.search(existing_html)
+    return (m.group("block") or "").strip() if m else ""
+
+def _sanitize_exec_summary_block(block_html: str) -> str:
+    """
+    Normalize the Executive Release Summary heading text.
+
+    We preserve the user's manually edited content, but we don't want legacy
+    heading suffixes like "(planned)" to persist forever.
+    """
+    if not block_html:
+        return block_html
+    # Remove an optional " (planned)" suffix inside the Executive heading tag.
+    return re.sub(
+        r"(<h[1-6][^>]*>\s*Executive\s+Release\s+Summary)\s*\(planned\)(\s*.*?</h[1-6]>)",
+        r"\1\2",
+        block_html,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+
+def upsert_exec_summary_block(html: str, preserved_block: str) -> str:
+    if not html or not preserved_block:
+        return html
+    preserved_block = _sanitize_exec_summary_block(preserved_block)
+    target = re.compile(
+        r"<h[1-6][^>]*>\s*Executive\s+Release\s+Summary.*?</h[1-6]>\s*.*?"
+        r"(?=<h[1-6][^>]*>\s*Release\s+Summary\s*</h[1-6]>)",
+        re.IGNORECASE | re.DOTALL,
+    )
+    if target.search(html):
+        return target.sub(preserved_block, html, count=1)
+    return html
+
+
+
+def extract_existing_status_block(existing_html: str) -> str:
+    if not existing_html:
+        return ""
+
+    rs_header = re.search(
+        r"<h[1-6][^>]*id\s*=\s*['\"]release-summary['\"][^>]*>",
+        existing_html,
+        flags=re.IGNORECASE,
+    )
+    # Monthly pages may not set id="release-summary"; scan top of body.
+    prefix = existing_html[: rs_header.start()] if rs_header else existing_html[:2000]
+
+    status_pattern = re.compile(
+        r"<p[^>]*>\s*(?:<strong>\s*)?Status:\s*(?:</strong>\s*)?.*?</p>",
+        re.IGNORECASE | re.DOTALL,
+    )
+    m = status_pattern.search(prefix)
+    return m.group(0).strip() if m else ""
+
+
+def upsert_top_status_block(html: str, status_block: str) -> str:
+    if not html:
+        return html
+
+    status_pattern = re.compile(
+        r"(<div[^>]*>\s*)(<p[^>]*>\s*(?:<strong>\s*)?Status:\s*(?:</strong>\s*)?.*?</p>)",
+        re.IGNORECASE | re.DOTALL,
+    )
+    if status_pattern.search(html):
+        return status_pattern.sub(rf"\1{status_block}", html, count=1)
+
+    return re.sub(r"(<div[^>]*>)", rf"\1\n{status_block}", html, count=1, flags=re.IGNORECASE)
+
+
+def confluence_update_page(
+    page_id: str, title: str, html: str, *, skip_if_unchanged: bool = False
+) -> Optional[str]:
     get_url = f"{CONFLUENCE_BASE_URL}/rest/api/content/{page_id}"
     info_resp = requests.get(
         get_url,
         auth=(USERNAME, API_TOKEN),
-        params={"expand": "version"},
+        params={"expand": "body.storage,version"},
         timeout=20,
     )
     if info_resp.status_code != 200:
@@ -174,6 +363,28 @@ def confluence_update_page(page_id: str, title: str, html: str) -> Optional[str]
         return None
 
     info = info_resp.json()
+    existing_html = info.get("body", {}).get("storage", {}).get("value", "")
+    preserved_exec = extract_existing_exec_summary_block(existing_html)
+    existing_status = extract_existing_status_block(existing_html)
+    if existing_status:
+        # Same as weekly: never overwrite a manually changed status.
+        html = upsert_top_status_block(html, existing_status)
+    else:
+        # Monthly pages created before this feature had no status; add default once.
+        html = upsert_top_status_block(html, DEFAULT_STATUS_BLOCK)
+
+    if preserved_exec:
+        html = upsert_exec_summary_block(html, preserved_exec)
+
+    if skip_if_unchanged:
+        existing_norm = _normalize_text_check(existing_html)
+        new_norm = _normalize_text_check(html)
+        if existing_norm == new_norm:
+            links = info.get("_links", {}) or {}
+            current_url = (links.get("base") or "") + (links.get("webui") or "")
+            print("No monthly content changes detected; skipping Confluence update.")
+            return current_url or None
+
     new_ver = info.get("version", {}).get("number", 1) + 1
     data = {
         "id": page_id,
@@ -201,13 +412,14 @@ def confluence_update_page(page_id: str, title: str, html: str) -> Optional[str]
     return (links.get("base") or "") + (links.get("webui") or "")
 
 
-def confluence_create_page(title: str, html: str) -> Optional[str]:
+def confluence_create_page(title: str, html: str) -> Tuple[Optional[str], Optional[str]]:
     url = f"{CONFLUENCE_BASE_URL}/rest/api/content"
+    html = upsert_top_status_block(html, DEFAULT_STATUS_BLOCK)
     data = {
         "type": "page",
         "title": title,
         "space": {"key": SPACE_KEY},
-        "ancestors": [{"id": PARENT_PAGE_ID}],
+        "ancestors": [{"id": MONTHLY_PARENT_PAGE_ID}],
         "body": {"storage": {"value": html, "representation": "storage"}},
     }
     r = requests.post(
@@ -219,18 +431,35 @@ def confluence_create_page(title: str, html: str) -> Optional[str]:
     )
     if r.status_code not in (200, 201):
         print(f"Monthly report create failed: {r.status_code} {r.text}", file=sys.stderr)
-        return None
+        return None, None
 
     res = r.json()
     links = res.get("_links", {})
-    return (links.get("base") or "") + (links.get("webui") or "")
+    page_url = (links.get("base") or "") + (links.get("webui") or "")
+    return page_url, res.get("id")
 
 
-def publish_monthly_page(title: str, html: str) -> Optional[str]:
+def publish_monthly_page(
+    title: str, html: str, *, skip_if_unchanged: bool = False
+) -> Optional[str]:
     page_id = confluence_find_page_id_by_title(title)
     if page_id:
-        return confluence_update_page(page_id, title, html)
-    return confluence_create_page(title, html)
+        url = confluence_update_page(
+            page_id, title, html, skip_if_unchanged=skip_if_unchanged
+        )
+    else:
+        url, new_id = confluence_create_page(title, html)
+        page_id = new_id or page_id
+    if url and page_id:
+        try:
+            from confluence_page_width import apply_page_display_width
+
+            apply_page_display_width(
+                CONFLUENCE_BASE_URL, (USERNAME, API_TOKEN), page_id
+            )
+        except Exception as exc:
+            print(f"Warning: could not set page width: {exc}", file=sys.stderr)
+    return url
 
 
 def _normalize_text_check(content: str) -> str:
@@ -275,29 +504,19 @@ def extract_release_summary_sections(storage_html: str) -> Dict[str, str]:
     if not storage_html:
         return sections
 
-    pattern = re.compile(
-        r"<h2[^>]*>\s*Release Summary\s*</h2>(?P<content>.*?)(?=<h2[^>]*>|$)",
+    # Extract only the "Release Summary" block (up to TABLE of Contents).
+    # Without this boundary, when heading levels change (H1/H2), we may
+    # accidentally capture Confluence's TOC + following sections into one
+    # subsection (e.g., "What we fixed").
+    summary_boundary_pattern = re.compile(
+        r"<h[1-2][^>]*>\s*Release Summary\s*</h[1-2]>\s*(?P<content>.*?)(?=<h[1-6][^>]*>\s*TABLE\s*of\s*Contents\s*</h[1-6]>|$)",
         re.IGNORECASE | re.DOTALL,
     )
-    m = pattern.search(storage_html)
+    m = summary_boundary_pattern.search(storage_html)
     if not m:
         return sections
 
     content = (m.group("content") or "").strip()
-
-    # Confluence pages may include TOC and following sections before the next <h2>.
-    # Keep only the manually edited summary part.
-    split_markers = [
-        r"<h3[^>]*>\s*TABLE\s*of\s*Contents\s*</h3>",
-        r":table-of-contents",
-        r"<hr[^>]*>",
-    ]
-    for marker in split_markers:
-        parts = re.split(marker, content, maxsplit=1, flags=re.IGNORECASE)
-        if len(parts) > 1:
-            content = parts[0].strip()
-            break
-
     if not _normalize_text_check(content):
         return sections
 
@@ -309,7 +528,7 @@ def extract_release_summary_sections(storage_html: str) -> Dict[str, str]:
     for canonical, variants in SUMMARY_SECTION_VARIANTS.items():
         header_pattern = "(?:" + "|".join(re.escape(v) for v in variants) + ")"
         section_pattern = re.compile(
-            rf"<h3[^>]*>\s*{header_pattern}\s*</h3>(?P<section_content>.*?)(?=<h3[^>]*>\s*(?:{all_headers})\s*</h3>|$)",
+            rf"<h[2-3][^>]*>\s*{header_pattern}\s*</h[2-3]>(?P<section_content>.*?)(?=<h[2-3][^>]*>\s*(?:{all_headers})\s*</h[2-3]>|$)",
             re.IGNORECASE | re.DOTALL,
         )
         section_match = section_pattern.search(content)
@@ -438,6 +657,10 @@ def generate_monthly_html(
     week_entries: List[Dict[str, str]],
     component_versions: Dict[str, str],
 ) -> str:
+    def _render_section_heading(canonical: str) -> str:
+        # Use the original headings (with unicode emoji).
+        return canonical
+
     links = []
     section_buckets: Dict[str, List[str]] = {key: [] for key in SUMMARY_SECTION_VARIANTS.keys()}
 
@@ -475,9 +698,10 @@ def generate_monthly_html(
         # Space above each subsection header: 16px for first, 24px for rest (clear gap after previous section)
         is_first = len(summary_parts) == 0
         margin_top = "16px" if is_first else "24px"
+        heading = _render_section_heading(canonical)
         summary_parts.append(
             f"""
-            <h3 style="margin-top:{margin_top};margin-bottom:8px;">{canonical}</h3>
+            <h2 style="margin-top:{margin_top};margin-bottom:8px;">{heading}</h2>
             {''.join(grouped)}
             """
         )
@@ -508,18 +732,18 @@ def generate_monthly_html(
 
     return f"""
 <div>
-    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Executive Release Summary (planned)</h2>
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Executive Release Summary</h1>
     <div style="margin:8px 0 14px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
         <p style="margin:0;"><em>To be filled manually.</em></p>
     </div>
 
-    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Summary</h2>
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Summary</h1>
     {summary_section}
 
-    <h2 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Component Latest Versions</h2>
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Component Latest Versions</h1>
     {components_table}
 
-    <h2 style="margin-top:26px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Notes details by week</h2>
+    <h1 style="margin-top:26px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Notes details by week</h1>
     <ul style="line-height:1.9;">
         {links_section}
     </ul>
@@ -563,10 +787,16 @@ def main() -> None:
 
     print(f"Monthly report generated: {args.output}")
     print(f"Weeks included: {len(entries)}")
+    if entries:
+        print("Weeks:", ", ".join(e.get("week", "") for e in entries if e.get("week")))
 
     if args.publish:
         title = f"SSDP Monthly Report - {month_label(year, month)}"
-        url = publish_monthly_page(title, f"<div>{final_html}</div>")
+        url = publish_monthly_page(
+            title,
+            f"<div>{final_html}</div>",
+            skip_if_unchanged=args.skip_if_unchanged,
+        )
         if url:
             print(f"CONFLUENCE_PAGE_URL={url}")
         else:

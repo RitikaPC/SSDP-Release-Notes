@@ -1,0 +1,77 @@
+<div>
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Executive Release Summary</h1>
+    <div style="margin:8px 0 14px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+        <p style="margin:0;"><em>To be filled manually.</em></p>
+    </div>
+
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Summary</h1>
+    
+            <h2 style="margin-top:16px;margin-bottom:8px;">➕ What we added:</h2>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="f9d44aee0a8e"><li local-id="caddb20a-7f7e-400d-8f34-bbc2b2b2d698"><p local-id="1d3c413e4a97"><strong>New Architecture Configurations (VDP_PROC):</strong> Expanded our processing capabilities by adding specific configurations to support new vehicle architectures (<code>rtbmv1-nea10</code> and <code>rtbmv1-nea11</code>).</p></li><li local-id="e5142ae5-0d2f-4a32-a5a4-d7a0b3b2e08d"><p local-id="beaae15b8e03"><strong>Dedicated F2X Environment:</strong> Prepared and isolated a production configuration specifically tailored for F2X deployments within the VDP_PROC stream.</p></li><li local-id="28c04ff8-ea66-4834-a953-e7b64cebe29b"><p local-id="feae60f4da59"><strong>Message Traceability (DOCG):</strong> Configured the system to add a Kafka Key for every message published by the JMSAdapter within the campaign flow, improving message tracking and partitioning. <em>(Note: This was part of a rolled-back hotfix).</em></p></li></ul>
+                </div>
+                
+            
+            <h2 style="margin-top:24px;margin-bottom:8px;">🔧 What we changed:</h2>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="c46cc2a64d57"><li local-id="256f7842-04e1-4db4-a704-6f0a4605e194"><p local-id="f21e5878daaa"><strong>Kafka Consumer Optimization:</strong> Refactored the Kafka consumer commit logic within the VDP_PROC stream to improve message processing reliability.</p></li><li local-id="b4284507-eaeb-420c-a338-616c3261d7d4"><p local-id="f11afac8e7c3"><strong>Version Advancements:</strong> Advanced the DOCG component to the <code>1.9.1</code> baseline and rolled out updates to VDP_PROC (<code>1.5.5</code> and <code>2.33.1</code>).</p></li></ul>
+                </div>
+                
+            
+            <h2 style="margin-top:24px;margin-bottom:8px;">🚮 What we Deprecated/ Removed:</h2>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="c5dae1c2296c"><li local-id="f28e0eae-ce74-45e6-bfe4-29da52b8cc3a"><p local-id="d409c554a09d"><strong>Deployment Rollback:</strong> The DOCG hotfix release (<code>DOCG-26.1.3.17 - 1.9.1</code>) was <strong>rolled back</strong> from production.</p></li><li local-id="add68f44-9d71-4fa1-ac5a-e6298a216120"><p local-id="3dd884e6fd39"><strong>No explicit feature deprecations</strong> were executed in this release cycle.</p></li></ul>
+                </div>
+                
+            
+            <h2 style="margin-top:24px;margin-bottom:8px;">🔨 What we fixed:</h2>
+            
+                <div style="margin:4px 0;padding:10px 12px;border:1px solid #DFE1E6;border-radius:6px;background:#F8F9FA;">
+                    <ul local-id="804f5e543c66"><li local-id="0a4e4e76-45d2-47b7-bb31-8c719ea4a98c"><p local-id="927cace9306d"><strong>System Resource Exhaustion (DOCG):</strong> Addressed critical infrastructure issues where DOCG PODs were consuming excessive memory (affecting almost all applications) and fixed the malfunctioning Production DB Max Pool update.</p></li><li local-id="3fea65cc-e852-4cc6-83ca-2cecaa90a45b"><p local-id="7a36b2847730"><strong>Alerts Data Integrity (VDP_PROC):</strong> Resolved a mapping issue for J4U Alerts across both PROC1 and PROC2 streams in the production environment.</p></li></ul> </div>
+    
+    <div style="min-width: 300.0px;max-width: 35.0%;background: rgb(248,249,250);padding: 20.0px;border-radius: 4.0px;border: 1.0px solid rgb(224,224,224);">
+    </div>
+    
+    <div style="min-width: 300.0px;max-width: 35.0%;background: rgb(248,249,250);padding: 20.0px;border-radius: 4.0px;border: 1.0px solid rgb(224,224,224);">
+                </div>
+                
+            
+
+    <h1 style="margin-top:24px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Component Latest Versions</h1>
+    <table style="border-collapse:collapse;width:100%;margin-top:8px;">
+        <thead>
+            <tr>
+                <th style="text-align:left;padding:8px 10px;border:1px solid #DFE1E6;background:#F4F5F7;">Component</th>
+                <th style="text-align:left;padding:8px 10px;border:1px solid #DFE1E6;background:#F4F5F7;">Latest Version</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>APIM</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>11.14.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>EAH</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.44.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>DOCG</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>DOCG-26.1.3.18 - 1.9.2</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDR</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>PATRIC</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>3.9.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>RCZ</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>RCZ 4.0.18</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>SYNAPSE</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.1.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>REFTEL</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>3.5.1</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>CALVA</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>CALVA-2.4.2</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>REFSER2</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>SERING</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_PROC</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.33.1</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.11.1</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS_SSDP</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.11.3</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_DS_MON</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>2.11.0</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_STORE</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>-</td></tr>
+<tr><td style='padding:8px 10px;border:1px solid #DFE1E6;'>VDP_STORE_2</td><td style='padding:8px 10px;border:1px solid #DFE1E6;'>1.6.8-P1</td></tr>
+        </tbody>
+    </table>
+
+    <h1 style="margin-top:26px;color:#0747A6;border-bottom:2px solid #0747A6;padding-bottom:8px;">Release Notes details by week</h1>
+    <ul style="line-height:1.9;">
+        <li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/3094610283/SSDP+Release+Notes+Week+2026-W14+30+Mar+2026+to+5th+April+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W14 (30 Mar 2026 to 5th April 2026)</a> (2026-W14)</li>
+<li><a target='_blank' href='https://eng-stla.atlassian.net/wiki/spaces/pCPC/pages/3124461883/SSDP+Release+Notes+Week+2026-W15+6+Apr+2026+to+12th+April+2026' style='color:#0066CC;text-decoration:none;'>SSDP Release Notes Week 2026-W15 (6 Apr 2026 to 12th April 2026)</a> (2026-W15)</li>
+    </ul>
+</div>
