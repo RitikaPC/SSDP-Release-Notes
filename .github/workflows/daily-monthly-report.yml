@@ -5,10 +5,18 @@ on:
     # Daily check for updated weekly pages and republish monthly if needed.
     - cron: "15 06 * * *"
   workflow_dispatch:
+      inputs:
+        target_month:
+          description: "Month as YYYY-MM (empty = calendar month in MONTHLY_REPORT_TZ, see job env)"
+          required: false
+          type: string
+          default: ""
 
 jobs:
   run-daily-monthly:
     runs-on: ubuntu-latest
+    env:
+      MONTHLY_REPORT_TZ: ${{ vars.MONTHLY_REPORT_TZ }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,8 +33,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          MONTH="$(date -u +%Y-%m)"
-          echo "Publishing monthly report for ${MONTH}"
+          TZ_FOR_MONTH="${MONTHLY_REPORT_TZ:-Europe/Paris}"
+          INPUT_MONTH="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_month || '' }}"
+          if [ -n "${INPUT_MONTH// }" ]; then
+            MONTH="${INPUT_MONTH// }"
+          else
+            MONTH="$(TZ="${TZ_FOR_MONTH}" date +%Y-%m)"
+          fi
+          echo "Publishing monthly report for ${MONTH} (calendar month in TZ=${TZ_FOR_MONTH}; override via repo var MONTHLY_REPORT_TZ or workflow_dispatch target_month)"
+
           python3 monthly_report.py --month "${MONTH}" --publish --skip-if-unchanged
         env:
           CONFLUENCE_USERNAME: ${{ secrets.CONFLUENCE_USERNAME }}
