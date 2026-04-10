@@ -8,6 +8,9 @@ on:
 jobs:
   run-nightly:
     runs-on: ubuntu-latest
+    env:
+      TZ: ${{ vars.RELEASE_NOTES_TZ || 'Europe/Paris' }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,7 +24,11 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run extract + summarize + publish
-        run: python3 extract.py && python3 summarize.py && python3 publish.py
+        run: |
+          set -euo pipefail
+          echo "RELEASE_NOTES_TZ=${TZ}"
+          echo "Calendar date: $(date +%F)  ISO week: $(date +%G-W%V)"
+          python3 extract.py && python3 summarize.py && python3 publish.py
         env:
           JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
@@ -29,3 +36,15 @@ jobs:
           CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
           CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
           CONFLUENCE_PARENT_PAGE_ID: ${{ secrets.CONFLUENCE_PARENT_PAGE_ID }}
+          
+      - name: Upload generated files (debug)
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-release-notes-output
+          if-no-files-found: warn
+          path: |
+            summary_output.html
+            Linked_Issues_Report.txt
+            summary_meta.json
+            week_number.txt
