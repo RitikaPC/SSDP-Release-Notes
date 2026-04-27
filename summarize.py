@@ -213,6 +213,22 @@ def classify(issue_type):
     return "FEATURES"
 
 
+def is_go_nogo_prod_status(status: str) -> bool:
+    """Exclude GO/NO GO PROD gated items from release tables."""
+    if not status:
+        return False
+    s = str(status).strip().lower()
+    if "prod" not in s:
+        return False
+    if "awaiting" in s and "go" in s:
+        return True
+    if "no go" in s or "no-go" in s or "nogo" in s:
+        return True
+    if "go / no go" in s:
+        return True
+    return False
+
+
 def build_changes(blocks):
     out = {"APIM": {}, "EAH": {}, "DOCG": {}, "VDR": {}, "PATRIC": {}, "RCZ":{}, "SYNAPSE": {}, "REFTEL": {}, "CALVA": {}, "REFSER2": {}, "SERING": {}, "VDP_PROC": {}, "VDP_STORE_2": {}}
 
@@ -797,6 +813,18 @@ def count_components_with_releases():
     
     return components_with_releases
 
+def count_components_with_release_notes():
+    """Count how many components have any release-note content this week.
+
+    This includes GO/NO GO PROD items (not deployed yet) that should still appear in the
+    detailed Release Notes, even when stopper-based 'New Version' is empty.
+    """
+    components_with_notes = 0
+    for component, versions in (pv or {}).items():
+        if versions and len(versions.keys()) > 0:
+            components_with_notes += 1
+    return components_with_notes
+
 def generate_component_toc():
     """Generate table of contents for components that have releases"""
     component_links = []
@@ -811,8 +839,9 @@ def generate_component_toc():
 
 # Check how many components have releases to determine layout
 num_releases = count_components_with_releases()
+num_release_notes = count_components_with_release_notes()
 
-if num_releases == 0:
+if num_release_notes == 0:
     # No releases - show condensed version
     release_note_summary_html = f"""
 <div style="background:#F8F9FA;border:1px solid #e0e0e0;border-radius:8px;padding:25px;margin-bottom:30px;">
@@ -887,7 +916,7 @@ section_html = ""
 
 # APIM
 apim_html = ""
-for ver in sorted(pv["APIM"].keys(), key=vtuple):
+for ver in sorted(pv["APIM"].keys(), key=vtuple, reverse=True):
     d = pv["APIM"][ver]
     apim_html += make_table(
         f"APIM-{ver}",
@@ -902,7 +931,7 @@ if apim_html.strip():
 
 # EAH
 eah_html = ""
-for ver in sorted(pv["EAH"].keys(), key=vtuple):
+for ver in sorted(pv["EAH"].keys(), key=vtuple, reverse=True):
     d = pv["EAH"][ver]
     eah_html += make_table(
         f"EAH-{ver}",
@@ -917,7 +946,7 @@ if eah_html.strip():
 
 # DOCG
 docg_html = ""
-for ver in sorted(pv["DOCG"].keys(), key=vtuple):
+for ver in sorted(pv["DOCG"].keys(), key=vtuple, reverse=True):
     d = pv["DOCG"][ver]
     extra = ""
     docg_html += make_table(
@@ -933,7 +962,7 @@ if docg_html.strip():
 
 # VDR
 vdr_html = ""
-for ver in sorted(pv.get("VDR", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("VDR", {}).keys(), key=vtuple, reverse=True):
     d = pv["VDR"][ver]
     extra = ""
     vdr_html += make_table(
@@ -949,7 +978,7 @@ if vdr_html.strip():
 
 # PATRIC
 patric_html = ""
-for ver in sorted(pv.get("PATRIC", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("PATRIC", {}).keys(), key=vtuple, reverse=True):
     d = pv["PATRIC"][ver]
     extra = ""
     patric_html += make_table(
@@ -965,7 +994,7 @@ if patric_html.strip():
 
 # RCZ
 rcz_html = ""
-for ver in sorted(pv.get("RCZ", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("RCZ", {}).keys(), key=vtuple, reverse=True):
     d = pv["RCZ"][ver]
     extra = ""
     rcz_html += make_table(
@@ -982,7 +1011,7 @@ if rcz_html.strip():
 
 # SYNAPSE
 synapse_html = ""
-for ver in sorted(pv.get("SYNAPSE", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("SYNAPSE", {}).keys(), key=vtuple, reverse=True):
     d = pv["SYNAPSE"][ver]
     extra = ""
     synapse_html += make_table(
@@ -999,7 +1028,7 @@ if synapse_html.strip():
 
 # REFTEL
 reftel_html = ""
-for ver in sorted(pv.get("REFTEL", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("REFTEL", {}).keys(), key=vtuple, reverse=True):
     d = pv["REFTEL"][ver]
     extra = ""
     reftel_html += make_table(
@@ -1016,7 +1045,7 @@ if reftel_html.strip():
 
 # CALVA
 calva_html = ""
-for ver in sorted(pv.get("CALVA", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("CALVA", {}).keys(), key=vtuple, reverse=True):
     d = pv["CALVA"][ver]
     extra = ""
     calva_html += make_table(
@@ -1033,7 +1062,7 @@ if calva_html.strip():
 
 # REFSER2
 refser2_html = ""
-for ver in sorted(pv.get("REFSER2", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("REFSER2", {}).keys(), key=vtuple, reverse=True):
     d = pv["REFSER2"][ver]
     extra = ""
     refser2_html += make_table(
@@ -1050,7 +1079,7 @@ if refser2_html.strip():
 
 # SERING
 sering_html = ""
-for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("SERING", {}).keys(), key=vtuple, reverse=True):
     d = pv["SERING"][ver]
     extra = ""
     sering_html += make_table(
@@ -1067,7 +1096,7 @@ if sering_html.strip():
 
 # VDP_PROC
 vdp_proc_html = ""
-for ver in sorted(pv.get("VDP_PROC", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("VDP_PROC", {}).keys(), key=vtuple, reverse=True):
     d = pv["VDP_PROC"][ver]
     extra = ""
     vdp_proc_html += make_table(
@@ -1084,7 +1113,7 @@ if vdp_proc_html.strip():
 
 # VDP_STORE_2
 vdp_store_2_html = ""
-for ver in sorted(pv.get("VDP_STORE_2", {}).keys(), key=vtuple):
+for ver in sorted(pv.get("VDP_STORE_2", {}).keys(), key=vtuple, reverse=True):
     d = pv["VDP_STORE_2"][ver]
     extra = ""
     vdp_store_2_html += make_table(
@@ -1118,7 +1147,7 @@ write(SUMMARY_HTML, html)
 
 meta = {
     "week": week_display,
-    "has_releases": num_releases > 0,
+    "has_releases": num_release_notes > 0,
     "prev_versions": {
         "APIM": prev_apim,
         "EAH": prev_eah,

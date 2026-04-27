@@ -353,35 +353,33 @@ def get_deploying_to_prod_date_from_history(issue_json):
         return None
     return max(matched_dates)
 
+def is_awaiting_go_nogo_status(status_name):
+    """True for PROD go/no-go gate statuses: 'Awaiting Go / No go PROD', 'GO / NO GO PROD', etc."""
+    if not status_name:
+        return False
+    s = status_name.lower()
+    if not re.search(r"\bprod\b", s):
+        return False
+    if "awaiting" in s and "go" in s:
+        return True
+    # Board columns often drop 'Awaiting' (e.g. GO / NO GO PROD)
+    if "no go" in s or "no-go" in s or "nogo" in s:
+        return True
+    return False
+
+
 def get_awaiting_go_nogo_date_from_history(issue_json):
-    """Return first date (YYYY-MM-DD) where status -> 'Awaiting Go / No go PROD' (or variations) in changelog, else None"""
+    """Return first date (YYYY-MM-DD) where status entered a go/no-go PROD gate, else None"""
     histories = issue_json.get("changelog", {}).get("histories", [])
     for h in histories:
         for item in h.get("items", []):
             if item.get("field") == "status":
                 to_status = item.get("toString") or ""
-                to_status_lower = to_status.lower()
-                # Handle various capitalization and spacing patterns; require PROD as a whole word
-                if (
-                    "awaiting" in to_status_lower
-                    and "go" in to_status_lower
-                    and re.search(r"\bprod\b", to_status_lower)
-                ):
+                if is_awaiting_go_nogo_status(to_status):
                     created = h.get("created")
                     if created:
                         return created.split("T")[0]
     return None
-
-def is_awaiting_go_nogo_status(status_name):
-    """Check if status is a variant of 'Awaiting Go / No go PROD'"""
-    if not status_name:
-        return False
-    lower_status = status_name.lower()
-    return (
-        "awaiting" in lower_status
-        and "go" in lower_status
-        and re.search(r"\bprod\b", lower_status)
-    )
 
 def get_rcz_release_date(issue_json):
     """
@@ -2308,6 +2306,8 @@ store_entry = {
 
 # -----------------------
 # APIM / EAH → In production only
+# NOTE: GO/NO GO PROD should still be present in the detailed release notes (Linked Issues),
+# but must NOT affect "Last deploy version/date" in the weekly summary.
 # -----------------------
 for sysname in ("APIM", "EAH"):
     versions = [
